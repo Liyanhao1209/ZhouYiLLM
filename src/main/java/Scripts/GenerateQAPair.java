@@ -8,13 +8,16 @@ import Reader.DocxReader.SingletonDocxReader;
 import Writer.XlsWriter.SingletonXlsWriter;
 import Writer.XlsWriter.XlsWriter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GenerateQAPair {
     static final ReadRule[] rules = new ReadRule[]{new SummaryPartRule("2"),new VocabularyPartRule()};
+
+    static final String[][] concat = new String[][]{
+            {"如何理解","怎么看待","什么是","如何解读"},
+            {"的定义是什么","应该怎样理解","应该怎样解读"}
+    };
+
 
     /**
      * word文档转换为QA对
@@ -41,11 +44,21 @@ public class GenerateQAPair {
         ArrayList<String> qs = new ArrayList<>();
         ArrayList<String> as = new ArrayList<>();
 
+        Random random = new Random();
+
         for (int i = 0; i < l.size(); i++) {
+            String text = l.get(i);
             if(i%2==0){
-                qs.add(l.get(i));
+                int p = random.nextInt(concat.length);
+                int q = random.nextInt(concat[p].length);
+                if(p==0){
+                    text = concat[p][q]+"\""+text+"\"";
+                }else{
+                    text = "\""+text+"\""+concat[p][q];
+                }
+                qs.add(text);
             }else{
-                as.add(l.get(i));
+                as.add(text);
             }
         }
 
