@@ -26,7 +26,8 @@ public class GenerateQAPair {
         String xlsName = args[3];
 
         DocxReader reader = SingletonDocxReader.getDocxReader(rules[Integer.parseInt(rule)]);
-        List<String> l = reader.readDoc(docxPath);
+        ArrayList<String> l = new ArrayList<>();
+        reader.readDocSplits(docxPath, l);
 
         Map<String, List<String>> cols = generateQAPairs(l);
         XlsWriter writer = SingletonXlsWriter.getXlsWriter();
