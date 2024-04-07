@@ -7,7 +7,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +22,7 @@ public class DocxReader {
      * @return 段落的列表（每个段落是一个字符串）
      */
     public synchronized void readDoc(String filePath,List<String> res){
+        System.out.println(filePath);
         try (FileInputStream fis = new FileInputStream(filePath)) {
             XWPFDocument document = new XWPFDocument(fis);
 

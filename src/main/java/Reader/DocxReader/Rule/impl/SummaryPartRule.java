@@ -1,7 +1,6 @@
 package Reader.DocxReader.Rule.impl;
 
 import Reader.DocxReader.Rule.Interface.ReadRule;
-import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class SummaryPartRule implements ReadRule {
     @Override
     public void addParagraph(XWPFParagraph paragraph, List<String> res) {
         String style = paragraph.getStyle();
-        System.out.println(style);
+//        System.out.println(style+" "+paragraph.getText());
 
         if(paragraph.getText().isEmpty()){
             return;

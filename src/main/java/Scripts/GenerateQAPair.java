@@ -3,6 +3,7 @@ package Scripts;
 import Reader.DocxReader.DocxReader;
 import Reader.DocxReader.Rule.Interface.ReadRule;
 import Reader.DocxReader.Rule.impl.SummaryPartRule;
+import Reader.DocxReader.Rule.impl.VocabularyPartRule;
 import Reader.DocxReader.SingletonDocxReader;
 import Writer.XlsWriter.SingletonXlsWriter;
 import Writer.XlsWriter.XlsWriter;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GenerateQAPair {
-    static final ReadRule[] rules = new ReadRule[]{new SummaryPartRule("2"),new SummaryPartRule("2")};
+    static final ReadRule[] rules = new ReadRule[]{new SummaryPartRule("2"),new VocabularyPartRule()};
 
     /**
      * word文档转换为QA对
