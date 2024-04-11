@@ -9,13 +9,13 @@ from nltk.translate.bleu_score import SmoothingFunction
 import jieba
 
 
-# 计算rouge_L
-def calculate_rouge_l(reference, hypothesis):
+# 计算bleu
+def calculate_bleu(reference, hypothesis):
     reference_tokens = list(jieba.cut(reference))
     hypothesis_tokens = list(jieba.cut(hypothesis))
     smoothing_function = SmoothingFunction().method7
-    rouge_l_score = sentence_bleu([reference_tokens], hypothesis_tokens, smoothing_function=smoothing_function)
-    return rouge_l_score
+    score = sentence_bleu([reference_tokens], hypothesis_tokens, smoothing_function=smoothing_function)
+    return score
 
 
 # 将模型的回答转换成问题的列表
@@ -76,14 +76,19 @@ if __name__ == '__main__':
         prompt += "请参考上面问题的内容和形式，对上述问题进行补充和拓展，再提出10个关于周易的比较深入的问题"
         print(prompt)
 
+        global response
         # 向GLM4提问并返回答案
-        response = client.chat.completions.create(
-            model="glm-4",  # 填写需要调用的模型名称
-            messages=[
-                {"role": "user",
-                 "content": prompt}
-            ],
-        )
+        try:
+            response = client.chat.completions.create(
+                model="glm-4",  # 填写需要调用的模型名称
+                messages=[
+                    {"role": "user",
+                     "content": prompt}
+                ],
+            )
+        except Exception as e:
+            print(f"发生错误：{e}")
+            continue
 
         print(response.choices[0].message.content)
 
@@ -96,9 +101,9 @@ if __name__ == '__main__':
         for question in questions:
             max_rouge = 0
             for generation_instruction in generation_instructions_list:
-                rouge_l = calculate_rouge_l(question, generation_instruction)
-                if rouge_l > max_rouge:
-                    max_rouge = rouge_l
+                bleu = calculate_bleu(question, generation_instruction)
+                if bleu > max_rouge:
+                    max_rouge = bleu
             if max_rouge < 0.7:
                 print(f"录入：{question}")
                 file.write(question + '\n')
