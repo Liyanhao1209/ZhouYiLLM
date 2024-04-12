@@ -39,7 +39,8 @@ if __name__ == '__main__':
     args = sys.argv
 
     origin_QA = args[1]
-    client = ZhipuAI(api_key="f283bb78734240c773568def32ec3bcb.T2plYvRz2yltocZT")  # 填写你自己的APIKey
+    key = args[2]
+    client = ZhipuAI(api_key=key)  # 填写你自己的APIKey
 
     while True:
         file = open("./self_instruct/target/generation_instruction.txt", 'a', encoding="UTF-8")

@@ -84,6 +84,7 @@ if __name__ == '__main__':
     args = sys.argv
 
     root = args[1]
-    client = ZhipuAI(api_key="f283bb78734240c773568def32ec3bcb.T2plYvRz2yltocZT")
+    key = args[2]
+    client = ZhipuAI(api_key=key)
 
     dfs(root)
