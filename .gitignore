@@ -3,3 +3,4 @@ venv/
 *.iml
 _pycache_
 target
+test

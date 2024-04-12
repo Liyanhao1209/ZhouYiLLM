@@ -1,13 +1,25 @@
 import os.path
-import random
-import re
 import sys
 
-import jieba
 import pdfplumber
-from nltk.translate.bleu_score import SmoothingFunction
-from nltk.translate.bleu_score import sentence_bleu
+from docx import Document
 from zhipuai import ZhipuAI
+
+
+def read_docx(docx_path):
+    # 初始化一个Document对象，读取docx文件
+    doc = Document(docx_path)
+
+    # 初始化一个空字符串来存储文档中的纯文本
+    full_text = []
+
+    # 遍历文档中的每个段落
+    for para in doc.paragraphs:
+        # 添加段落文本到full_text列表中
+        full_text.append(para.text)
+
+        # 将列表中的文本合并成一个字符串并返回
+    return '\n'.join(full_text)
 
 
 def read_pdf(pdf_path):
@@ -26,32 +38,6 @@ def read_pdf(pdf_path):
     return text_content
 
 
-# 计算bleu
-def calculate_bleu(reference, hypothesis):
-    reference_tokens = list(jieba.cut(reference))
-    hypothesis_tokens = list(jieba.cut(hypothesis))
-    smoothing_function = SmoothingFunction().method7
-    score = sentence_bleu([reference_tokens], hypothesis_tokens, smoothing_function=smoothing_function)
-    return score
-
-
-# 将模型的回答转换成问题的列表
-def extract_questions(text):
-    # 使用正则表达式匹配以数字、空格、英文句号和冒号开头的行
-    pattern = r'^\d+\s*[、.]?\s*问题\s*[:：]?\s*(.*)$'
-    questions = []
-
-    # 遍历文本的每一行
-    for line in text.split('\n'):
-        # 使用正则表达式进行匹配
-        match = re.match(pattern, line)
-        if match:
-            question = match.group(1).strip()  # 提取匹配的问题，并去除两端的空格
-            questions.append(question)
-
-    return questions
-
-
 def dfs(path):
     work_station = path + '\\' + 'Workstation.txt'
     with open(work_station, 'r+', encoding='UTF-8') as f:
@@ -67,15 +53,8 @@ def dfs(path):
 
 
 def do_task(task):
-    target = open("./self_QA/target/self_QA_instruction.txt", 'r+', encoding="UTF-8")
-    instructions = target.readlines()
-    sample = random.sample(instructions, 1)
-
-    prompt = "你是一名精通周易的专家，下面是一个与周易相关的问题：\n"
-    prompt += "1、问题：" + sample[0] + "\n"
-    prompt += "现在给你一段文本，请参考文本内容与上面问题的形式，再提出10个关于周易的比较深入的问题:\n"
-    pdf_text = read_pdf(task)
-    prompt += pdf_text + "\n"
+    text = read_docx(task)
+    content = gen_prompt(text)
 
     global response
     try:
@@ -83,7 +62,7 @@ def do_task(task):
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user",
-                 "content": prompt}
+                 "content": content}
             ],
         )
     except Exception as e:
@@ -91,23 +70,14 @@ def do_task(task):
 
     print(response.choices[0].message.content)
 
-    # 提取问题
-    questions = extract_questions(response.choices[0].message.content)
-    for i, question in enumerate(questions, start=1):
-        print(f"{question}")
 
-    # 指令存储到文件
-    for question in questions:
-        max_rouge = 0
-        for generation_instruction in instructions:
-            bleu = calculate_bleu(question, generation_instruction)
-            if bleu > max_rouge:
-                max_rouge = bleu
-        if max_rouge < 0.7:
-            print(f"录入：{question}")
-            target.write(question + '\n')
-
-    target.close()
+def gen_prompt(text: str) -> str:
+    prompt = "你是一名研究周易的专家。现在有一篇关于周易的文章，内容为：\n[" + text + "]\n"
+    prompt += ("请根据上述文章的内容生成5"
+               "个关于周易的尽可能专业且多样化的问题对（即一个问题及其对应的回答）。这些问答对中的问题可以是关于事实的问题，也可以是对相关内容的理解和评价。在提问时，请不要使用“这个”、“那个”等指示代词。\n")
+    prompt += "请按照以下格式生成问题：\n"
+    prompt += "1、(问题：......，回答：......)\n1、(问题：......，回答：......)"
+    return prompt
 
 
 if __name__ == '__main__':
