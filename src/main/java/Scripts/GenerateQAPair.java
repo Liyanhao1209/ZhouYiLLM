@@ -56,6 +56,7 @@ public class GenerateQAPair {
                 }else{
                     text = "\""+text+"\""+concat[p][q];
                 }
+                text+="?";
                 qs.add(text);
             }else{
                 as.add(text);
