@@ -1,15 +1,9 @@
 import json
+import sys
 from typing import List
 import os
 from docx import Document
 from textSplitter.chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
-
-text_split_path = "D:\\workSpace\\Scripts\\python_scripts\\text_split\\config\\textSplit.json"
-with open(text_split_path, 'r', encoding='utf-8') as f:
-    config = json.load(f)
-
-fp = config['file_path']
-failed_root = config['failed_path']
 
 
 def read_docx(docx_path: str) -> str:
@@ -34,14 +28,15 @@ def do_fail_rec(task):
 
 
 def do_split(task: str) -> List[str]:
+    global chunk, overlap
     try:
         text = read_docx(task)
         # 调分词器
         t_splitter = ChineseRecursiveTextSplitter(
             keep_separator=True,
             is_separator_regex=True,
-            chunk_size=50,
-            chunk_overlap=0
+            chunk_size=chunk,
+            chunk_overlap=overlap
         )
 
         res = t_splitter.split_text(text)
@@ -100,8 +95,21 @@ def dfs_split(path: str, target: str, work_station: str):
         os.rename(ws_tmp, ws)
 
 
-for root in fp.values():
-    src_paths = root['src_paths']
-    target_paths = root['target_paths']
-    for i in range(len(src_paths)):
-        dfs_split(src_paths[i], target_paths[i], work_station=root['WorkStation'])
+if __name__ == '__main__':
+    text_split_path = sys.argv[1]
+
+    with open(text_split_path, 'r', encoding='utf-8') as f:
+        config = json.load(f)
+
+    fp = config['file_path']
+    failed_root = config['failed_path']
+
+    split_args = config['split_args']
+    chunk = int(split_args['chunk_size'])
+    overlap = int(split_args['overlap_size'])
+
+    for root in fp.values():
+        src_paths = root['src_paths']
+        target_paths = root['target_paths']
+        for i in range(len(src_paths)):
+            dfs_split(src_paths[i], target_paths[i], work_station=root['WorkStation'])
