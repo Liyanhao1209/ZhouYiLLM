@@ -1,0 +1,11 @@
+{
+  "file_path":
+  {
+      "Studies of Zhouyi":{
+          "src_paths": ["D:\\workSpace\\Scripts\\python_scripts\\text_split\\source_files\\《周易研究》2020-2023"],
+          "target_paths": ["D:\\workSpace\\Scripts\\python_scripts\\text_split\\target_files\\Text_split_target\\《周易研究》"],
+          "WorkStation": "WorkStation.txt"
+      }
+  },
+  "failed_path": "D:\\workSpace\\Scripts\\python_scripts\\text_split\\target_files\\Text_split\\Failed\\fail.txt"
+}
