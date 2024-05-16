@@ -1,0 +1,17 @@
+{
+  "file_path": {
+    "Studies of Zhouyi": {
+      "src_paths": [],
+      "api_path": "<http://127.0.0.1:8501/knowledge_base/upload_docs>"
+    }
+  },
+  "failed_path": "",
+  "split_args": {
+    "chunk_size": "250",
+    "overlap_size": "100",
+    "knowledge_base_name": "faiss Zhouyi",
+    "override": "True",
+    "to_vector_store": "True",
+    "zh_title_enhance": "True"
+  }
+}
