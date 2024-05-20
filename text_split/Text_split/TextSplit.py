@@ -3,7 +3,7 @@ import sys
 from typing import List
 import os
 from docx import Document
-from textSplitter.chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
+# from textSplitter.chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
 
 
 def read_docx(docx_path: str) -> str:
@@ -32,15 +32,15 @@ def do_split(task: str) -> List[str]:
     try:
         text = read_docx(task)
         # 调分词器
-        t_splitter = ChineseRecursiveTextSplitter(
-            keep_separator=True,
-            is_separator_regex=True,
-            chunk_size=chunk,
-            chunk_overlap=overlap
-        )
-
-        res = t_splitter.split_text(text)
-        return res
+        # t_splitter = ChineseRecursiveTextSplitter(
+        #     keep_separator=True,
+        #     is_separator_regex=True,
+        #     chunk_size=chunk,
+        #     chunk_overlap=overlap
+        # )
+        #
+        # res = t_splitter.split_text(text)
+        return [text]
     except Exception as e:
         print(f'对{task}进行分词时出现错误:{e}')
         do_fail_rec(task)

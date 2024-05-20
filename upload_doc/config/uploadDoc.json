@@ -1,15 +1,15 @@
 {
   "file_path": {
     "Studies of Zhouyi": {
-      "src_paths": [],
-      "api_path": "<http://127.0.0.1:8501/knowledge_base/upload_docs>"
+      "src_paths": ["D:\\workspace\\data\\target\\《周易研究》\\《周易研究》2020-2023"],
+      "api_path": "http://127.0.0.1:7861/knowledge_base/upload_docs"
     }
   },
-  "failed_path": "",
+  "failed_path": "D:\\workSpace\\Scripts\\python_scripts\\text_split\\target_files\\Text_split\\Failed\\fail.txt",
   "split_args": {
     "chunk_size": "250",
     "overlap_size": "100",
-    "knowledge_base_name": "faiss Zhouyi",
+    "knowledge_base_name": "faiss_zhouyi",
     "override": "True",
     "to_vector_store": "True",
     "zh_title_enhance": "True"
