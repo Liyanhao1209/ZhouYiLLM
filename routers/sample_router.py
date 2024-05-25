@@ -11,6 +11,10 @@ class SampleRouter(routers_mount_interface):
         super().__init__(prefix, tag)
 
     def mount(self, app: FastAPI):
-        app.get(self.prefix + "/say-hello", tags=self.tag, summary="一个简单的例子")(sample_service.hello_world)
-        app.get(self.prefix + "/say-hello-to-someone/{username}", tags=self.tag, summary="一个简单的例子")(
+
+        app.get(self.generate_route_path(['say-hello']), tags=self.tag, summary="一个简单的例子")(
+            sample_service.hello_world)
+
+        app.get(self.generate_route_path(['say-hello-to-someone', '{username}']), tags=self.tag,
+                summary="一个简单的例子")(
             sample_service.specific_id)

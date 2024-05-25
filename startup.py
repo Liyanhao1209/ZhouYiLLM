@@ -1,7 +1,12 @@
 import uvicorn
 
+from component.MySQL_engine import init_db_conn
 from config.server_config import *
 from routers import mount_routers
+
+
+def init_web_service():
+    run_api_server()
 
 
 def run_api_server():
@@ -13,5 +18,9 @@ def run_api_server():
     uvicorn.run(app, host=host, port=port)
 
 
+def init_db():
+    init_db_conn()
+
+
 if __name__ == '__main__':
-    run_api_server()
+    init_web_service()

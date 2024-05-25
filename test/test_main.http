@@ -1,11 +1,14 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/
+# 用户创建新会话
+POST http://127.0.0.1:9090/conversation/new-conversation
+Content-Type: application/json
 Accept: application/json
+
+{
+  "user_id": "1234567890",
+  "conv_name": "dummy_conv"
+}
 
 ###
 
-GET http://127.0.0.1:8000/hello/User
-Accept: application/json
-
-###
