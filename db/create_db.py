@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from sqlalchemy import ForeignKey, create_engine, Column, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -35,7 +35,7 @@ class Conversation(Base):
 
     id: Mapped[str] = mapped_column(primary_key=True)
     conv_name: Mapped[str] = mapped_column()
-    create_time: Mapped[datetime] = mapped_column()
+    create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
     owner = relationship('User', back_populates='conversations')
@@ -51,7 +51,7 @@ class Blog(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column()
     content: Mapped[Text] = Column(Text)
-    create_time: Mapped[datetime] = mapped_column()
+    create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
     owner = relationship('User', back_populates='blogs')
@@ -67,7 +67,7 @@ class Comment(Base):
 
     id: Mapped[str] = mapped_column(primary_key=True)
     content: Mapped[str] = mapped_column()
-    create_time: Mapped[datetime] = mapped_column()
+    create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
     blog_id: Mapped[str] = mapped_column(ForeignKey('Blog.id'))
 
@@ -85,7 +85,7 @@ class KnowledgeBase(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
-    create_time: Mapped[datetime] = mapped_column()
+    create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
     owner = relationship('User', back_populates='knowledge_bases')

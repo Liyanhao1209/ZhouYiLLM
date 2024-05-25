@@ -1,11 +1,12 @@
 import uvicorn
 
-from component.MySQL_engine import init_db_conn
+from component.DB_engine import init_db_conn
 from config.server_config import *
 from routers import mount_routers
 
 
 def init_web_service():
+    init_db()
     run_api_server()
 
 
