@@ -39,6 +39,7 @@ class Conversation(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
     owner = relationship('User', back_populates='conversations')
+    records = relationship('Record', back_populates='conversation')
 
     def __repr__(self):
         return f'<Conversation(id={self.id}, conv_name={self.conv_name})>'
@@ -104,6 +105,21 @@ class Administrator(Base):
 
     def __repr__(self):
         return f'<Administrator(id={self.id}, name={self.name})>'
+
+
+# 聊天记录表
+class Record(Base):
+    __tablename__ = "Record"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    content: Mapped[str] = mapped_column()
+    is_ai: Mapped[bool] = mapped_column()
+    conv_id: Mapped[str] = mapped_column(ForeignKey('Conversation.id'))
+
+    conversation = relationship('Conversation', back_populates='records')
+
+    def __repr__(self):
+        return f'<Record(id={self.id}, content={self.content})>'
 
 
 if __name__ == '__main__':
