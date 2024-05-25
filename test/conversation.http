@@ -1,0 +1,20 @@
+# 用户创建新会话
+POST http://127.0.0.1:9090/conversation/new-conversation
+Content-Type: application/json
+Accept: application/json
+
+{
+  "user_id": "d078b124cf27413bbb99f6484782e98c",
+  "conv_name": "dummy_conv"
+}
+
+###
+POST http://127.0.0.1:9090/conversation/llm-chat
+Content-Type: application/json
+Accept: application/json
+
+{
+  "conv_id": "fcc228ccfa324b79b957cd043bce23b8",
+  "query": "我叫什么名字？",
+  "prompt_name": "with_history"
+}
