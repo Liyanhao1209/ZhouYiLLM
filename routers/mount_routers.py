@@ -25,8 +25,9 @@ def create_app() -> FastAPI:
     app = FastAPI(title='易学大模型Web应用服务端')
     from routers.sample_router import SampleRouter
     from routers.conversation_routers import ConversationRouter
+    from routers.administrator_routers import AdministratorRouter
 
     SampleRouter(prefix='sample', tag=['sample']).mount(app)
     ConversationRouter(prefix='conversation', tag=['conversation management']).mount(app)
-
+    AdministratorRouter(prefix='admin', tag=['admin management']).mount(app)
     return app

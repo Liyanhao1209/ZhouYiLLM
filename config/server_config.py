@@ -17,3 +17,9 @@ CHAT_ARGS = {
     "prompt_name": ['default', 'with_history', 'py'],
     "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/chat'
 }
+
+EMAIL_ARGS = {
+    "username": '',
+    "authorization_code": '',
+    "host": 'smtp.126.com',
+}
