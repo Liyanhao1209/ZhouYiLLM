@@ -26,8 +26,12 @@ def create_app() -> FastAPI:
     from routers.sample_router import SampleRouter
     from routers.conversation_routers import ConversationRouter
     from routers.administrator_routers import AdministratorRouter
+    from routers.user_router import UserRouter
 
     SampleRouter(prefix='sample', tag=['sample']).mount(app)
     ConversationRouter(prefix='conversation', tag=['conversation management']).mount(app)
     AdministratorRouter(prefix='admin', tag=['admin management']).mount(app)
+    UserRouter(prefix='user', tag=['user management']).mount(app)
+
+
     return app
