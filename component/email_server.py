@@ -1,10 +1,12 @@
 import yagmail
 from config.server_config import *
 
-yag_server = None
+yag_server = yagmail.SMTP(user=EMAIL_ARGS["username"], password=EMAIL_ARGS["authorization_code"],
+                          host=EMAIL_ARGS["host"])
 
 
 def init_email_server():
+    global yag_server
     # 连接服务器
     # 用户名、授权码、服务器地址
     yag_server = yagmail.SMTP(user=EMAIL_ARGS["username"], password=EMAIL_ARGS["authorization_code"],
