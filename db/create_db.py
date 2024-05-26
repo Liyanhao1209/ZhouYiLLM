@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 
 from sqlalchemy import ForeignKey, create_engine, Column, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -20,10 +21,10 @@ class User(Base):
     sex: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
 
-    conversations = relationship('Conversation', back_populates='owner')  # 拥有的会话集合
-    blogs = relationship('Blog', back_populates='owner')  # 拥有的博客集合
-    comments = relationship('Comment', back_populates='owner')  # 拥有的评论集合
-    knowledge_bases = relationship('KnowledgeBase', back_populates='owner')  # 拥有的知识库集合
+    conversations: Mapped[List["Conversation"]] = relationship(back_populates='owner')  # 拥有的会话集合
+    blogs: Mapped[List["Blog"]] = relationship(back_populates='owner')  # 拥有的博客集合
+    comments: Mapped[List["Comment"]] = relationship(back_populates='owner')  # 拥有的评论集合
+    knowledge_bases: Mapped[List["KnowledgeBase"]] = relationship(back_populates='owner')  # 拥有的知识库集合
 
     def __repr__(self):
         return f'<User(id={self.id}, email={self.email}, name={self.name})>'
@@ -38,8 +39,8 @@ class Conversation(Base):
     create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
-    owner = relationship('User', back_populates='conversations')
-    records = relationship('Record', back_populates='conversation')
+    owner: Mapped["User"] = relationship(back_populates='conversations')
+    records: Mapped[List["Record"]] = relationship(back_populates='conversation')
 
     def __repr__(self):
         return f'<Conversation(id={self.id}, conv_name={self.conv_name})>'
@@ -55,8 +56,8 @@ class Blog(Base):
     create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
-    owner = relationship('User', back_populates='blogs')
-    comments = relationship('Comment', back_populates='blog')
+    owner: Mapped["User"] = relationship(back_populates='blogs')
+    comments: Mapped[List["Comment"]] = relationship(back_populates='blog')
 
     def __repr__(self):
         return f'<Blog(id={self.id}, title={self.title})>'
@@ -72,8 +73,8 @@ class Comment(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
     blog_id: Mapped[str] = mapped_column(ForeignKey('Blog.id'))
 
-    owner = relationship('User', back_populates='comments')
-    blog = relationship('Blog', back_populates='comments')
+    owner: Mapped["User"] = relationship(back_populates='comments')
+    blog: Mapped["Blog"] = relationship(back_populates='comments')
 
     def __repr__(self):
         return f'<Comment(id={self.id}, content={self.content})>'
@@ -89,7 +90,7 @@ class KnowledgeBase(Base):
     create_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow())
     user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
 
-    owner = relationship('User', back_populates='knowledge_bases')
+    owner: Mapped["User"] = relationship(back_populates='knowledge_bases')
 
     def __repr__(self):
         return f'<KnowledgeBase(id={self.id}, name={self.name})>'
@@ -116,7 +117,7 @@ class Record(Base):
     is_ai: Mapped[bool] = mapped_column()
     conv_id: Mapped[str] = mapped_column(ForeignKey('Conversation.id'))
 
-    conversation = relationship('Conversation', back_populates='records')
+    conversation: Mapped["Conversation"] = relationship(back_populates='records')
 
     def __repr__(self):
         return f'<Record(id={self.id}, content={self.content})>'
