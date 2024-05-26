@@ -10,12 +10,20 @@ LANGCHAIN_SERVER = {
     "port": 7861
 }
 
+LLM_MODELS = ["chatglm3-6b", "zhipu-api", "openai-api"]
+
 CHAT_ARGS = {
-    "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
+    "llm_models": LLM_MODELS,
     "history_len": 256,
     "temperature": 0.7,
     "prompt_name": ['default', 'with_history', 'py'],
     "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/chat'
+}
+
+KB_CHAT_ARGS = {
+    "top_k": 20,
+    "score_threshold": 1.01,
+    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
 }
 
 EMAIL_ARGS = {

@@ -1,7 +1,7 @@
 import datetime
 from typing import List
 
-from sqlalchemy import ForeignKey, create_engine, Column, Text
+from sqlalchemy import ForeignKey, create_engine, Column, Text, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -112,7 +112,7 @@ class Administrator(Base):
 class Record(Base):
     __tablename__ = "Record"
 
-    id: Mapped[str] = mapped_column(primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     content: Mapped[str] = mapped_column()
     is_ai: Mapped[bool] = mapped_column()
     conv_id: Mapped[str] = mapped_column(ForeignKey('Conversation.id'))

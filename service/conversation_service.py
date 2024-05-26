@@ -4,12 +4,13 @@ import logging
 import uuid
 from typing import List
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from component.DB_engine import engine
-from config.server_config import CHAT_ARGS
+from config.server_config import CHAT_ARGS, KB_CHAT_ARGS
 from db.create_db import Conversation, Record
-from message_model.request_model.conversation_model import NewConv, LLMChat
+from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, History
 from message_model.response_model.response import BaseResponse
 
 import requests
@@ -36,6 +37,19 @@ async def new_conversation(nc: NewConv) -> BaseResponse:
     return BaseResponse(code=200, message="会话创建成功", data={"conv_id": conv_id})
 
 
+async def request(url: str, request_body: dict, prefix: str) -> dict:
+    try:
+        response = requests.post(url=url, json=request_body)
+        print(response.text)
+    except Exception as e:
+        return {"success": False, "error": f'{e}'}
+
+    if response.ok:
+        return {"success": True, "data": json.loads(response.text[len(prefix):].strip())}
+
+    return {"success": False, "error": f'{response.text}'}
+
+
 async def request_llm_chat(ca: LLMChat) -> dict:
     """
     生成llm对话请求
@@ -56,22 +70,68 @@ async def request_llm_chat(ca: LLMChat) -> dict:
         "prompt_name": ca.prompt_name
     }
 
-    try:
-        response = requests.post(url=CHAT_ARGS["url"], json=request_body)
-        print(response.text)
-    except Exception as e:
-        return {"success": False, "error": f'{e}'}
+    return await request(url=CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
-    if response.ok:
-        return {"success": True, "data": json.loads(response.text[len("data: "):].strip())}
 
-    return {"success": False, "error": f'{response.text}'}
+async def request_knowledge_base_chat(kb: KBChat) -> dict:
+    """
+    生成知识库对话请求
+    参数：
+    1. query
+    2. knowledge_base_name
+    3. top_k
+    4. score_threshold
+    5. history:List[History]
+    6. model_name
+    7. temperature
+    8. prompt_name
+    """
+    request_body = {
+        "query": kb.query,
+        "knowledge_base_name": kb.knowledge_base_id if not kb.knowledge_base_id == "-1" else "faiss_zhouyi",
+        "top_k": KB_CHAT_ARGS["top_k"],
+        "score_threshold": KB_CHAT_ARGS["score_threshold"],
+        "history": "",
+        "model_name": CHAT_ARGS["llm_models"][0],
+        "temperature": CHAT_ARGS["temperature"],
+        "prompt_name": kb.prompt_name
+    }
+
+    # 获取历史记录
+    records = await get_conversation_history(kb.conv_id)
+    history = []
+    for i in range(0, len(records), 2):
+        history.append(
+            [
+                {
+                    "role": "user",
+                    "content": records[i].content
+                },
+                {
+                    "role": "assistant",
+                    "content": records[i + 1].content
+                }
+            ]
+        )
+    request_body["history"] = history
+    print(history)
+
+    return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+
+
+def max_id_in_record() -> int:
+    with Session(engine) as session:
+        result = session.query(func.max(Record.id)).scalar()
+        if result:
+            return result
+        else:
+            return 0
 
 
 # 将聊天记录插入数据库
 def add_record_to_conversation(conv_id: str, text: str, is_ai: bool) -> None:
     with Session(engine) as session:
-        session.add(Record(id=uuid.uuid4().hex, content=text, is_ai=is_ai, conv_id=conv_id))
+        session.add(Record(id=max_id_in_record() + 1, content=text, is_ai=is_ai, conv_id=conv_id))
         session.commit()
 
 
