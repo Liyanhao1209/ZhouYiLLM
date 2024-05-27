@@ -59,7 +59,7 @@ def see_users_record(user_id: str) -> BaseResponse:
             result = []
             for c in conversations:
                 records = session.query(Record).join(Conversation, Record.conv_id == Conversation.id,
-                                                     isouter=True).all()
+                                                     isouter=True).filter(Conversation.id == c.id).all()
                 result.append(records)
     except Exception as e:
         return BaseResponse(code=200, msg='查询失败！', data={'error': str(e)})
