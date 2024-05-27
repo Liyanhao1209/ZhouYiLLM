@@ -132,15 +132,15 @@ async def request_knowledge_base_chat(kb: KBChat) -> dict:
         "knowledge_base_name": kb.knowledge_base_id if not kb.knowledge_base_id == "-1" else "faiss_zhouyi",
         "top_k": KB_CHAT_ARGS["top_k"],
         "score_threshold": KB_CHAT_ARGS["score_threshold"],
-        #"history": "",
+        # "history": "",
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": kb.prompt_name
     }
 
     # 获取历史记录
-    #history = await gen_history(conv_id=kb.conv_id)
-    #request_body["history"] = history  #json.dumps([h.dict() for h in history])
+    # history = await gen_history(conv_id=kb.conv_id)
+    # request_body["history"] = history  #json.dumps([h.dict() for h in history])
 
     return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
@@ -160,15 +160,15 @@ async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜�
         "query": sc.query,
         "search_engine_name": sc.search_engine_name,
         "top_k": KB_CHAT_ARGS["top_k"],
-        #"history": "",
+        # "history": "",
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": sc.prompt_name
     }
 
     # 获取历史记录
-    #history = await gen_history(conv_id=sc.conv_id)
-    #request_body["history"] = history
+    # history = await gen_history(conv_id=sc.conv_id)
+    # request_body["history"] = history
 
     return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 

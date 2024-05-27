@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from component.DB_engine import engine
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm
+from component.redis_server import get_redis_instance
+from message_model.response_model.response import BaseResponse
 
 app = FastAPI()
 
@@ -40,5 +42,7 @@ async def register_user(register_form: RegisterForm):
 
 
 @app.post("/login")
-async def login_user():
-    pass
+def login_user(user_e: RegisterForm) -> BaseResponse:
+    get_redis_instance().set(user_e.email, user_e.password)
+    obj = get_redis_instance().get(user_e.email)
+    return BaseResponse(code=200, data={"obj": obj})

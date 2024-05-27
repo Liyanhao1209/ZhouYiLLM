@@ -37,4 +37,9 @@ EMAIL_ARGS = {
     "host": 'smtp.163.com',
 }
 
-
+REDIS_ARGS = {
+    "host": 'localhost',
+    "port": 6379,
+    "decode_responses": True
+    
+}
