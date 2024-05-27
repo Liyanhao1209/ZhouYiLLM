@@ -2,7 +2,6 @@ import datetime
 import json
 import logging
 import uuid
-import threading
 from typing import List
 
 import requests
@@ -13,7 +12,7 @@ from component.DB_engine import engine, record_lock
 from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS
 from config.template_config import get_mix_chat_prompt
 from db.create_db import Conversation, Record
-from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat
+from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History
 from message_model.response_model.response import BaseResponse
 
 
@@ -40,13 +39,15 @@ async def new_conversation(nc: NewConv) -> BaseResponse:
 
 async def request(url: str, request_body: dict, prefix: str) -> dict:
     try:
-        response = requests.post(url=url, json=request_body)
-        print(response.text)
+        response = requests.post(url=url, headers={"Content-Type": "application/json"}, json=request_body)
+        # print(response.text)
+        text = response.text[response.text.find('{'):response.text.rfind('}') + 1]
+        print(text)
     except Exception as e:
         return {"success": False, "error": f'{e}'}
 
     if response.ok:
-        return {"success": True, "data": json.loads(response.text[len(prefix):].strip())}
+        return {"success": True, "data": json.loads(text)}
 
     return {"success": False, "error": f'{response.text}'}
 
@@ -131,15 +132,15 @@ async def request_knowledge_base_chat(kb: KBChat) -> dict:
         "knowledge_base_name": kb.knowledge_base_id if not kb.knowledge_base_id == "-1" else "faiss_zhouyi",
         "top_k": KB_CHAT_ARGS["top_k"],
         "score_threshold": KB_CHAT_ARGS["score_threshold"],
-        "history": "",
+        #"history": "",
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": kb.prompt_name
     }
 
     # 获取历史记录
-    history = await gen_history(conv_id=kb.conv_id)
-    request_body["history"] = history
+    #history = await gen_history(conv_id=kb.conv_id)
+    #request_body["history"] = history  #json.dumps([h.dict() for h in history])
 
     return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
@@ -159,34 +160,35 @@ async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜�
         "query": sc.query,
         "search_engine_name": sc.search_engine_name,
         "top_k": KB_CHAT_ARGS["top_k"],
-        "history": "",
+        #"history": "",
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": sc.prompt_name
     }
 
     # 获取历史记录
-    history = await gen_history(conv_id=sc.conv_id)
-    request_body["history"] = history
+    #history = await gen_history(conv_id=sc.conv_id)
+    #request_body["history"] = history
 
     return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
-async def gen_history(conv_id: str) -> List[List[dict]]:
+async def gen_history(conv_id: str) -> List[History]:
     records = await get_conversation_history(conv_id)
     history = []
     for i in range(0, len(records), 2):
         history.append(
-            [
-                {
-                    "role": "user",
-                    "content": records[i].content
-                },
-                {
-                    "role": "assistant",
-                    "content": records[i + 1].content
-                }
-            ]
+            History.from_data({
+                "role": "user",
+                "content": records[i].content
+            })
+        )
+
+        history.append(
+            History.from_data({
+                "role": "assistant",
+                "content": records[i + 1].content
+            })
         )
     return history
 
