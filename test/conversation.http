@@ -27,6 +27,17 @@ Accept: application/json
 {
   "conv_id": "fcc228ccfa324b79b957cd043bce23b8",
   "query": "如何理解逆向格义？",
-  "prompt_name": "with_history",
+  "prompt_name": "default",
+  "knowledge_base_id": "faiss_zhouyi"
+}
+
+###
+POST http://127.0.0.1:9090/conversation/mix-chat
+Content-Type: application/json
+Accept: application/json
+
+{
+  "conv_id": "fcc228ccfa324b79b957cd043bce23b8",
+  "query": "谈谈你对周易的理解",
   "knowledge_base_id": "faiss_zhouyi"
 }
