@@ -26,9 +26,15 @@ KB_CHAT_ARGS = {
     "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
 }
 
+SE_CHAT_ARGS = {
+    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/search_engine_chat'
+}
+
 EMAIL_ARGS = {
     # 个人邮箱
     "username": 'sdukeji112233@163.com',
     "authorization_code": 'SOKUSUSQOEYZLQPD',
     "host": 'smtp.163.com',
 }
+
+

@@ -10,7 +10,7 @@ class BaseResponse(BaseModel):
     data: Any = pydantic.Field(None, description="API data")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "code": 200,
                 "msg": "success",

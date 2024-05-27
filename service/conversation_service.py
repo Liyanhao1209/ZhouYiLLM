@@ -2,17 +2,18 @@ import datetime
 import json
 import logging
 import uuid
+import threading
 from typing import List
 
 import requests
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from component.DB_engine import engine
-from config.server_config import CHAT_ARGS, KB_CHAT_ARGS
+from component.DB_engine import engine, record_lock
+from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS
 from config.template_config import get_mix_chat_prompt
 from db.create_db import Conversation, Record
-from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat
+from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat
 from message_model.response_model.response import BaseResponse
 
 
@@ -69,7 +70,9 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
         return BaseResponse(code=200, message="知识库请求失败", data={"error": f'{kb_response["error"]}'})
 
     # 请求搜索引擎
-    search_response = await request_search_engine_chat()
+    # search_response = await request_search_engine_chat(SEChat(query=mc.query, conv_id=mc.conv_id))
+    # if not search_response["success"]:
+    #     return BaseResponse(code=200, message="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
 
     # 生成prompt
     prompt = get_mix_chat_prompt(question=mc.query, history=gen_history(mc.conv_id),
@@ -78,6 +81,11 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
 
     # 请求大模型
     response = await request_llm_chat(LLMChat(query=prompt, conv_id=mc.conv_id, prompt_name=mc.prompt_name))
+
+    # 确保问题和回答原子性地入库
+    with record_lock:
+        add_record_to_conversation(mc.conv_id, mc.query, False)
+        add_record_to_conversation(mc.conv_id, response["data"]["text"], True)
 
     return BaseResponse(code=200, message="混合对话请求成功", data={"answer": response["data"]["text"]})
 
@@ -136,8 +144,32 @@ async def request_knowledge_base_chat(kb: KBChat) -> dict:
     return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
-async def request_search_engine_chat() -> dict:
-    return {}
+async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜索引擎一直超时 需要解决
+    """
+    生成搜索引擎对话请求
+    1. query
+    2. search_engine_name
+    3. top_k
+    4. history
+    5. model_name
+    6. temperature
+    7. prompt_name
+    """
+    request_body = {
+        "query": sc.query,
+        "search_engine_name": sc.search_engine_name,
+        "top_k": KB_CHAT_ARGS["top_k"],
+        "history": "",
+        "model_name": CHAT_ARGS["llm_models"][0],
+        "temperature": CHAT_ARGS["temperature"],
+        "prompt_name": sc.prompt_name
+    }
+
+    # 获取历史记录
+    history = await gen_history(conv_id=sc.conv_id)
+    request_body["history"] = history
+
+    return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
 async def gen_history(conv_id: str) -> List[List[dict]]:

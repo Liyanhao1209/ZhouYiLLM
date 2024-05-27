@@ -8,6 +8,8 @@ from config.database_config import SQLITE_CONNECTION
 db_lock = Lock()
 engine = None
 
+record_lock = Lock()
+
 
 # 初始化数据库连接
 def init_db_conn():
