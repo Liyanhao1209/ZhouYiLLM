@@ -1,9 +1,9 @@
 import uvicorn
 
 from component.DB_engine import init_db_conn
+from component.email_server import init_email_server
 from config.server_config import *
 from routers import mount_routers
-from component.email_server import init_email_server
 
 
 def init_web_service():
