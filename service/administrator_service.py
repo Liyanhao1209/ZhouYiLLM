@@ -13,6 +13,7 @@ from component.DB_engine import engine
 from db.create_db import Administrator, Blog, User, Conversation, Record
 from message_model.response_model.response import BaseResponse
 from message_model.request_model.administrator_model import AdminModel, AdminQueryData
+from component.email_server import send_email
 
 
 # 获取用户知识库
@@ -75,9 +76,11 @@ def block_user(aq: AdminQueryData) -> BaseResponse:
             if not u.is_active:
                 return BaseResponse(code=200, msg='用户已经被封禁！', data={'error': '用户已经被封禁'})
             u.is_active = False
+            send_email(u.email, '账号封禁通知', f'用户{u.name}因为使用不合规范，被封禁，望周知')
             session.commit()
             return BaseResponse(code=200, msg='操作成功', data={'msg': '操作成功'})
     except Exception as e:
+        print(e)
         return BaseResponse(code=200, msg='操作失败！', data={'error': str(e)})
 
 
@@ -91,7 +94,9 @@ def relive_user(aq: AdminQueryData) -> BaseResponse:
             if u.is_active:
                 return BaseResponse(code=200, msg='用户没有被封禁！', data={'error': '用户没有被封禁'})
             u.is_active = True
+            send_email(u.email, '账号解禁通知', f'用户{u.name}封禁已解除，望周知')
             session.commit()
             return BaseResponse(code=200, msg='操作成功', data={'msg': '操作成功'})
     except Exception as e:
+        print(e)
         return BaseResponse(code=200, msg='操作失败！', data={'error': str(e)})

@@ -27,7 +27,8 @@ KB_CHAT_ARGS = {
 }
 
 EMAIL_ARGS = {
-    "username": '',
-    "authorization_code": '',
-    "host": 'smtp.126.com',
+    # 个人邮箱
+    "username": 'sdukeji112233@163.com',
+    "authorization_code": 'SOKUSUSQOEYZLQPD',
+    "host": 'smtp.163.com',
 }

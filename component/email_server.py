@@ -17,8 +17,10 @@ def send_email(to, subject, content, attachment=None):
     email_to = [to, ]
     email_title = subject
     email_content = content
+    email_attachments = None
     # 附件列表
-    email_attachments = [attachment]
+    if attachment:
+        email_attachments = [attachment]
 
     # 发送邮件
     yag_server.send(email_to, email_title, email_content, email_attachments)
