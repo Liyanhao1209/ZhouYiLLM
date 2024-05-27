@@ -11,6 +11,7 @@ from message_model.request_model.user_model import RegisterForm
 
 app = FastAPI()
 
+
 @app.post("/register")
 async def register_user(register_form: RegisterForm):
     """用户注册接口"""
@@ -23,7 +24,8 @@ async def register_user(register_form: RegisterForm):
             raise HTTPException(status_code=400, detail="用户名已存在")
 
         # 创建新用户并添加到数据库
-        new_user = User(id=conv_id,email=register_form.email, password=register_form.password,name="",is_active=True,age=0,sex="0",description="")
+        new_user = User(id=conv_id, email=register_form.email, password=register_form.password, name="", is_active=True,
+                        age=0, sex="0", description="")
         print(new_user)
         session.add(new_user)
         session.commit()
@@ -35,6 +37,7 @@ async def register_user(register_form: RegisterForm):
         raise HTTPException(status_code=400, detail="注册失败，可能是由于数据库完整性约束")
     finally:
         session.close()
+
 
 @app.post("/login")
 async def login_user():

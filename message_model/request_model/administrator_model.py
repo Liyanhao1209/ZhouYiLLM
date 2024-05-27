@@ -7,6 +7,6 @@ class AdminModel(BaseModel):
 
 
 class AdminQueryData(BaseModel):
-    id: str
-    username: str
-    user_id: str
+    id: str | None
+    username: str | None
+    user_id: str | None

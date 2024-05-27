@@ -33,8 +33,8 @@ async def add_administrator(admin: AdminModel) -> BaseResponse:
         logging.info(f'{time}创建了管理员{admin.name}, id={admin_id}')
     except Exception as e:
         logging.error(f'{time}创建管理员{admin.name}失败')
-        return BaseResponse(code=200, message='注册失败', data={'error': str(e)})
-    return BaseResponse(code=200, message='注册成功', data={'admin_id': admin_id})
+        return BaseResponse(code=200, msg='注册失败', data={'error': str(e)})
+    return BaseResponse(code=200, msg='注册成功', data={'admin_id': admin_id})
 
 
 # 获取用户博客
@@ -44,8 +44,8 @@ def see_users_blog(user_id: str) -> BaseResponse:
             result = session.query(Blog).join(User, Blog.user_id == User.id, isouter=True).filter(
                 User.id == user_id).all()
     except Exception as e:
-        return BaseResponse(code=200, message='操作失败', data={'error': str(e)})
-    return BaseResponse(code=200, message="操作成功", data={'result': result})
+        return BaseResponse(code=200, msg='操作失败', data={'error': str(e)})
+    return BaseResponse(code=200, msg="操作成功", data={'result': result})
 
 
 # 获取用户与模型的对话
@@ -61,21 +61,37 @@ def see_users_record(user_id: str) -> BaseResponse:
                                                      isouter=True).all()
                 result.append(records)
     except Exception as e:
-        return BaseResponse(code=200, message='查询失败！', data={'error': str(e)})
-    return BaseResponse(code=200, message='查询成功！', data={'result': result})
+        return BaseResponse(code=200, msg='查询失败！', data={'error': str(e)})
+    return BaseResponse(code=200, msg='查询成功！', data={'result': result})
 
 
-def blocked_user(user_id: str) -> BaseResponse:
+def block_user(aq: AdminQueryData) -> BaseResponse:
     """
-    封禁某用户及其邮箱，并以邮件的方式通知该用户
+    封禁某用户及其邮箱，并以邮件的方式通知该用户x
     """
-    with Session(engine) as session:
-        user = session.query(User).filter(User.id == user_id).one()
-        if user is None:
-            return BaseResponse(code=200, message='用户不存在！', data={'error': '用户不存在'})
-        if not user.is_active:
-            return BaseResponse(code=200, message='用户已经被封禁！', data={'error': '用户已经被封禁'})
-        user.is_active = False
-        session.commit()
+    try:
+        with Session(engine) as session:
+            u = session.query(User).filter(User.id == aq.user_id).one()
+            if not u.is_active:
+                return BaseResponse(code=200, msg='用户已经被封禁！', data={'error': '用户已经被封禁'})
+            u.is_active = False
+            session.commit()
+            return BaseResponse(code=200, msg='操作成功', data={'msg': '操作成功'})
+    except Exception as e:
+        return BaseResponse(code=200, msg='操作失败！', data={'error': str(e)})
 
-    
+
+def relive_user(aq: AdminQueryData) -> BaseResponse:
+    """
+    解禁某用户及其邮箱，并以邮件的方式通知该用户x
+    """
+    try:
+        with Session(engine) as session:
+            u = session.query(User).filter(User.id == aq.user_id).one()
+            if u.is_active:
+                return BaseResponse(code=200, msg='用户没有被封禁！', data={'error': '用户没有被封禁'})
+            u.is_active = True
+            session.commit()
+            return BaseResponse(code=200, msg='操作成功', data={'msg': '操作成功'})
+    except Exception as e:
+        return BaseResponse(code=200, msg='操作失败！', data={'error': str(e)})
