@@ -59,4 +59,11 @@ class KBChat(BaseModel):
     conv_id: str
     query: str
     knowledge_base_id: str | None = "-1"
-    prompt_name: str | None = "with_history"
+    prompt_name: str | None = "default"
+
+
+class MixChat(BaseModel):
+    conv_id: str
+    query: str
+    knowledge_base_id: str | None = "-1"
+    prompt_name: str | None = "default"
