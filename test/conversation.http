@@ -9,35 +9,50 @@ Accept: application/json
 }
 
 ###
+# 用户请求大模型对话
 POST http://127.0.0.1:9090/conversation/llm-chat
 Content-Type: application/json
 Accept: application/json
 
 {
-  "conv_id": "fcc228ccfa324b79b957cd043bce23b8",
+  "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
   "query": "那我再问你一下，我叫什么名字？",
   "prompt_name": "with_history"
 }
 
 ###
+# 用户请求知识库对话
 POST http://127.0.0.1:9090/conversation/knowledge-base-chat
 Content-Type: application/json
 Accept: application/json
 
 {
-  "conv_id": "fcc228ccfa324b79b957cd043bce23b8",
+  "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
   "query": "如何理解逆向格义？",
   "prompt_name": "default",
   "knowledge_base_id": "faiss_zhouyi"
 }
 
 ###
+# 用户请求搜索引擎对话
+POST http://127.0.0.1:9090/conversation/search-engine-chat
+Content-Type: application/json
+Accept: application/json
+
+{
+    "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
+    "query": "如何理解逆向格义？",
+    "search_engine_name": "duckduckgo"
+}
+
+###
+# 用户请求混合机制对话
 POST http://127.0.0.1:9090/conversation/mix-chat
 Content-Type: application/json
 Accept: application/json
 
 {
-  "conv_id": "fcc228ccfa324b79b957cd043bce23b8",
-  "query": "谈谈你对周易的理解",
+  "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
+  "query": "能说得再详细一点吗？最好举几个有关逆向格义的例子？",
   "knowledge_base_id": "faiss_zhouyi"
 }

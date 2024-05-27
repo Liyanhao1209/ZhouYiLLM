@@ -62,6 +62,13 @@ class KBChat(BaseModel):
     prompt_name: str | None = "default"
 
 
+class SEChat(BaseModel):
+    conv_id: str
+    query: str
+    search_engine_name: str | None = "duckduckgo"
+    prompt_name: str | None = "default"
+
+
 class MixChat(BaseModel):
     conv_id: str
     query: str

@@ -33,5 +33,4 @@ def create_app() -> FastAPI:
     AdministratorRouter(prefix='admin', tag=['admin management']).mount(app)
     UserRouter(prefix='user', tag=['user management']).mount(app)
 
-
     return app

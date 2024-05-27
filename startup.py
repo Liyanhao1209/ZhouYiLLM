@@ -1,9 +1,10 @@
 import uvicorn
 
 from component.DB_engine import init_db_conn
-from component.email_server import init_email_server
 from config.server_config import *
 from routers import mount_routers
+from component.email_server import init_email_server
+from component.redis_server import redis_server_init
 
 
 def init_web_service():
@@ -14,6 +15,7 @@ def init_web_service():
 def run_api_server():
     init_email_server()
     app = mount_routers.create_app()
+    redis_server_init()
 
     host = WEB_SERVER['host']
     port = WEB_SERVER['port']
