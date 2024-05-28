@@ -1,6 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import List
-
+from starlette.middleware.cors import CORSMiddleware
+from config.server_config import CORS_ARGS
 from fastapi import FastAPI
 
 
@@ -23,6 +24,15 @@ class routers_mount_interface(ABC):
 
 def create_app() -> FastAPI:
     app = FastAPI(title='易学大模型Web应用服务端')
+    # 配置跨域
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=CORS_ARGS["origins"],
+        allow_credentials=CORS_ARGS["credentials"],
+        allow_methods=CORS_ARGS["methods"],
+        allow_headers=CORS_ARGS["headers"],
+    )
+
     from routers.sample_router import SampleRouter
     from routers.conversation_routers import ConversationRouter
     from routers.administrator_routers import AdministratorRouter

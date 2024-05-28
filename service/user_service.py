@@ -36,7 +36,6 @@ async def register_user(register_form: RegisterForm):
         new_user = User(id=conv_id, email=register_form.email, password=password_hash, name="", is_active=True,
                         age=0, sex="0", description="")
 
-
         session.add(new_user)
         session.commit()
         session.refresh(new_user)  # 获取新插入记录的id等信息
@@ -53,7 +52,7 @@ async def login_user(login_form: LoginForm):
     """
        用户登录接口
        LoginForm 包含 email 和 password 字段
-       """
+   """
     session = Session(bind=engine)
     try:
         # 根据邮箱查询用户
