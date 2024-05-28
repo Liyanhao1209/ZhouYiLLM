@@ -1,10 +1,8 @@
 import jwt
 from datetime import datetime, timedelta
 import uuid
+from config.server_config import JWT_ARGS
 
-# 定义秘钥，用于签名，应妥善保管，不能泄露
-SECRET_KEY = "SDU_ZhouyiLLM_ljj_lyh_ldl_jfm"
-ALGORITHM = "HS256"  # 使用HS256算法进行签名
 
 def generate_token(email):
     # 载荷包含声明，这里是用户邮箱
@@ -17,7 +15,6 @@ def generate_token(email):
     }
 
     # 生成JWT
-    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(payload, JWT_ARGS["secret_key"], algorithm=JWT_ARGS["algorithm"])
 
     return token
-
