@@ -6,7 +6,8 @@ WEB_SERVER = {
 }
 
 LANGCHAIN_SERVER = {
-    "host": '121.250.210.123',
+    # "host": '121.250.210.123',
+    "host": 'zy.tessky.top',
     "port": 7861
 }
 
@@ -17,17 +18,20 @@ CHAT_ARGS = {
     "history_len": 256,
     "temperature": 0.7,
     "prompt_name": ['default', 'with_history', 'py'],
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/chat'
+    # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/chat'
+    "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/chat'
 }
 
 KB_CHAT_ARGS = {
     "top_k": 20,
     "score_threshold": 1.01,
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
+    # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
+    "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/knowledge_base_chat'
 }
 
 SE_CHAT_ARGS = {
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/search_engine_chat'
+    # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/search_engine_chat'
+    "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/search_engine_chat'
 }
 
 EMAIL_ARGS = {
@@ -41,5 +45,17 @@ REDIS_ARGS = {
     "host": 'localhost',
     "port": 6379,
     "decode_responses": True
-    
+}
+
+JWT_ARGS = {
+    "secret_key": "SDU_ZhouyiLLM_ljj_lyh_ldl_jfm",
+    "algorithm": "HS256",
+    "expire_time": 30
+}
+
+CORS_ARGS = {
+    "origins": ["*"],
+    "credentials": True,
+    "methods": ["*"],
+    "headers": ["*"]
 }
