@@ -1,23 +1,20 @@
-import string
-import uuid
 import random
+import uuid
+from hashlib import md5
 
-from aioredis import create_redis_pool
-from fastapi import FastAPI, HTTPException
-
+from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
 from component.DB_engine import engine
+from component.email_server import send_email
+from component.redis_server import get_redis_instance
+from component.token_server import generate_token
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
-from hashlib import md5
-from component.token_server import generate_token
-from component.email_server import send_email
 
 
-# @app.post("/register")
 async def register_user(register_form: RegisterForm):
     """用户注册接口"""
     conv_id = uuid.uuid4().hex
@@ -28,10 +25,17 @@ async def register_user(register_form: RegisterForm):
         if existing_user:
             raise HTTPException(status_code=400, detail="用户名已存在")
 
+        redis = get_redis_instance()
+        judge = redis.get(register_form.email)
+        captcha_code_str = judge.decode('utf-8')
+
+        if register_form.captcha != captcha_code_str:
+            raise HTTPException(status_code=400, detail="验证码错误")
         # 对密码进行MD5加密
         password_hash = md5(register_form.password.encode('utf-8')).hexdigest()
         new_user = User(id=conv_id, email=register_form.email, password=password_hash, name="", is_active=True,
                         age=0, sex="0", description="")
+
 
         session.add(new_user)
         session.commit()
@@ -45,7 +49,6 @@ async def register_user(register_form: RegisterForm):
         session.close()
 
 
-# @app.post("/login")
 async def login_user(login_form: LoginForm):
     """
        用户登录接口
@@ -75,7 +78,6 @@ async def login_user(login_form: LoginForm):
         session.close()
 
 
-# @app.post("/update-info")
 async def update_info(info_form: InfoForm):
     """
        用户更新个人信息接口
@@ -107,15 +109,14 @@ async def update_info(info_form: InfoForm):
 async def send_verification_code(email: str):
     """发送验证码到邮箱并存储到Redis"""
     # 生成6位数字验证码
-    code = ""
+    code = ''
     for i in range(6):
         ch = chr(random.randrange(ord('0'), ord('9') + 1))
         code += ch
 
     send_email(email, '注册验证码', code)  # 发送邮件
 
-    redis_pool = await create_redis_pool("redis://127.0.0.1:6379/0")
-    redis_pool.set(email, code, ex=60)
-
+    redis = get_redis_instance()
+    redis.set(email, code, ex=4000)
 
     return JSONResponse(content={"detail": "Verification code has been sent to your email."})

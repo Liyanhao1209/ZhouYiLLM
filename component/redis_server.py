@@ -7,8 +7,8 @@ pool = None
 
 def redis_server_init():
     global redis_instance, pool
-    pool = ConnectionPool(host=server_config.REDIS_ARGS["host"], port=server_config.REDIS_ARGS["port"], )
-    redis_instance = StrictRedis(connection_pool=pool)
+    pool = ConnectionPool(host=server_config.REDIS_ARGS["host"], port=server_config.REDIS_ARGS["port"])
+    redis_instance = StrictRedis(connection_pool=pool, decode_responses=True)
 
 
 def get_redis_instance():
