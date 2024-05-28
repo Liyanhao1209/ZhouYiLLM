@@ -1,18 +1,20 @@
+import random
 import uuid
+from hashlib import md5
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
 
 from component.DB_engine import engine
+from component.email_server import send_email
+from component.redis_server import get_redis_instance
+from component.token_server import generate_token
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
-from message_model.request_model.user_model import RegisterForm
-
-app = FastAPI()
+from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
 
 
-@app.post("/register")
 async def register_user(register_form: RegisterForm):
     """用户注册接口"""
     conv_id = uuid.uuid4().hex
@@ -23,10 +25,18 @@ async def register_user(register_form: RegisterForm):
         if existing_user:
             raise HTTPException(status_code=400, detail="用户名已存在")
 
-        # 创建新用户并添加到数据库
-        new_user = User(id=conv_id, email=register_form.email, password=register_form.password, name="", is_active=True,
+        redis = get_redis_instance()
+        judge = redis.get(register_form.email)
+        captcha_code_str = judge.decode('utf-8')
+
+        if register_form.captcha != captcha_code_str:
+            raise HTTPException(status_code=400, detail="验证码错误")
+        # 对密码进行MD5加密
+        password_hash = md5(register_form.password.encode('utf-8')).hexdigest()
+        new_user = User(id=conv_id, email=register_form.email, password=password_hash, name="", is_active=True,
                         age=0, sex="0", description="")
-        print(new_user)
+
+
         session.add(new_user)
         session.commit()
         session.refresh(new_user)  # 获取新插入记录的id等信息
@@ -39,6 +49,74 @@ async def register_user(register_form: RegisterForm):
         session.close()
 
 
-@app.post("/login")
-async def login_user():
-    pass
+async def login_user(login_form: LoginForm):
+    """
+       用户登录接口
+       LoginForm 包含 email 和 password 字段
+       """
+    session = Session(bind=engine)
+    try:
+        # 根据邮箱查询用户
+        user = session.query(User).filter(User.email == login_form.email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="用户不存在")
+
+        # 对用户输入的密码进行MD5加密
+        input_password_hash = md5(login_form.password.encode('utf-8')).hexdigest()
+
+        # 验证密码是否正确
+        if user.password != input_password_hash:
+            raise HTTPException(status_code=401, detail="密码错误")
+
+        token = generate_token(user.email)
+        # 登录成功，可以在此处生成token或者session等操作
+        return {"code": 200, "message": "登录成功", "data": {"user_id": user.id, "token": token}}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="登录失败，请重试")
+    finally:
+        session.close()
+
+
+async def update_info(info_form: InfoForm):
+    """
+       用户更新个人信息接口
+       info_form 包含 name ,age,sex,description 字段
+       """
+    session = Session(bind=engine)
+    try:
+        # 根据用户ID查询用户（这里假设email是用户ID或能唯一确定用户）
+        user = session.query(User).filter(User.email == info_form.email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="用户不存在")
+
+        # 更新用户信息
+        user.name = info_form.name
+        user.age = info_form.age
+        user.sex = info_form.sex
+        user.description = info_form.description
+
+        session.commit()
+        return {"code": 200, "message": "个人信息更新成功"}
+
+    except Exception as e:
+        session.rollback()  # 发生异常时回滚事务
+        raise HTTPException(status_code=500, detail="个人信息更新失败，请重试")
+    finally:
+        session.close()
+
+
+async def send_verification_code(email: str):
+    """发送验证码到邮箱并存储到Redis"""
+    # 生成6位数字验证码
+    code = ''
+    for i in range(6):
+        ch = chr(random.randrange(ord('0'), ord('9') + 1))
+        code += ch
+
+    send_email(email, '注册验证码', code)  # 发送邮件
+
+    redis = get_redis_instance()
+    redis.set(email, code, ex=4000)
+
+    return JSONResponse(content={"detail": "Verification code has been sent to your email."})

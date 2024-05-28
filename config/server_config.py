@@ -37,4 +37,13 @@ EMAIL_ARGS = {
     "host": 'smtp.163.com',
 }
 
+REDIS_ARGS = {
+    "host": 'localhost',
+    "port": 6379,
+    "decode_responses": True
+}
 
+JWT_ARGS = {
+    "secret_key": "SDU_ZhouyiLLM_ljj_lyh_ldl_jfm",
+    "algorithm": "HS256"
+}
