@@ -76,7 +76,7 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
     #     return BaseResponse(code=200, message="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
 
     # 生成prompt
-    prompt = get_mix_chat_prompt(question=mc.query, history=gen_history(mc.conv_id),
+    prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
                                  answer1=llm_response["data"]["text"], answer2=kb_response["data"]["answer"],
                                  answer3="")
 
