@@ -15,8 +15,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
-  "query": "那我再问你一下，我叫什么名字？",
+  "conv_id": "a63483c810794db88e25abb9cda26389",
+  "query": "你好，你知道我叫什么吗？",
   "prompt_name": "with_history"
 }
 
