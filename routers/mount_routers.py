@@ -44,4 +44,5 @@ def create_app() -> FastAPI:
     UserRouter(prefix='user', tag=['user management']).mount(app)
     KnowledgeBaseRouters(prefix='knowledge_base', tag=['knowledge base management']).mount(app)
 
+
     return app
