@@ -1,10 +1,8 @@
 import datetime
-import json
 import logging
 import uuid
 from typing import List
 
-import requests
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -14,6 +12,7 @@ from config.template_config import get_mix_chat_prompt
 from db.create_db import Conversation, Record
 from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History
 from message_model.response_model.response import BaseResponse
+from util.utils import request
 
 
 async def new_conversation(nc: NewConv) -> BaseResponse:
@@ -32,24 +31,9 @@ async def new_conversation(nc: NewConv) -> BaseResponse:
         logging.info(f"{nc.user_id} 创建了会话 {conv_id} 会话名{nc.conv_name}")
     except Exception as e:
         logging.error(f"{nc.user_id} 创建会话失败 {e}")
-        return BaseResponse(code=200, message="会话创建失败", data={"error": f'{e}'})
+        return BaseResponse(code=500, msg="会话创建失败", data={"error": f'{e}'})
 
-    return BaseResponse(code=200, message="会话创建成功", data={"conv_id": conv_id})
-
-
-async def request(url: str, request_body: dict, prefix: str) -> dict:
-    try:
-        response = requests.post(url=url, headers={"Content-Type": "application/json"}, json=request_body)
-        # print(response.text)
-        text = response.text[response.text.find('{'):response.text.rfind('}') + 1]
-        print(text)
-    except Exception as e:
-        return {"success": False, "error": f'{e}'}
-
-    if response.ok:
-        return {"success": True, "data": json.loads(text)}
-
-    return {"success": False, "error": f'{response.text}'}
+    return BaseResponse(code=200, msg="会话创建成功", data={"conv_id": conv_id})
 
 
 async def request_mix_chat(mc: MixChat) -> BaseResponse:
@@ -63,17 +47,17 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
     # 先请求大模型以自身能力给出解答
     llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id))
     if not llm_response["success"]:
-        return BaseResponse(code=200, message="大模型请求失败", data={"error": f'{llm_response["error"]}'})
+        return BaseResponse(code=500, msg="大模型请求失败", data={"error": f'{llm_response["error"]}'})
 
     # 请求知识库
     kb_response = await request_knowledge_base_chat(KBChat(query=mc.query, conv_id=mc.conv_id))
     if not kb_response["success"]:
-        return BaseResponse(code=200, message="知识库请求失败", data={"error": f'{kb_response["error"]}'})
+        return BaseResponse(code=500, msg="知识库请求失败", data={"error": f'{kb_response["error"]}'})
 
     # 请求搜索引擎
     # search_response = await request_search_engine_chat(SEChat(query=mc.query, conv_id=mc.conv_id))
     # if not search_response["success"]:
-    #     return BaseResponse(code=200, message="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
+    #     return BaseResponse(code=500, msg="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
 
     # 生成prompt
     prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
@@ -83,12 +67,20 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
     # 请求大模型
     response = await request_llm_chat(LLMChat(query=prompt, conv_id=mc.conv_id, prompt_name=mc.prompt_name))
 
-    # 确保问题和回答原子性地入库
-    with record_lock:
-        add_record_to_conversation(mc.conv_id, mc.query, False)
-        add_record_to_conversation(mc.conv_id, response["data"]["text"], True)
+    if response["success"]:
+        # 确保问题和回答原子性地入库
+        with record_lock:
+            add_record_to_conversation(mc.conv_id, mc.query, False)
+            add_record_to_conversation(mc.conv_id, response["data"]["text"], True)
 
-    return BaseResponse(code=200, message="混合对话请求成功", data={"answer": response["data"]["text"]})
+        return BaseResponse(code=200, msg="混合对话请求成功",
+                            data={
+                                "answer": response["data"]["text"],
+                                "docs": kb_response["data"]["docs"]
+                                }
+                            )
+
+    return BaseResponse(code=500, msg="混合对话请求失败", data={"error": f'{response["error"]}'})
 
 
 async def request_llm_chat(ca: LLMChat) -> dict:
@@ -105,7 +97,8 @@ async def request_llm_chat(ca: LLMChat) -> dict:
     request_body = {
         "query": ca.query,
         "conversation_id": ca.conv_id,
-        "history_len": CHAT_ARGS["history_len"],
+        # "history_len": CHAT_ARGS["history_len"],
+        "history_len": -1,
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": ca.prompt_name
