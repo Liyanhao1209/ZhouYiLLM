@@ -1,9 +1,8 @@
 import random
 import uuid
-from datetime import timedelta
 from hashlib import md5
 
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
@@ -11,8 +10,7 @@ from starlette.responses import JSONResponse
 from component.DB_engine import engine
 from component.email_server import send_email
 from component.redis_server import get_redis_instance
-from component.token_server import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, \
-    get_current_active_user
+from component.token_server import generate_token
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
 
@@ -29,8 +27,6 @@ async def register_user(register_form: RegisterForm):
 
         redis = get_redis_instance()
         judge = redis.get(register_form.email)
-        if not judge:
-            raise HTTPException(status_code=400, detail="验证码错误")
         captcha_code_str = judge.decode('utf-8')
 
         if register_form.captcha != captcha_code_str:
@@ -39,6 +35,7 @@ async def register_user(register_form: RegisterForm):
         password_hash = md5(register_form.password.encode('utf-8')).hexdigest()
         new_user = User(id=conv_id, email=register_form.email, password=password_hash, name="", is_active=True,
                         age=0, sex="0", description="")
+
 
         session.add(new_user)
         session.commit()
@@ -71,13 +68,9 @@ async def login_user(login_form: LoginForm):
         if user.password != input_password_hash:
             raise HTTPException(status_code=401, detail="密码错误")
 
-        # 登录成功，在此处生成token
-        # token = generate_token(user.email)
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(
-            data={"sub": user.email}, expires_delta=access_token_expires
-        )
-        return {"code": 200, "message": "登录成功", "data": {"token": access_token, "token_type": "bearer"}}
+        token = generate_token(user.email)
+        # 登录成功，可以在此处生成token或者session等操作
+        return {"code": 200, "message": "登录成功", "data": {"user_id": user.id, "token": token}}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail="登录失败，请重试")
@@ -85,14 +78,14 @@ async def login_user(login_form: LoginForm):
         session.close()
 
 
-async def update_info(info_form: InfoForm, current_user: User = Depends(get_current_active_user)):
+async def update_info(info_form: InfoForm):
     """
        用户更新个人信息接口
        info_form 包含 name ,age,sex,description 字段
        """
     session = Session(bind=engine)
     try:
-        # 根据用户ID查询用户
+        # 根据用户ID查询用户（这里假设email是用户ID或能唯一确定用户）
         user = session.query(User).filter(User.email == info_form.email).first()
         if not user:
             raise HTTPException(status_code=404, detail="用户不存在")
