@@ -1,0 +1,16 @@
+{
+  "sources": ["./source/test_data.xlsx"],
+  "targets": ["./target/response1.json"],
+  "prompt": {
+    "one_out_of_four": "你是一个周易研究专家。我现在有一个关于周易的问题，是一个四选一选择题，请你帮我回答。题目是：{{question}}，选项是：{{options}}，答案是：(请你回答)。请直接回答，不要解释。"
+  },
+  "chat_args": {
+    "url": "http://zy.tessky.top/chat/knowledge_base_chat",
+    "top_k": 20,
+    "score_threshold": 1.00,
+    "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
+    "prompt_name": ["default","text","empty"],
+    "knowledge_base_name": "faiss_zhouyi",
+    "temperature": 0.7
+  }
+}
