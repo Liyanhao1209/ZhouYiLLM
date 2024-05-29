@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Union
 
@@ -9,12 +8,7 @@ from jwt.exceptions import InvalidTokenError
 from sqlalchemy.orm import Session
 from component.DB_engine import engine
 from db.create_db import User
-from message_model.request_model.token_model import TokenData
-
-# 定义秘钥，用于签名，应妥善保管，不能泄露
-SECRET_KEY = "SDU_ZhouyiLLM_ljj_lyh_ldl_jfm"
-ALGORITHM = "HS256"  # 使用HS256算法进行签名
-ACCESS_TOKEN_EXPIRE_MINUTES = 300
+from config.server_config import JWT_ARGS
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -27,7 +21,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, JWT_ARGS["secret_key"], algorithm=JWT_ARGS["algorithm"])
     return encoded_jwt
 
 
@@ -39,7 +33,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, JWT_ARGS["secret_key"], algorithms=[JWT_ARGS["algorithm"]])
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception

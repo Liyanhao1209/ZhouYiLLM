@@ -7,12 +7,11 @@ from fastapi import HTTPException, Depends
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
-
+from config.server_config import JWT_ARGS
 from component.DB_engine import engine
 from component.email_server import send_email
 from component.redis_server import get_redis_instance
-from component.token_server import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, \
-    get_current_active_user
+from component.token_server import create_access_token,get_current_active_user
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
 
@@ -73,7 +72,7 @@ async def login_user(login_form: LoginForm):
 
         # 登录成功，在此处生成token
         # token = generate_token(user.email)
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token_expires = timedelta(minutes=JWT_ARGS["expire_time"])
         access_token = create_access_token(
             data={"sub": user.email}, expires_delta=access_token_expires
         )

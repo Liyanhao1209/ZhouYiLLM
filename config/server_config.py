@@ -50,7 +50,7 @@ REDIS_ARGS = {
 JWT_ARGS = {
     "secret_key": "SDU_ZhouyiLLM_ljj_lyh_ldl_jfm",
     "algorithm": "HS256",
-    "expire_time": 30
+    "expire_time": 30,
 }
 
 CORS_ARGS = {
@@ -59,3 +59,4 @@ CORS_ARGS = {
     "methods": ["*"],
     "headers": ["*"]
 }
+
