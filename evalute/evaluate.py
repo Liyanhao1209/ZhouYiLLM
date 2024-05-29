@@ -18,9 +18,10 @@ def deal_one_out_of_four_xlsx(path: str) -> List[json]:
     for sh in shs:
         ws = wb[sh]
 
-        for row in ws.iter_rows(min_row=1, values_only=True):
+        for row in ws.iter_rows(min_row=1, max_row=170,values_only=True):
             # row 是一个元组，包含了当前行的所有数据
             question = row[0]
+            print(question)
             options = [f'A:{row[1]}', f'B:{row[2]}', f'C:{row[3]}', f'D:{row[4]}']
             answer = row[5]
             question_type = row[6]
@@ -42,6 +43,7 @@ def deal_one_out_of_four_xlsx(path: str) -> List[json]:
 
 def request_kb_chat(question: str, options: List[str]) -> json:
     query = config["prompt"]["one_out_of_four"].format(question=question, options=options)
+    print(query)
     args = config["chat_args"]
 
     request_body = {
