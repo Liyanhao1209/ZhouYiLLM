@@ -1,12 +1,14 @@
 import datetime
+import json
 import uuid
 
+import requests
 from sqlalchemy.orm import Session
 
 import db.create_db
 from component.DB_engine import engine
-from config.knowledge_base_config import KB_ARGS
-from message_model.request_model.knowledge_base_model import KnowledgeBase
+from config.knowledge_base_config import KB_ARGS, DOC_ARGS
+from message_model.request_model.knowledge_base_model import KnowledgeBase, KBFile
 from message_model.response_model.response import BaseResponse
 from util.utils import request
 
@@ -41,3 +43,23 @@ async def create_knowledge_base(kb: KnowledgeBase) -> BaseResponse:
 
     return BaseResponse(code=500, msg="创建知识库失败", data={"error": response["error"]})
 
+
+async def upload_knowledge_files(kbf: KBFile) -> BaseResponse:
+    # 表单参数
+    form_data = {
+        'knowledge_base_name': kbf.knowledge_base_id,
+        'override': DOC_ARGS["override_custom_docs"],
+        'to_vector_store': DOC_ARGS["to_vector_store"],
+        'chunk_size': DOC_ARGS["chunk_size"],
+        'chunk_overlap': DOC_ARGS["overlap_size"],
+        'zh_title_enhance': DOC_ARGS["zh_title_enhance"],
+        'docs': DOC_ARGS["docs"],
+        'not_refresh_vs_cache': DOC_ARGS["not_refresh_vs_cache"]
+    }
+
+    files = {'files': kbf.files}
+
+    response = requests.post(DOC_ARGS['url'], files=files, data=form_data)
+
+    if response.ok:
+        return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json.loads(response.text[response.text.find('{'):response.text.rfind('}') + 1])["failed_files"]})
