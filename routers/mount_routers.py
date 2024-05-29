@@ -1,6 +1,10 @@
 from abc import abstractmethod, ABC
 from typing import List
+
+from fastapi.exceptions import ResponseValidationError
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import JSONResponse
+
 from config.server_config import CORS_ARGS
 from fastapi import FastAPI
 
@@ -24,6 +28,19 @@ class routers_mount_interface(ABC):
 
 def create_app() -> FastAPI:
     app = FastAPI(title='易学大模型Web应用服务端')
+
+    # 定义一个异常处理器来捕获 ResponseValidationError
+    @app.exception_handler(ResponseValidationError)
+    async def validation_exception_handler(request, exc: ResponseValidationError):
+        return JSONResponse(
+            status_code=422,
+            content={
+                "code": 422,
+                "message": "Validation error",
+                "errors": exc.errors()
+            },
+        )
+
     # 配置跨域
     app.add_middleware(
         CORSMiddleware,
@@ -43,6 +60,5 @@ def create_app() -> FastAPI:
     AdministratorRouter(prefix='admin', tag=['admin management']).mount(app)
     UserRouter(prefix='user', tag=['user management']).mount(app)
     KnowledgeBaseRouters(prefix='knowledge_base', tag=['knowledge base management']).mount(app)
-
 
     return app

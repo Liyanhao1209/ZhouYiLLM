@@ -1,14 +1,17 @@
 import datetime
-import json
 import uuid
+from typing import List
 
+import fastapi.exceptions
 import requests
+from fastapi import UploadFile, File, Form
+from requests import RequestException
 from sqlalchemy.orm import Session
 
 import db.create_db
 from component.DB_engine import engine
 from config.knowledge_base_config import KB_ARGS, DOC_ARGS
-from message_model.request_model.knowledge_base_model import KnowledgeBase, KBFile
+from message_model.request_model.knowledge_base_model import KnowledgeBase
 from message_model.response_model.response import BaseResponse
 from util.utils import request, serialize_knowledge_base
 
@@ -44,10 +47,13 @@ async def create_knowledge_base(kb: KnowledgeBase) -> BaseResponse:
     return BaseResponse(code=500, msg="创建知识库失败", data={"error": response["error"]})
 
 
-async def upload_knowledge_files(kbf: KBFile) -> BaseResponse:
+async def upload_knowledge_files(
+        files: List[UploadFile] = File(..., description="上传文件,支持多文件"),
+        kb_id: str = Form(..., description="知识库id")
+) -> BaseResponse:
     # 表单参数
     form_data = {
-        'knowledge_base_name': kbf.knowledge_base_id,
+        'knowledge_base_name': kb_id,
         'override': DOC_ARGS["override_custom_docs"],
         'to_vector_store': DOC_ARGS["to_vector_store"],
         'chunk_size': DOC_ARGS["chunk_size"],
@@ -57,14 +63,25 @@ async def upload_knowledge_files(kbf: KBFile) -> BaseResponse:
         'not_refresh_vs_cache': DOC_ARGS["not_refresh_vs_cache"]
     }
 
-    files = {'files': kbf.files}
+    # files = {'files': ("C:\\Users\\Administrator\\Desktop\\upload.txt", open("C:\\Users\\Administrator\\Desktop\\upload.txt", "rb"))}
 
-    response = requests.post(DOC_ARGS['url'], files=files, data=form_data)
+    files = {'files': (file.filename, file.file) for file in files}
 
-    if response.ok:
-        return BaseResponse(code=200, msg="上传文件成功", data={
-            "failed_files": json.loads(response.text[response.text.find('{'):response.text.rfind('}') + 1])[
-                "failed_files"]})
+    print(files)
+    print(form_data)
+
+    try:
+        response = requests.post(DOC_ARGS['url'], files=files, data=form_data)
+    except Exception as e:
+        return BaseResponse(code=500, msg="上传文件失败", data={"error": f'{e}'})
+
+    try:
+        if response.ok:
+            print(response.text)
+            json_res = response.json()
+            return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json_res["data"]["failed_files"]})
+    except (fastapi.exceptions.ResponseValidationError , RequestException) as e:
+        return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": None, "error": f'{e}'})
 
 
 async def get_user_kbs(user_id: str) -> BaseResponse:
@@ -72,6 +89,7 @@ async def get_user_kbs(user_id: str) -> BaseResponse:
         with Session(engine) as session:
             user_kbs = session.query(db.create_db.KnowledgeBase).filter(
                 db.create_db.KnowledgeBase.user_id == user_id).all()
-        return BaseResponse(code=200, msg="获取知识库成功", data={"user_kbs": [serialize_knowledge_base(kb) for kb in user_kbs]})
+        return BaseResponse(code=200, msg="获取知识库成功",
+                            data={"user_kbs": [serialize_knowledge_base(kb) for kb in user_kbs]})
     except Exception as e:
         return BaseResponse(code=500, msg="获取知识库失败", data={"error": f'{e}'})
