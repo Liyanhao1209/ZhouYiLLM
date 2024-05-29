@@ -62,4 +62,25 @@ async def upload_knowledge_files(kbf: KBFile) -> BaseResponse:
     response = requests.post(DOC_ARGS['url'], files=files, data=form_data)
 
     if response.ok:
-        return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json.loads(response.text[response.text.find('{'):response.text.rfind('}') + 1])["failed_files"]})
+        return BaseResponse(code=200, msg="上传文件成功", data={
+            "failed_files": json.loads(response.text[response.text.find('{'):response.text.rfind('}') + 1])[
+                "failed_files"]})
+
+
+async def get_user_kbs(user_id: str) -> BaseResponse:
+    try:
+        with Session(engine) as session:
+            user_kbs = session.query(db.create_db.KnowledgeBase).filter(
+                db.create_db.KnowledgeBase.user_id == user_id).all()
+        return BaseResponse(code=200, msg="获取知识库成功", data={"user_kbs": [serialize_knowledge_base(kb) for kb in user_kbs]})
+    except Exception as e:
+        return BaseResponse(code=500, msg="获取知识库失败", data={"error": f'{e}'})
+
+
+def serialize_knowledge_base(kb: db.create_db.KnowledgeBase) -> dict:
+    return {
+        'id': kb.id,
+        'name': kb.name,
+        'create_time': kb.create_time.isoformat() if kb.create_time else None,
+        'user_id': kb.user_id,
+    }
