@@ -5,6 +5,14 @@
     "one_out_of_four": "我现在有一个关于周易的问题，是一个四选一选择题，请你帮我回答。题目是：{question}，选项是：{options}，答案是：(请你回答)。请直接回答，不要解释。"
   },
   "test_args": {
+    "origin_llm": {
+      "url": "http://zy.tessky.top/chat/chat",
+      "history_len": -1,
+      "temperature": 0.7,
+      "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
+      "prompt_name": ["default","with_history","py"],
+      "ans_key": "text"
+    },
     "origin_llm_kb": {
         "url": "http://zy.tessky.top/chat/knowledge_base_chat",
         "top_k": 20,
@@ -12,11 +20,18 @@
         "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
         "prompt_name": ["default","text","empty"],
         "knowledge_base_name": "faiss_zhouyi",
-        "temperature": 0.7
+        "temperature": 0.7,
+        "ans_key": "answer"
     },
     "zhipu_ai": {
         "api_key": "you should never know this,my dear friends,use your own api keys",
-        "model": "glm-4"
+        "model": "glm-4",
+        "ans_key": "answer"
     }
+  },
+  "completion": {
+    "origin_llm_kb": true,
+    "zhipu_ai": true,
+    "origin_llm": false
   }
 }

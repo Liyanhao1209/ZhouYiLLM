@@ -11,7 +11,7 @@ class chat_interface(ABC):
         pass
 
     # 针对4选1的xlsx
-    def deal_one_out_of_four_xlsx(self, path: str, config: json) -> List[dict]:
+    def deal_one_out_of_four_xlsx(self, path: str, config: json, ans: str) -> List[dict]:
         wb = load_workbook(filename=path)
 
         shs = wb.sheetnames
@@ -39,7 +39,7 @@ class chat_interface(ABC):
                             "options": options,
                             "correct_answer": answer,
                             "type": question_type,
-                            "kb_answer": response["answer"],
+                            "kb_answer": response[ans],
                         }
                     )
                     index += 1
