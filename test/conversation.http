@@ -58,6 +58,18 @@ Accept: application/json
 }
 
 ###
+# 用户请求在线大模型回答
+POST http://127.0.0.1:9090/conversation/online-llm-chat
+Content-Type: application/json
+Accept: application/json
+
+{
+    "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
+    "query": "历史上有哪些在日常生活中运用逆向格义的例子？"
+}
+
+
+###
 # 用户请求混合机制对话
 POST http://127.0.0.1:9090/conversation/mix-chat
 Content-Type: application/json

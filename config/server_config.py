@@ -34,6 +34,11 @@ SE_CHAT_ARGS = {
     "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/search_engine_chat'
 }
 
+ONLINE_LLM_ARGS = {
+    "zhipu_api_key": "f283bb78734240c773568def32ec3bcb.T2plYvRz2yltocZT",
+    "model": ["glm-4"]
+}
+
 EMAIL_ARGS = {
     # 个人邮箱
     "username": 'sdukeji112233@163.com',
@@ -59,4 +64,3 @@ CORS_ARGS = {
     "methods": ["*"],
     "headers": ["*"]
 }
-

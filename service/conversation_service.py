@@ -7,10 +7,12 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from component.DB_engine import engine, record_lock
-from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS
-from config.template_config import get_mix_chat_prompt
+from component.Online_LLM_client import get_zhipu_client
+from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS, ONLINE_LLM_ARGS
+from config.template_config import get_mix_chat_prompt, get_online_llm_chat_prompt
 from db.create_db import Conversation, Record
-from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History
+from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History, \
+    OnlineLLMChat
 from message_model.response_model.response import BaseResponse
 from util.utils import request, serialize_conversation, serialize_record
 
@@ -55,14 +57,20 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
         return BaseResponse(code=500, msg="知识库请求失败", data={"error": f'{kb_response["error"]}'})
 
     # 请求搜索引擎
+    # (this part has been deprecated by langchain-core 0.2.x while the 0.3.x version in the future will support this function)
     # search_response = await request_search_engine_chat(SEChat(query=mc.query, conv_id=mc.conv_id))
     # if not search_response["success"]:
     #     return BaseResponse(code=500, msg="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
 
+    # 请求在线大模型
+    # online_llm_response = await request_online_llm(OnlineLLMChat(query=mc.query, conv_id=mc.conv_id))
+    # if not online_llm_response.code == 200:
+    #     return BaseResponse(code=500, msg="在线大模型请求失败", data={"error": f'{online_llm_response.msg}'})
+
     # 生成prompt
     prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
                                  answer1=llm_response["data"]["text"], answer2=kb_response["data"]["answer"],
-                                 answer3="")
+                                 answer3="")  # answer3=online_llm_response["data"]["answer"]
 
     # 请求大模型
     response = await request_llm_chat(LLMChat(query=prompt, conv_id=mc.conv_id, prompt_name=mc.prompt_name))
@@ -138,7 +146,7 @@ async def request_knowledge_base_chat(kb: KBChat) -> dict:
     return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
-async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜索引擎一直超时 需要解决
+async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜索引擎一直超时 需要解决  (别解决了，这个功能0.2.x版本不支持)
     """
     生成搜索引擎对话请求
     1. query
@@ -164,6 +172,23 @@ async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜�
     # request_body["history"] = history
 
     return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+
+
+async def request_online_llm(olc: OnlineLLMChat) -> BaseResponse:
+    try:
+        response = get_zhipu_client().chat.completions.create(
+            model=ONLINE_LLM_ARGS['model'][0],
+            messages=[
+                {
+                    "role": "user",
+                    "content": get_online_llm_chat_prompt(olc.query)
+                }
+            ]
+        )
+    except Exception as e:
+        return BaseResponse(code=500, msg="在线大模型请求失败", data={"error": f'{e}'})
+
+    return BaseResponse(code=200, msg="在线大模型请求成功", data={"answer": response.choices[0].message.content})
 
 
 async def get_user_conversations(user_id: str) -> BaseResponse:
