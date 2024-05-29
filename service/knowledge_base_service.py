@@ -34,7 +34,7 @@ async def create_knowledge_base(kb: KnowledgeBase) -> BaseResponse:
         "embed_model": KB_ARGS["embed_model"],
     }
 
-    response = await request(url=KB_ARGS['url'],request_body=request_body,prefix="")
+    response = await request(url=KB_ARGS['url'], request_body=request_body, prefix="")
 
     if response["success"]:
         return BaseResponse(code=200, msg="创建知识库成功", data={"kb_id": kb_id})
