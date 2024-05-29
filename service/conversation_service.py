@@ -12,7 +12,7 @@ from config.template_config import get_mix_chat_prompt
 from db.create_db import Conversation, Record
 from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History
 from message_model.response_model.response import BaseResponse
-from util.utils import request
+from util.utils import request, serialize_conversation, serialize_record
 
 
 async def new_conversation(nc: NewConv) -> BaseResponse:
@@ -77,7 +77,7 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
                             data={
                                 "answer": response["data"]["text"],
                                 "docs": kb_response["data"]["docs"]
-                                }
+                            }
                             )
 
     return BaseResponse(code=500, msg="混合对话请求失败", data={"error": f'{response["error"]}'})
@@ -166,6 +166,25 @@ async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜�
     return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
+async def get_user_conversations(user_id: str) -> BaseResponse:
+    try:
+        with Session(engine) as session:
+            conversations = session.query(Conversation).filter(Conversation.user_id == user_id).all()
+        return BaseResponse(code=200, msg='获取会话列表成功',
+                            data={"conversations": [serialize_conversation(c) for c in conversations]})
+    except Exception as e:
+        return BaseResponse(code=500, msg='获取会话列表失败', data={'error': f'{e}'})
+
+
+async def get_conversation_record(conv_id: str) -> BaseResponse:
+    try:
+        records = await get_conversation_history(conv_id)
+        return BaseResponse(code=200, msg=f'获取会话{conv_id}记录成功',
+                            data={'records': [serialize_record(r) for r in records]})
+    except Exception as e:
+        return BaseResponse(code=500, msg=f'获取会话{conv_id}记录失败', data={'error': f'{e}'})
+
+
 async def gen_history(conv_id: str) -> List[History]:
     records = await get_conversation_history(conv_id)
     history = []
@@ -205,7 +224,7 @@ def add_record_to_conversation(conv_id: str, text: str, is_ai: bool) -> None:
 # 查询某个会话的所有聊天记录
 async def get_conversation_history(conv_id: str) -> List:
     with Session(engine) as session:
-        result = session.query(Record).filter(Record.conv_id == conv_id).all()
+        result = session.query(Record).filter(Record.conv_id == conv_id).order_by(Record.id).all()
         return result
 
 

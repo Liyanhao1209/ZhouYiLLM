@@ -10,7 +10,7 @@ from component.DB_engine import engine
 from config.knowledge_base_config import KB_ARGS, DOC_ARGS
 from message_model.request_model.knowledge_base_model import KnowledgeBase, KBFile
 from message_model.response_model.response import BaseResponse
-from util.utils import request
+from util.utils import request, serialize_knowledge_base
 
 
 async def create_knowledge_base(kb: KnowledgeBase) -> BaseResponse:
@@ -75,12 +75,3 @@ async def get_user_kbs(user_id: str) -> BaseResponse:
         return BaseResponse(code=200, msg="获取知识库成功", data={"user_kbs": [serialize_knowledge_base(kb) for kb in user_kbs]})
     except Exception as e:
         return BaseResponse(code=500, msg="获取知识库失败", data={"error": f'{e}'})
-
-
-def serialize_knowledge_base(kb: db.create_db.KnowledgeBase) -> dict:
-    return {
-        'id': kb.id,
-        'name': kb.name,
-        'create_time': kb.create_time.isoformat() if kb.create_time else None,
-        'user_id': kb.user_id,
-    }
