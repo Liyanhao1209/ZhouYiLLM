@@ -10,6 +10,16 @@ SDU 2024 项目实训 易学大模型仓库
     2. self-instruct模板回答
     3. self-qa问答对生成
     4. self-qa prompt模板优化
+    5. upload_docs批量上传文件到知识库
+    6. evaluate模块基线测试环境评测大模型性能
 3. webServer web应用服务端：
+    1. component: 类似于Java Spring Bean，容器化机制
+    2. config：各类配置文件
+    3. db：sqlite建库与数据库表所在地
+    4. message_model：消息模型（请求-响应等）
+    5. routers：层级路由模型
+    6. service：web服务
+    7. test：接口测试模块
+    8. util：实用工具类
 
 
