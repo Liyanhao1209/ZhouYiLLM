@@ -5,5 +5,5 @@
     "origin_llm_kb",
     "zhipu_ai"
   ],
-  "target": "./output.json"
+  "target": "./target/output.json"
 }

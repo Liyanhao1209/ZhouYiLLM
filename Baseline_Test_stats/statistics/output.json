@@ -1,0 +1,20 @@
+[
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 8,
+        "Solve_rate": "0.0471",
+        "llm_name": "origin_llm"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 57,
+        "Solve_rate": "0.3353",
+        "llm_name": "origin_llm_kb"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 12,
+        "Solve_rate": "0.0706",
+        "llm_name": "zhipu_ai"
+    }
+]
