@@ -166,7 +166,7 @@ export default {
 .center {
 	width: 1920px;
 	height: 1080px;
-	background-image: url('https://gd-hbimg.huaban.com/9165dc3c0f8279ae5402d1f47212847bff68b49f3cb547-QEli8R');
+	background-image: url('https://pic.vjshi.com/2022-06-07/c5bf5fd3afe94abcbaa8b034b886350e/00001.jpg?x-oss-process=style/watermark');
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	display: flex;
