@@ -8,6 +8,7 @@ WEB_SERVER = {
 LANGCHAIN_SERVER = {
     # "host": '121.250.210.123',
     "host": 'zy.tessky.top',
+    "release": 'release.tessky.top',
     "port": 7861
 }
 

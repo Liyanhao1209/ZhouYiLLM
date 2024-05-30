@@ -1,0 +1,8 @@
+# 高权限人员切换大模型
+POST http://127.0.0.1:9090/option/change-llm-model
+Content-Type: application/json
+Accept: application/json
+
+{
+    "model_name": "chatglm3-6b"
+}
