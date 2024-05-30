@@ -1,0 +1,9 @@
+{
+  "base_loc": "./files/",
+  "source": [
+    "origin_llm",
+    "origin_llm_kb",
+    "zhipu_ai"
+  ],
+  "target": "./output.json"
+}
