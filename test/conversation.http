@@ -56,3 +56,6 @@ Accept: application/json
   "query": "历史上有哪些在日常生活中运用逆向格义的例子？",
   "knowledge_base_id": "faiss_zhouyi"
 }
+
+###
+GET http://zy.tessky.top/knowledge_base/list_knowledge_bases
