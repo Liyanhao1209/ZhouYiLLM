@@ -1,4 +1,5 @@
 import json
+import re
 
 """
 现在的需求是，统计这个json数组一共有多少json对象，统计这些json对象中，correct_answer和kb_answer能够对应的有多少？
@@ -17,21 +18,28 @@ llm_name
 """
 
 
+def contains_letters(text):
+    return bool(re.search(r'[a-dA-D]', text))
+
+
 def count_up(jsons, llm_name):
     total_num = len(jsons)
     solved_num = 0
+    unsolved = []
     for j in jsons:
         correct_answer = str(j['correct_answer'])
         kb_answer = str(j['kb_answer'])
-        if kb_answer.find(correct_answer) > 0:
+        if kb_answer.find(correct_answer) != -1 or kb_answer.find(correct_answer.lower()) != -1:
             solved_num += 1
+        if not contains_letters(kb_answer):
+            unsolved.append(j)
     rate = format(solved_num / total_num, '.4f')
     return {
         "Tot_problem_nums": total_num,
         "Solved_problem_nums": solved_num,
         "Solve_rate": rate,
         "llm_name": llm_name
-    }
+    }, unsolved
 
 
 if __name__ == '__main__':
@@ -41,13 +49,22 @@ if __name__ == '__main__':
     files = config['source']
     base = config['base_loc']
     target = config['target']
+    unresolved_loc = config['unresolved_loc']
+
     res = []
     for name in files:
         loc = base + name + '.json'
         with open(loc, 'r', encoding='utf-8') as cf:
             jsonlist = json.load(cf)
-        res.append(count_up(jsonlist, name))
+
+        ok, unresolved_list = count_up(jsonlist, name)
+        res.append(ok)
+        # 未处理的保存
+        loc = unresolved_loc + name + '_unresolved.json'
+        with open(loc, 'w', encoding='utf-8') as uf:
+            json.dump(unresolved_list, uf, ensure_ascii=False, indent=4)
+            uf.close()
+        cf.close()
     with open(target, 'w', encoding='utf-8') as f:
         json.dump(res, f, ensure_ascii=False, indent=4)
-    print('done')
-
+    print(contains_letters('done'))
