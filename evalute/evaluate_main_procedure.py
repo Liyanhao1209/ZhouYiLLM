@@ -1,5 +1,6 @@
 import json
 import os
+from time import sleep
 
 import requests
 
@@ -32,6 +33,9 @@ def init_models(configuration: json) -> dict[str, chat_interface]:
     # ft-30 微调30轮的
     ft_30 = zhouyi_ft(2)
     m['yizhou-ft-30'] = ft_30
+    # ft-30 微调3轮的
+    ft_3 = zhouyi_ft(3)
+    m['yizhou-ft-3'] = ft_3
     # ft-100-kb 微调100轮带知识库
     ft_100_kb = zhouyi_ft(0)
     m['yizhou-ft-100-kb'] = ft_100_kb
@@ -41,6 +45,9 @@ def init_models(configuration: json) -> dict[str, chat_interface]:
     # ft-30-kb 微调30轮带知识库
     ft_30_kb = zhouyi_ft(2)
     m['yizhou-ft-30-kb'] = ft_30_kb
+    # ft-3-kb 微调3轮带知识库
+    ft_3_kb = zhouyi_ft(3)
+    m['yizhou-ft-3-kb'] = ft_3_kb
     return m
 
 
@@ -51,8 +58,9 @@ def release_models(model_name: str, configuration: json) -> bool:
             "keep_origin": False
         }
         response = requests.post(url=configuration["test_args"]["release_url"], json=data)
+        sleep(30)  # 异步响应
         print(f'切换大模型至{model_name}的响应为:{response.text}')
-        if response.json()["detail"] == "Not Found":
+        if "msg" not in response.json():
             return False
         return True
     except Exception as e:

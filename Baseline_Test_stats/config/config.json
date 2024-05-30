@@ -3,8 +3,12 @@
   "source": [
     "origin_llm",
     "origin_llm_kb",
-    "zhipu_ai"
+    "zhipu_ai",
+    "yizhou-ft-3-kb",
+    "yizhou-ft-30-kb",
+    "yizhou-ft-50-kb",
+    "yizhou-ft-100-kb"
   ],
-  "target": "./statistics/target/output.json",
+  "target": "./target/output.json",
   "unresolved_loc": "./unresolved/"
 }
