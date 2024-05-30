@@ -1,5 +1,4 @@
 function checkPass(value) {
-    
     var count = 0
     //数字
     if (/\d/.test(value)) count++;

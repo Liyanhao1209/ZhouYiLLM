@@ -7,31 +7,17 @@ const request = axios.create({
     },
 })
 
-function login(data){
-    request.post('/user/login', data).then(res=>{
-        return res
-    }).catch(e =>{
-        console.log(e);
-    })
+function login(data) {
+    return request.post('/user/login', data)
+}
+function register(data) {
+    return request.post('/user/register', data)
+}
+function sendVerifyCode(data) {
+    return request.post('user/send_verification_code/' + data)
 }
 
-function register(data){
-    request.post('/user/register', data).then(res=>{
-        return res
-    }).catch(e =>{
-        console.log(e);
-    })
-}
-
-function sendVerifyCode(data){
-    request.post('user/send_verification_code/'+data).then(res=>{
-        return res;
-    }).catch(e =>{
-        console.log(e);
-    })
-}
-
-export{
+export {
     login,
     sendVerifyCode,
     register

@@ -109,10 +109,10 @@ export default {
 			}
 		}
 		return {
-			code_button_disable: false,
 			overlaylong: 'overlaylong',
 			overlaytitle: 'overlaytitle',
 			disfiex: 1,
+			time: 0,
 			buttonText: '发送验证码',
 			loginForm: {
 				email: '',
@@ -152,6 +152,11 @@ export default {
 				]
 			},
 
+		}
+	},
+	computed: {
+		code_button_disable() {
+			return this.time > 0
 		}
 	},
 
@@ -196,9 +201,18 @@ export default {
 						message: '发送成功',
 						type: 'success'
 					})
-					this.code_button_disable = true
-					this.buttonText = '已发送'
+					this.time = 60
+					this.buttonText = '已发送' + this.time + '秒后再试'
+					setInterval(() => {
+						this.time--;
+						if (this.time > 0) this.buttonText = '已发送' + this.time + '秒后再试'
+						else{
+							this.buttonText = '发送验证码'
+						}
+
+					}, 1000);
 				})
+
 			} else {
 				ElMessage({
 					message: '请输入正确的邮箱',
