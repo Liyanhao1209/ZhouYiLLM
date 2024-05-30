@@ -69,6 +69,11 @@ class SEChat(BaseModel):
     prompt_name: str | None = "default"
 
 
+class OnlineLLMChat(BaseModel):
+    conv_id: str
+    query: str
+
+
 class MixChat(BaseModel):
     conv_id: str
     query: str

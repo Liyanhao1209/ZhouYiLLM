@@ -1,19 +1,20 @@
 import datetime
-import json
 import logging
 import uuid
 from typing import List
 
-import requests
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from component.DB_engine import engine, record_lock
-from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS
-from config.template_config import get_mix_chat_prompt
+from component.Online_LLM_client import get_zhipu_client
+from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS, ONLINE_LLM_ARGS
+from config.template_config import get_mix_chat_prompt, get_online_llm_chat_prompt
 from db.create_db import Conversation, Record
-from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History
+from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History, \
+    OnlineLLMChat
 from message_model.response_model.response import BaseResponse
+from util.utils import request, serialize_conversation, serialize_record
 
 
 async def new_conversation(nc: NewConv) -> BaseResponse:
@@ -32,24 +33,9 @@ async def new_conversation(nc: NewConv) -> BaseResponse:
         logging.info(f"{nc.user_id} 创建了会话 {conv_id} 会话名{nc.conv_name}")
     except Exception as e:
         logging.error(f"{nc.user_id} 创建会话失败 {e}")
-        return BaseResponse(code=200, message="会话创建失败", data={"error": f'{e}'})
+        return BaseResponse(code=500, msg="会话创建失败", data={"error": f'{e}'})
 
-    return BaseResponse(code=200, message="会话创建成功", data={"conv_id": conv_id})
-
-
-async def request(url: str, request_body: dict, prefix: str) -> dict:
-    try:
-        response = requests.post(url=url, headers={"Content-Type": "application/json"}, json=request_body)
-        # print(response.text)
-        text = response.text[response.text.find('{'):response.text.rfind('}') + 1]
-        print(text)
-    except Exception as e:
-        return {"success": False, "error": f'{e}'}
-
-    if response.ok:
-        return {"success": True, "data": json.loads(text)}
-
-    return {"success": False, "error": f'{response.text}'}
+    return BaseResponse(code=200, msg="会话创建成功", data={"conv_id": conv_id})
 
 
 async def request_mix_chat(mc: MixChat) -> BaseResponse:
@@ -63,32 +49,46 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
     # 先请求大模型以自身能力给出解答
     llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id))
     if not llm_response["success"]:
-        return BaseResponse(code=200, message="大模型请求失败", data={"error": f'{llm_response["error"]}'})
+        return BaseResponse(code=500, msg="大模型请求失败", data={"error": f'{llm_response["error"]}'})
 
     # 请求知识库
     kb_response = await request_knowledge_base_chat(KBChat(query=mc.query, conv_id=mc.conv_id))
     if not kb_response["success"]:
-        return BaseResponse(code=200, message="知识库请求失败", data={"error": f'{kb_response["error"]}'})
+        return BaseResponse(code=500, msg="知识库请求失败", data={"error": f'{kb_response["error"]}'})
 
     # 请求搜索引擎
+    # (this part has been deprecated by langchain-core 0.2.x while the 0.3.x version in the future will support this function)
     # search_response = await request_search_engine_chat(SEChat(query=mc.query, conv_id=mc.conv_id))
     # if not search_response["success"]:
-    #     return BaseResponse(code=200, message="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
+    #     return BaseResponse(code=500, msg="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
+
+    # 请求在线大模型
+    # online_llm_response = await request_online_llm(OnlineLLMChat(query=mc.query, conv_id=mc.conv_id))
+    # if not online_llm_response.code == 200:
+    #     return BaseResponse(code=500, msg="在线大模型请求失败", data={"error": f'{online_llm_response.msg}'})
 
     # 生成prompt
     prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
                                  answer1=llm_response["data"]["text"], answer2=kb_response["data"]["answer"],
-                                 answer3="")
+                                 answer3="")  # answer3=online_llm_response["data"]["answer"]
 
     # 请求大模型
     response = await request_llm_chat(LLMChat(query=prompt, conv_id=mc.conv_id, prompt_name=mc.prompt_name))
 
-    # 确保问题和回答原子性地入库
-    with record_lock:
-        add_record_to_conversation(mc.conv_id, mc.query, False)
-        add_record_to_conversation(mc.conv_id, response["data"]["text"], True)
+    if response["success"]:
+        # 确保问题和回答原子性地入库
+        with record_lock:
+            add_record_to_conversation(mc.conv_id, mc.query, False)
+            add_record_to_conversation(mc.conv_id, response["data"]["text"], True)
 
-    return BaseResponse(code=200, message="混合对话请求成功", data={"answer": response["data"]["text"]})
+        return BaseResponse(code=200, msg="混合对话请求成功",
+                            data={
+                                "answer": response["data"]["text"],
+                                "docs": kb_response["data"]["docs"]
+                            }
+                            )
+
+    return BaseResponse(code=500, msg="混合对话请求失败", data={"error": f'{response["error"]}'})
 
 
 async def request_llm_chat(ca: LLMChat) -> dict:
@@ -105,7 +105,8 @@ async def request_llm_chat(ca: LLMChat) -> dict:
     request_body = {
         "query": ca.query,
         "conversation_id": ca.conv_id,
-        "history_len": CHAT_ARGS["history_len"],
+        # "history_len": CHAT_ARGS["history_len"],
+        "history_len": -1,
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": ca.prompt_name
@@ -145,7 +146,7 @@ async def request_knowledge_base_chat(kb: KBChat) -> dict:
     return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
-async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜索引擎一直超时 需要解决
+async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜索引擎一直超时 需要解决  (别解决了，这个功能0.2.x版本不支持)
     """
     生成搜索引擎对话请求
     1. query
@@ -171,6 +172,42 @@ async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜�
     # request_body["history"] = history
 
     return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+
+
+async def request_online_llm(olc: OnlineLLMChat) -> BaseResponse:
+    try:
+        response = get_zhipu_client().chat.completions.create(
+            model=ONLINE_LLM_ARGS['model'][0],
+            messages=[
+                {
+                    "role": "user",
+                    "content": get_online_llm_chat_prompt(olc.query)
+                }
+            ]
+        )
+    except Exception as e:
+        return BaseResponse(code=500, msg="在线大模型请求失败", data={"error": f'{e}'})
+
+    return BaseResponse(code=200, msg="在线大模型请求成功", data={"answer": response.choices[0].message.content})
+
+
+async def get_user_conversations(user_id: str) -> BaseResponse:
+    try:
+        with Session(engine) as session:
+            conversations = session.query(Conversation).filter(Conversation.user_id == user_id).all()
+        return BaseResponse(code=200, msg='获取会话列表成功',
+                            data={"conversations": [serialize_conversation(c) for c in conversations]})
+    except Exception as e:
+        return BaseResponse(code=500, msg='获取会话列表失败', data={'error': f'{e}'})
+
+
+async def get_conversation_record(conv_id: str) -> BaseResponse:
+    try:
+        records = await get_conversation_history(conv_id)
+        return BaseResponse(code=200, msg=f'获取会话{conv_id}记录成功',
+                            data={'records': [serialize_record(r) for r in records]})
+    except Exception as e:
+        return BaseResponse(code=500, msg=f'获取会话{conv_id}记录失败', data={'error': f'{e}'})
 
 
 async def gen_history(conv_id: str) -> List[History]:
@@ -212,7 +249,7 @@ def add_record_to_conversation(conv_id: str, text: str, is_ai: bool) -> None:
 # 查询某个会话的所有聊天记录
 async def get_conversation_history(conv_id: str) -> List:
     with Session(engine) as session:
-        result = session.query(Record).filter(Record.conv_id == conv_id).all()
+        result = session.query(Record).filter(Record.conv_id == conv_id).order_by(Record.id).all()
         return result
 
 
