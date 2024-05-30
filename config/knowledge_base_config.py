@@ -16,3 +16,7 @@ DOC_ARGS = {
     "docs": None,
     'url': f'http://{LANGCHAIN_SERVER["host"]}/knowledge_base/upload_docs'
 }
+
+FILE_ARGS = {
+    'url': f'http://{LANGCHAIN_SERVER["host"]}/knowledge_base/list_files'
+}

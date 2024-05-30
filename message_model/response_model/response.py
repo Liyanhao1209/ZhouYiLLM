@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 
 import pydantic
 from pydantic import BaseModel
@@ -14,5 +14,18 @@ class BaseResponse(BaseModel):
             "example": {
                 "code": 200,
                 "msg": "success",
+            }
+        }
+
+
+class ListResponse(BaseResponse):
+    data: List[str] = pydantic.Field(..., description="List of names")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "code": 200,
+                "msg": "success",
+                "data": ["doc1.docx", "doc2.pdf", "doc3.txt"],
             }
         }

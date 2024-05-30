@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import List
+from typing import List, Union
 
 import fastapi.exceptions
 import requests
@@ -10,9 +10,9 @@ from sqlalchemy.orm import Session
 
 import db.create_db
 from component.DB_engine import engine
-from config.knowledge_base_config import KB_ARGS, DOC_ARGS
+from config.knowledge_base_config import KB_ARGS, DOC_ARGS, FILE_ARGS
 from message_model.request_model.knowledge_base_model import KnowledgeBase
-from message_model.response_model.response import BaseResponse
+from message_model.response_model.response import BaseResponse, ListResponse
 from util.utils import request, serialize_knowledge_base
 
 
@@ -67,8 +67,8 @@ async def upload_knowledge_files(
 
     files = {'files': (file.filename, file.file) for file in files}
 
-    print(files)
-    print(form_data)
+    # print(files)
+    # print(form_data)
 
     try:
         response = requests.post(DOC_ARGS['url'], files=files, data=form_data)
@@ -80,7 +80,7 @@ async def upload_knowledge_files(
             print(response.text)
             json_res = response.json()
             return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json_res["data"]["failed_files"]})
-    except (fastapi.exceptions.ResponseValidationError , RequestException) as e:
+    except (fastapi.exceptions.ResponseValidationError, RequestException) as e:
         return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": None, "error": f'{e}'})
 
 
@@ -93,3 +93,13 @@ async def get_user_kbs(user_id: str) -> BaseResponse:
                             data={"user_kbs": [serialize_knowledge_base(kb) for kb in user_kbs]})
     except Exception as e:
         return BaseResponse(code=500, msg="获取知识库失败", data={"error": f'{e}'})
+
+
+async def get_kb_files(kb_id: str) -> Union[BaseResponse, ListResponse]:
+    try:
+        response = requests.get(FILE_ARGS['url'], params={"knowledge_base_name": kb_id})
+        # print(response.json())
+        if response.ok:
+            return ListResponse(data=response.json()["data"])
+    except Exception as e:
+        return BaseResponse(code=500, msg="获取知识库文件失败", data={"error": f'{e}'})

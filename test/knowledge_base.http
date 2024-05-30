@@ -14,3 +14,9 @@ Accept: application/json
 GET http://127.0.0.1:9090/knowledge_base/get-knowledge-base?user_id=d078b124cf27413bbb99f6484782e98c
 Content-Type: application/json
 Accept: application/json
+
+###
+# 获取知识库文件
+GET http://127.0.0.1:9090/knowledge_base/get-kb-files?kb_id=5d03ee4424704be0be845688d06cad3c
+Content-Type: application/json
+Accept: application/json
