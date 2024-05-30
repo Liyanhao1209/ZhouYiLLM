@@ -6,10 +6,10 @@
 				<div class="overlaylong-Signin" v-if="disfiex == 0">
 					<h2 class="overlaylongH2">登录</h2>
 					<el-form :model="loginForm" :rules="loginRules" ref="loginForm">
-						<el-form-item prop="email">
+						<el-form-item prop="email" required>
 							<input type="text" placeholder="email" v-model="loginForm.email">
 						</el-form-item>
-						<el-form-item prop="password">
+						<el-form-item prop="password" required>
 							<input type="password" placeholder="password" v-model="loginForm.password">
 						</el-form-item>
 					</el-form>
@@ -18,21 +18,27 @@
 				</div>
 				<div class="overlaylong-Signup" v-if="disfiex == 1">
 					<h2 class="overlaylongH2">注册</h2>
-					<el-form :model="registerForm" :rules="registerRules" ref="registerForm">
-						<el-form-item prop="email">
-							<input type="text" placeholder="邮箱" v-model="registerForm.email">
+					<el-form :model="registerForm" :rules="registerRules" ref="registerForm" label-width="80px"
+						size="large" style="width: 350px;">
+						<el-form-item prop="email" required label="邮箱">
+							<el-input type="text" placeholder="email" v-model="registerForm.email" />
 						</el-form-item>
 						<el-form-item>
-							<el-button @click="getVerifyCode(); buttonText = '已发送'">{{ buttonText }}</el-button>
+							<el-button @click="getVerifyCode()" ref="code_button" :disabled="code_button_disable">{{
+								buttonText
+							}}</el-button>
 						</el-form-item>
-						<el-form-item prop="captcha">
-							<input type="text" placeholder="验证码" v-model="registerForm.captcha">
+						<el-form-item prop="captcha" required label="验证码">
+							<el-input type="text" placeholder="验证码" v-model="registerForm.captcha" />
 						</el-form-item>
-						<el-form-item prop="password">
-							<input type="password" placeholder="密码" v-model="registerForm.password">
+						<el-form-item prop="password" required label="密码">
+							<el-tooltip placement="top-start">
+								<template #content>密码必须包含数字、小写字母、大写字母、<br />下划线'_'中的至少两种<br />密码长度不少于8位不多于16位</template>
+								<el-input type="password" placeholder="密码" v-model="registerForm.password" />
+							</el-tooltip>
 						</el-form-item>
-						<el-form-item prop="pass2">
-							<input type="password" placeholder="确认密码" v-model="registerForm.pass2">
+						<el-form-item prop="pass2" required label="确认密码">
+							<el-input type="password" placeholder="确认密码" v-model="registerForm.pass2" />
 						</el-form-item>
 					</el-form>
 					<el-button class="inupbutton" @click="register()">注册</el-button>
@@ -62,10 +68,12 @@
 
 <script>
 import { login, sendVerifyCode, register } from '@/service/authService.js'
+import { checkPass } from '@/utils/register_utils.js'
+import { ElMessage } from 'element-plus'
 export default {
 	name: "login",
 	data() {
-
+		//表单验证
 		var validPass = (rule, value, callback) => {
 			if (value === '') {
 				callback(new Error('请再次输入密码'));
@@ -75,7 +83,33 @@ export default {
 				callback();
 			}
 		}
+		//验证密码规则
+		var valid_regis_password = (rule, value, callback) => {
+			if (value.length < 8 || value.length > 16) {
+				callback(new Error('密码长度在8~16位之间'))
+			}
+			if (checkPass(value)) {
+				callback()
+			} else {
+				callback(new Error('密码必须包含数字、小写字母、大写字母、下划线\'_\'中的至少两种'))
+			}
+		}
+		var valid_email = (rule, value, callback) => {
+			if (/\w*@.*/.test(value)) {
+				callback()
+			} else {
+				callback(new Error('请输入正确的邮箱'))
+			}
+		}
+		var valid_code = (rule, value, callback) => {
+			if (/\d{6}/.test(value)) {
+				callback()
+			} else {
+				callback(new Error('请输入6位数字验证码'))
+			}
+		}
 		return {
+			code_button_disable: false,
 			overlaylong: 'overlaylong',
 			overlaytitle: 'overlaytitle',
 			disfiex: 1,
@@ -93,7 +127,8 @@ export default {
 			},
 			loginRules: {
 				email: [
-					{ required: true, message: '请输入邮箱', trigger: 'blur' }
+					{ required: true, message: '请输入邮箱', trigger: 'blur' },
+					{ validator: valid_email, trigger: 'blur' }
 				],
 				password: [
 					{ required: true, message: '请输入密码', trigger: 'blur' }
@@ -101,14 +136,16 @@ export default {
 			},
 			registerRules: {
 				email: [
-					{ required: true, message: '请输入邮箱', trigger: 'blur' }
+					{ required: true, message: '请输入邮箱', trigger: 'blur' },
+					{ validator: valid_email, trigger: 'blur' }
 				],
 				password: [
-					{ required: true, message: '请输入密码', trigger: 'blur' }
+					{ required: true, message: '请输入密码', trigger: 'blur' },
+					{ validator: valid_regis_password, trigger: 'blur' }
 				],
 				captcha: [
 					{ required: true, message: '请输入验证', trigger: 'blur' },
-					{ min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' }
+					{ validator: valid_code, trigger: 'blur' }
 				],
 				pass2: [
 					{ validator: validPass, trigger: 'blur' }
@@ -126,7 +163,7 @@ export default {
 					login(this.loginForm).then(res => {
 						console.log(res)
 					}).cache(e => {
-						// console.log(e)
+						console.log(e)
 					})
 				} else {
 					return false;
@@ -136,8 +173,6 @@ export default {
 		register() {
 			this.$refs["registerForm"].validate(valid => {
 				if (valid) {
-					console.log('valid', valid);
-
 					register(this.registerForm).then(res => {
 						ElMessage({
 							message: '注册成功',
@@ -145,18 +180,31 @@ export default {
 						})
 					})
 				} else {
+					ElMessage({
+						message: '请检查输入的信息',
+						type: 'error'
+					})
 					return false;
 				}
 			})
 
 		},
 		getVerifyCode() {
-			sendVerifyCode(this.registerForm.email).then(res => {
-				ElMessage({
-					message: '发送成功',
-					type: 'success'
+			if (/\w*@.*/.test(this.registerForm.email)) {
+				sendVerifyCode(this.registerForm.email).then(res => {
+					ElMessage({
+						message: '发送成功',
+						type: 'success'
+					})
+					this.code_button_disable = true
+					this.buttonText = '已发送'
 				})
-			})
+			} else {
+				ElMessage({
+					message: '请输入正确的邮箱',
+					type: 'error'
+				})
+			}
 		}
 	}
 }
@@ -191,7 +239,7 @@ h1 {
 	min-height: 480px;
 	margin-top: 20px;
 	display: flex;
-	background: -webkit-linear-gradient(right, #4284db, #29eac4);
+	background: -webkit-linear-gradient(right, #58596d, #424732);
 }
 
 .overlaylong {
@@ -337,7 +385,7 @@ h3 {
 }
 
 .inupbutton {
-	background-color: #29eac4;
+	background-color: #2a4a4e;
 	border: none;
 	width: 180px;
 	height: 40px;
