@@ -5,13 +5,27 @@
     "one_out_of_four": "我现在有一个关于周易的问题，是一个四选一选择题，请你帮我回答。题目是：{question}，选项是：{options}，答案是：(请你回答)。请直接回答，不要解释。"
   },
   "test_args": {
+    "release_url": "http://zy.tessky.top/release",
+    "release_name": {
+      "yizhou-ft-100": "yizhou-ft-100",
+      "yizhou-ft-50": "yizhou-ft-50",
+      "yizhou-ft-30": "yizhou-ft-30",
+      "yizhou-ft-100-kb": "yizhou-ft-100-kb",
+      "yizhou-ft-50-kb": "yizhou-ft-50-kb",
+      "yizhou-ft-30-kb": "yizhou-ft-30-kb",
+      "origin_llm": "chatglm3-6b",
+      "origin_llm_kb": "chatglm3-6b"
+    },
+    "ans_key": {
+      "text": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30", "origin_llm"],
+      "answer": ["zhipu_ai","origin_llm_kb","yizhou-ft-100-kb","yizhou-ft-50-kb","yizhou-ft-30-kb"]
+    },
     "origin_llm": {
       "url": "http://zy.tessky.top/chat/chat",
       "history_len": -1,
       "temperature": 0.7,
       "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
-      "prompt_name": ["default","with_history","py"],
-      "ans_key": "text"
+      "prompt_name": ["default","with_history","py"]
     },
     "origin_llm_kb": {
         "url": "http://zy.tessky.top/chat/knowledge_base_chat",
@@ -20,18 +34,36 @@
         "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
         "prompt_name": ["default","text","empty"],
         "knowledge_base_name": "faiss_zhouyi",
-        "temperature": 0.7,
-        "ans_key": "answer"
+        "temperature": 0.7
     },
     "zhipu_ai": {
         "api_key": "you should never know this,my dear friends,use your own api keys",
-        "model": "glm-4",
-        "ans_key": "answer"
+        "model": "glm-4"
+    },
+    "zhouyi_ft": {
+        "url": "http://zy.tessky.top/chat/chat",
+        "history_len": -1,
+        "temperature": 0.7,
+        "llm_models": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30"],
+        "prompt_name": ["default","with_history","py"]
+    },
+    "zhouyi_ft_kb": {
+        "url": "http://zy.tessky.top/chat/knowledge_base_chat",
+        "history_len": -1,
+        "temperature": 0.7,
+        "llm_models": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30"],
+        "prompt_name": ["default","with_history","py"]
     }
   },
   "completion": {
     "origin_llm_kb": true,
     "zhipu_ai": true,
-    "origin_llm": false
+    "origin_llm": true,
+    "yizhou-ft-100": false,
+    "yizhou-ft-50": false,
+    "yizhou-ft-30": false,
+    "yizhou-ft-100-kb": false,
+    "yizhou-ft-50-kb": false,
+    "yizhou-ft-30-kb": false
   }
 }
