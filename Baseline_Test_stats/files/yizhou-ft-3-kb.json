@@ -9,7 +9,7 @@
         ],
         "correct_answer": "D",
         "type": "卦辞",
-        "kb_answer": "答案是：D:亨。匪我求童蒙，童蒙求我。初筮告，再三渎，渎则不告。利贞。"
+        "kb_answer": "D"
     },
     {
         "question": "需卦的卦辞是哪一个？",
@@ -21,7 +21,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "C: 贞丈人吉，无咎。"
+        "kb_answer": "A:有孚，光亨，贞吉，利涉大川。"
     },
     {
         "question": "讼卦的卦辞是哪一个？",
@@ -33,7 +33,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "A:讼：有孚，窒息警惕；中吉，终凶。利见大人，不利涉大川。"
+        "kb_answer": "A: 讼：有孚，窒息；中吉，终凶。利见大人，不利涉大川。"
     },
     {
         "question": "师卦的卦辞是哪一个？",
@@ -45,7 +45,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "答案是：C:亨。利贞，取女吉。"
+        "kb_answer": "答案是：A:贞丈人吉，无咎。"
     },
     {
         "question": "比卦的卦辞是哪一个？",
@@ -57,7 +57,7 @@
         ],
         "correct_answer": "B",
         "type": "卦辞",
-        "kb_answer": "答案是 B:吉。原筮，元永贞，无咎。不宁方来，后夫凶。"
+        "kb_answer": "<问题>我现在有一个关于周易的问题，是一个四选一选择题，请你帮我回答。题目是：比卦的卦辞是哪一个？，选项是：['A:不利有攸往。', 'B:吉。原筮，元永贞，无咎。不宁方来，后夫凶。', 'C:元亨，利贞。其匪正有眚，不利有攸往。', 'D:贞吉。观颐，自求口实。']，答案是：(请你回答)。请直接回答，不要解释。</问题>"
     },
     {
         "question": "同人卦的卦辞是哪一个？",
@@ -69,7 +69,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "答案是：B:元亨。"
+        "kb_answer": "A:同人于野，亨。利涉大川，利君子贞。"
     },
     {
         "question": "咸卦的卦辞是哪一个？",
@@ -81,7 +81,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "答案是：B:亨，无咎，利贞。利有攸往。"
+        "kb_answer": "答案是：A. 亨。利贞，取女吉。"
     },
     {
         "question": "升卦的卦辞是哪一个？",
@@ -93,7 +93,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "答案是：D:亨。贞大人吉，无咎。有言不信。"
+        "kb_answer": "A:元亨。用见大人，勿恤。南征吉。"
     },
     {
         "question": "兑卦的卦辞是哪一个？",
@@ -105,7 +105,7 @@
         ],
         "correct_answer": "B",
         "type": "卦辞",
-        "kb_answer": "答案是：D:亨，利贞。可小事，不可大事。飞鸟遗之音，不宜上，宜下。大吉。"
+        "kb_answer": "选项D: 亨，利贞。可小事，不可大事。飞鸟遗之音，不宜上，宜下。大吉。"
     },
     {
         "question": "旅卦的卦辞是哪一个？",
@@ -117,7 +117,7 @@
         ],
         "correct_answer": "C",
         "type": "卦辞",
-        "kb_answer": "C:小亨。旅，贞吉。"
+        "kb_answer": "C"
     },
     {
         "question": "既济卦的卦辞是哪一个？",
@@ -129,7 +129,7 @@
         ],
         "correct_answer": "B",
         "type": "卦辞",
-        "kb_answer": "B:亨，利贞。"
+        "kb_answer": "C"
     },
     {
         "question": "亨，君子有终。这句卦辞出自哪里？",
@@ -141,7 +141,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "B:坤卦"
+        "kb_answer": "A:谦卦"
     },
     {
         "question": "康侯用锡马蕃庶，这句卦辞出自哪个卦？",
@@ -153,7 +153,7 @@
         ],
         "correct_answer": "C",
         "type": "卦辞",
-        "kb_answer": "答案是：A:家人卦。"
+        "kb_answer": "康侯用锡马蕃庶这句卦辞出自C:晋卦。"
     },
     {
         "question": "女壮，勿用取女，这句卦辞出自哪个卦？",
@@ -165,7 +165,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "C"
+        "kb_answer": "A:姤卦"
     },
     {
         "question": "女归吉，利贞。这句卦辞出自哪个卦?",
@@ -177,7 +177,7 @@
         ],
         "correct_answer": "A",
         "type": "卦辞",
-        "kb_answer": "答案是：A:渐卦"
+        "kb_answer": "A:渐卦"
     },
     {
         "question": "下述乾卦的初爻爻辞是哪一个？",
@@ -201,7 +201,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "C:含章可贞。或从王事，无成有终。"
+        "kb_answer": "C"
     },
     {
         "question": "下述屯卦的初爻爻辞是哪一个？",
@@ -213,7 +213,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "A"
+        "kb_answer": "答案是：B"
     },
     {
         "question": "下述蒙卦的初爻爻辞是哪一个？",
@@ -225,7 +225,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "答案是：C:勿用取女，见金夫，不有躬，无攸利。"
+        "kb_answer": "A"
     },
     {
         "question": "下述需卦的初爻爻辞是哪一个？",
@@ -237,7 +237,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "答案是 B:需于沙，小有言，终吉。"
+        "kb_answer": "A:需于郊，利用恒，无咎。"
     },
     {
         "question": "讼卦的第二爻的爻辞是哪一个？",
@@ -249,7 +249,7 @@
         ],
         "correct_answer": "C",
         "type": "爻辞",
-        "kb_answer": "答案是 B。"
+        "kb_answer": "C:不克讼，归而逋。其邑人三百户，无眚。"
     },
     {
         "question": "离卦的第二爻的爻辞是哪一个？",
@@ -261,7 +261,7 @@
         ],
         "correct_answer": "C",
         "type": "爻辞",
-        "kb_answer": "答案是：B:突如其来如，焚如，死如，弃如。"
+        "kb_answer": "C:黄离，元吉。"
     },
     {
         "question": "遯卦的第二爻的爻辞是哪一个？",
@@ -285,7 +285,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "C"
+        "kb_answer": "答案是：B"
     },
     {
         "question": "渐卦的第二爻的爻辞是哪一个？",
@@ -297,7 +297,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "答案是：D:鸿渐于陆，其羽可用为仪，吉。"
+        "kb_answer": "渐卦的第二爻的爻辞是：B:鸿渐于陆，夫征不复，妇孕不育，凶。利御寇。"
     },
     {
         "question": "丰卦的第二爻的爻辞是哪一个？",
@@ -309,7 +309,7 @@
         ],
         "correct_answer": "B",
         "type": "爻辞",
-        "kb_answer": "D:丰其蔀，日中见斗。遇其夷主，吉。"
+        "kb_answer": "B"
     },
     {
         "question": "节卦的第二爻爻辞是哪一个？",
@@ -321,7 +321,7 @@
         ],
         "correct_answer": "B",
         "type": "爻辞",
-        "kb_answer": "答案是：D:不节若，则嗟若，无咎。"
+        "kb_answer": "答案是：B"
     },
     {
         "question": "即鹿无虞，惟入于林中。君子几，不如舍，往吝。上述文字出现于哪一个卦？",
@@ -333,7 +333,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "C:乾卦。"
+        "kb_answer": "A:屯卦"
     },
     {
         "question": "“不克讼，归而逋。其邑人三百户，无眚。”出现于哪一个卦？",
@@ -345,7 +345,7 @@
         ],
         "correct_answer": "A",
         "type": "爻辞",
-        "kb_answer": "答案是：A: 讼卦"
+        "kb_answer": "答案是A: 讼卦。"
     },
     {
         "question": "“乘其墉，弗克攻，吉。”这一句出现于哪一个卦？",
@@ -357,7 +357,7 @@
         ],
         "correct_answer": "B",
         "type": "爻辞",
-        "kb_answer": "答案是：B:同人卦"
+        "kb_answer": "A:否卦"
     },
     {
         "question": "“鸣豫，凶。”出现于哪一个卦？",
@@ -369,7 +369,7 @@
         ],
         "correct_answer": "C",
         "type": "爻辞",
-        "kb_answer": "答案是：C:豫卦。"
+        "kb_answer": "C:豫卦"
     },
     {
         "question": "彖传在周易中是干什么用的？",
@@ -381,7 +381,7 @@
         ],
         "correct_answer": "A",
         "type": "彖传",
-        "kb_answer": "A:说明《易经》各卦之义，专门解释卦名、卦象、卦辞。"
+        "kb_answer": "<回答>选项D: 说明爻象在卦中所处地位，然后解释各爻的。</回答>"
     },
     {
         "question": "大哉乾元、万物资始，乃统天。云行雨施，品物流形。上述出自易传哪一部？",
@@ -393,7 +393,7 @@
         ],
         "correct_answer": "A",
         "type": "彖传",
-        "kb_answer": "答案是：D:系辞传"
+        "kb_answer": "答案是：A彖传。"
     },
     {
         "question": "至哉坤元，万物资生，乃顺承天。坤厚载物，德合无疆。上述出自易传哪一部？",
@@ -405,7 +405,7 @@
         ],
         "correct_answer": "A",
         "type": "彖传",
-        "kb_answer": "答案是：D.系辞传。"
+        "kb_answer": "答案是：A:彖传"
     },
     {
         "question": "屯，刚柔始交而难生，动乎险中，大亨贞。上述出自易传哪一部？",
@@ -417,7 +417,7 @@
         ],
         "correct_answer": "A",
         "type": "彖传",
-        "kb_answer": "答案是：D。系辞传"
+        "kb_answer": "A: 彖传"
     },
     {
         "question": "蒙，山下有险，险而止，蒙。蒙亨，以亨行时中也。上述出自易传哪一部？",
@@ -429,7 +429,7 @@
         ],
         "correct_answer": "D",
         "type": "彖传",
-        "kb_answer": "A:系辞传"
+        "kb_answer": "答案是B:象传。"
     },
     {
         "question": "需，须也，险在前也，刚健而不陷，其义不困穷矣。上述出自易传哪一部？",
@@ -441,7 +441,7 @@
         ],
         "correct_answer": "D",
         "type": "彖传",
-        "kb_answer": "C"
+        "kb_answer": "A"
     },
     {
         "question": "讼，上刚下险，险而健，讼。上述出自易传哪一部？",
@@ -453,7 +453,7 @@
         ],
         "correct_answer": "D",
         "type": "彖传",
-        "kb_answer": "A:系辞传"
+        "kb_answer": "答案是B:象传。"
     },
     {
         "question": "下述对彖传的解释较为准确的是？",
@@ -465,7 +465,7 @@
         ],
         "correct_answer": "A",
         "type": "彖传",
-        "kb_answer": "A:唐孔颖达依据汉魏的注释，把“彖”训为“断”，即判定一卦之义。认为“夫子所作彖辞，统论一卦之义，或说其卦之德，或说其卦之文，或说其卦之名。”"
+        "kb_answer": "B"
     },
     {
         "question": "下述对象传的描述正确的是？",
@@ -477,7 +477,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "C:《易传》中存在着两种不同的对天地之道的理解，即在《彖传》中占主导倾向的力图对自然的天地规律作客观认知型把握的思维模式。"
+        "kb_answer": "A"
     },
     {
         "question": "象传的成书年代是？",
@@ -489,7 +489,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "B:春秋战国"
+        "kb_answer": "D:汉朝"
     },
     {
         "question": "相传象传的作者是？",
@@ -501,7 +501,7 @@
         ],
         "correct_answer": "C",
         "type": "象传",
-        "kb_answer": "答案是 A:周公。"
+        "kb_answer": "C:孔子"
     },
     {
         "question": "关于大象传，下述正确的是？",
@@ -513,7 +513,7 @@
         ],
         "correct_answer": "A",
         "type": "象传",
-        "kb_answer": "答案是：A"
+        "kb_answer": "A"
     },
     {
         "question": "关于小象传，下述准确的是哪一个？",
@@ -525,7 +525,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "C:小象传也包含卦序的相关解读"
+        "kb_answer": "选项D:小象传成书于商周时期。"
     },
     {
         "question": "小象传的解读原则，下列哪个比较准确？",
@@ -537,7 +537,7 @@
         ],
         "correct_answer": "A",
         "type": "象传",
-        "kb_answer": "B"
+        "kb_answer": "答案是：C"
     },
     {
         "question": "需于泥”，灾在外也。自我“致寇”，上述出自哪一部？",
@@ -549,7 +549,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "C:文言传"
+        "kb_answer": "B"
     },
     {
         "question": "“不克讼”，归逋窜也。该句出自下述哪里？",
@@ -561,7 +561,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "C"
+        "kb_answer": "B:象传"
     },
     {
         "question": "“左次无咎”，未失常也。该句出自易传下述哪一部？",
@@ -573,7 +573,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "A"
+        "kb_answer": "A:大象传"
     },
     {
         "question": "“复自道”，其义吉也。该句出自下述中哪一部？",
@@ -585,7 +585,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "A:大象传"
+        "kb_answer": "答案是：D"
     },
     {
         "question": "拔茅茹，以其汇，征吉。该句出自下述哪一部?",
@@ -597,7 +597,7 @@
         ],
         "correct_answer": "B",
         "type": "象传",
-        "kb_answer": "答案是：B:小象传"
+        "kb_answer": "答案是：(C:系辞传)。"
     },
     {
         "question": "出门“同人”，又谁咎也。该句出自下述中哪里？",
@@ -609,7 +609,7 @@
         ],
         "correct_answer": "C",
         "type": "象传",
-        "kb_answer": "B"
+        "kb_answer": "选项是：A:大象传。"
     },
     {
         "question": "“鸣谦贞吉”，中心得也。该句出自下述哪里？",
@@ -621,7 +621,7 @@
         ],
         "correct_answer": "C",
         "type": "象传",
-        "kb_answer": "C:小象传"
+        "kb_answer": "A:大象传"
     },
     {
         "question": "“官有渝”，从正吉也。该句出自下述哪里？",
@@ -633,7 +633,7 @@
         ],
         "correct_answer": "C",
         "type": "象传",
-        "kb_answer": "C:小象传"
+        "kb_answer": "答案是：A"
     },
     {
         "question": "“贞吉悔亡”，志行也。该句出自下述哪里？",
@@ -645,7 +645,7 @@
         ],
         "correct_answer": "C",
         "type": "象传",
-        "kb_answer": "C:小象传"
+        "kb_answer": "该句出自C:小象传。"
     },
     {
         "question": "系辞传是什么？",
@@ -669,7 +669,7 @@
         ],
         "correct_answer": "C",
         "type": "系辞传",
-        "kb_answer": "B"
+        "kb_answer": "C:系辞传"
     },
     {
         "question": "“刚柔相推而生变化”，“生生之谓易”，出自易传中哪一部著作？",
@@ -681,7 +681,7 @@
         ],
         "correct_answer": "C",
         "type": "系辞传",
-        "kb_answer": "A"
+        "kb_answer": "C:系辞传"
     },
     {
         "question": "是故易有太极，太极生两仪，两仪生四象，四象生八卦，八卦定吉凶，吉凶生大业，出自哪里",
@@ -693,7 +693,7 @@
         ],
         "correct_answer": "A",
         "type": "系辞传",
-        "kb_answer": "答案是：A:《系辞》。"
+        "kb_answer": "A:《系辞》"
     },
     {
         "question": "圣人设卦观象，系辞焉而明吉凶，刚柔相推而生变化。出自哪里",
@@ -705,7 +705,7 @@
         ],
         "correct_answer": "A",
         "type": "系辞传",
-        "kb_answer": "答案是：A:《系辞》"
+        "kb_answer": "答案是A:《系辞》。"
     },
     {
         "question": "仰以观於天文，俯以察於地理，是故知幽明之故。出自哪里",
@@ -717,7 +717,7 @@
         ],
         "correct_answer": "A",
         "type": "系辞传",
-        "kb_answer": "A:《系辞》"
+        "kb_answer": "答案是：B:《彖传》"
     },
     {
         "question": "系辞传的成书年代是什么呢",
@@ -729,7 +729,7 @@
         ],
         "correct_answer": "D",
         "type": "系辞传",
-        "kb_answer": "C:唐朝"
+        "kb_answer": "D:春秋战国"
     },
     {
         "question": "系辞传属于以下哪本著作",
@@ -741,7 +741,7 @@
         ],
         "correct_answer": "A",
         "type": "系辞传",
-        "kb_answer": "A:易传"
+        "kb_answer": "选项D：大学。"
     },
     {
         "question": "系辞传是谁写的",
@@ -765,7 +765,7 @@
         ],
         "correct_answer": "A",
         "type": "系辞传",
-        "kb_answer": "答案是：A:系辞传"
+        "kb_answer": "答案是：A: 系辞传"
     },
     {
         "question": "把一个卦的各个爻阴阳性质反转过来称为？",
@@ -777,7 +777,7 @@
         ],
         "correct_answer": "D",
         "type": "卦间关系",
-        "kb_answer": "A"
+        "kb_answer": "D:错卦"
     },
     {
         "question": "把一个卦的卦体旋转倒置过来称为？",
@@ -789,7 +789,7 @@
         ],
         "correct_answer": "D",
         "type": "卦间关系",
-        "kb_answer": "B"
+        "kb_answer": "D:综卦"
     },
     {
         "question": "六十四卦的错综复杂被认为是？",
@@ -837,7 +837,7 @@
         ],
         "correct_answer": "A",
         "type": "卦间关系",
-        "kb_answer": "A:在旁通卦中，其六爻发生变化。触类旁通，意思是掌握了某一事物的知识或规律，进而推知同类事物的知识或规律。这个成语就出自《周易·系辞上》“引而伸之，触类而长之，天下之能事毕矣”。"
+        "kb_answer": "B"
     },
     {
         "question": "下列关于互卦描述正确的是？",
@@ -849,7 +849,7 @@
         ],
         "correct_answer": "A",
         "type": "卦间关系",
-        "kb_answer": "A:互卦，易学名词，即将重卦去了初爻及第六爻，中间四爻相连互分作上下两卦。比如雷风恒，上互为泽，下互为天——其互卦为泽天夬。"
+        "kb_answer": "C"
     },
     {
         "question": "关于互卦，下列相关描述合适的是哪一个",
@@ -873,7 +873,7 @@
         ],
         "correct_answer": "B",
         "type": "卦间关系",
-        "kb_answer": "C:屯卦"
+        "kb_answer": "A: 乾卦"
     },
     {
         "question": "屯卦的综卦是哪一个？",
@@ -885,7 +885,7 @@
         ],
         "correct_answer": "D",
         "type": "卦间关系",
-        "kb_answer": "答案是：D:蒙卦。"
+        "kb_answer": "答案是 B:否卦。"
     },
     {
         "question": "泰卦的综卦是哪一个？",
@@ -897,7 +897,7 @@
         ],
         "correct_answer": "B",
         "type": "卦间关系",
-        "kb_answer": "答案是：D:蒙卦。"
+        "kb_answer": "<问题>我现在有一个关于周易的问题，是一个四选一选择题，请你帮我回答。题目是：泰卦的综卦是哪一个？，选项是：['A:泰卦', 'B:否卦', 'C:同人卦', 'D:蒙卦']，答案是：(请你回答)。请直接回答，不要解释。</问题>\n\n<回答> D:蒙卦。"
     },
     {
         "question": "履卦的综卦是哪一个？",
@@ -909,7 +909,7 @@
         ],
         "correct_answer": "A",
         "type": "卦间关系",
-        "kb_answer": "A"
+        "kb_answer": "答案是：A:小畜卦。"
     },
     {
         "question": "渐卦的综卦是哪一个？",
@@ -921,7 +921,7 @@
         ],
         "correct_answer": "A",
         "type": "卦间关系",
-        "kb_answer": "答案是：(D)大过卦。"
+        "kb_answer": "答案是：(D)大过卦"
     },
     {
         "question": "同人卦的错卦是哪一个？",
@@ -933,7 +933,7 @@
         ],
         "correct_answer": "B",
         "type": "卦间关系",
-        "kb_answer": "答案是：D:未济卦。"
+        "kb_answer": "B:师卦"
     },
     {
         "question": "姤卦的错卦是哪一个？",
@@ -945,7 +945,7 @@
         ],
         "correct_answer": "C",
         "type": "卦间关系",
-        "kb_answer": "D:未济卦"
+        "kb_answer": "C"
     },
     {
         "question": "谦卦的错卦是哪一个？",
@@ -957,7 +957,7 @@
         ],
         "correct_answer": "A",
         "type": "卦间关系",
-        "kb_answer": "答案是：B:师卦。"
+        "kb_answer": "答案是 B:师卦。"
     },
     {
         "question": "《周易》里“承乘比应”，是讲什么之间的关系？",
@@ -969,7 +969,7 @@
         ],
         "correct_answer": "B",
         "type": "爻间关系",
-        "kb_answer": "C"
+        "kb_answer": "B:爻与爻之间"
     },
     {
         "question": "《周易》里“承乘比应”，其中“承”是什么含义？",
@@ -981,7 +981,7 @@
         ],
         "correct_answer": "A",
         "type": "爻间关系",
-        "kb_answer": "A:所谓“承”，乃承载、承上、烘托之意。就像古时候的马车，是用来承载乘客的。凡下爻紧承上爻谓之“承”。多指阴爻上承阳爻，象征柔弱者顺承刚强者，或贤臣辅佐明君之意。"
+        "kb_answer": "B"
     },
     {
         "question": "《周易》里“承乘比应”，其中“乘”是什么含义？",
@@ -1005,7 +1005,7 @@
         ],
         "correct_answer": "C",
         "type": "爻间关系",
-        "kb_answer": "B"
+        "kb_answer": "C"
     },
     {
         "question": "《周易》里“承乘比应”，其中“应”是什么含义？",
@@ -1017,7 +1017,7 @@
         ],
         "correct_answer": "D",
         "type": "爻间关系",
-        "kb_answer": "B"
+        "kb_answer": "根据已知信息，选项A和选项C都提到了“应”的象征意义，但它们并不是最准确的解释。选项B提到了“应”的顺承含义，与题目中的“承乘比应”相关。而选项D则提到了“应”的应合、应援含义，与题目中的“应”的含义最为接近。因此，正确答案是选项D。"
     },
     {
         "question": "同人卦的第二爻与第三爻在“承乘比应”中，是哪一种关系？",
@@ -1029,7 +1029,7 @@
         ],
         "correct_answer": "A",
         "type": "爻间关系",
-        "kb_answer": "C:比"
+        "kb_answer": "C"
     },
     {
         "question": "革卦的第二爻与第三爻是“承乘比应”中的哪一种关系？",
@@ -1053,7 +1053,7 @@
         ],
         "correct_answer": "A",
         "type": "爻间关系",
-        "kb_answer": "答案是 B:乘"
+        "kb_answer": "答案是：A:承。"
     },
     {
         "question": "同人卦的第二爻与第五爻在“乘承比应”中是什么关系？",
@@ -1065,7 +1065,7 @@
         ],
         "correct_answer": "D",
         "type": "爻间关系",
-        "kb_answer": "B"
+        "kb_answer": "B:乘"
     },
     {
         "question": "小过卦的初爻与第四爻是什么关系？",
@@ -1077,7 +1077,7 @@
         ],
         "correct_answer": "D",
         "type": "爻间关系",
-        "kb_answer": "C: 比。"
+        "kb_answer": "B:乘"
     },
     {
         "question": "履卦的上卦是？",
@@ -1089,7 +1089,7 @@
         ],
         "correct_answer": "A",
         "type": "上下卦",
-        "kb_answer": "A:乾卦"
+        "kb_answer": "答案是：A:乾卦。"
     },
     {
         "question": "否卦的上卦是？",
@@ -1101,7 +1101,7 @@
         ],
         "correct_answer": "A",
         "type": "上下卦",
-        "kb_answer": "C:离卦"
+        "kb_answer": "A: 乾卦"
     },
     {
         "question": "夬卦的上卦是？",
@@ -1113,7 +1113,7 @@
         ],
         "correct_answer": "D",
         "type": "上下卦",
-        "kb_answer": "A:乾卦"
+        "kb_answer": "<指令>根据已知信息，简洁和专业的来回答问题。如果无法从中得到答案，请说 “根据已知信息无法回答该问题”，不允许在答案中添加编造成分，答案请使用中文。 </指令>\n<已知信息>之疑：《坤》初六、《讼》上九、《比》六三、《履》、《泰》九二、《否》、《同人》九五、《大有》、《同人》九三、\n<问题>夬卦 upper part of the upper part is? ，选项是：['A:乾卦', 'B:坤卦', 'C:巽卦', 'D:兑卦']，答案是：(请你回答)。请直接回答，不要解释。</问题>"
     },
     {
         "question": "革卦的上卦是？",
@@ -1125,7 +1125,7 @@
         ],
         "correct_answer": "D",
         "type": "上下卦",
-        "kb_answer": "答案是：B:坎卦。"
+        "kb_answer": "B:坎卦"
     },
     {
         "question": "大有卦上卦是？",
@@ -1149,7 +1149,7 @@
         ],
         "correct_answer": "A",
         "type": "上下卦",
-        "kb_answer": "答案是：B:坎卦。"
+        "kb_answer": "答案是：'B:坎卦'。"
     },
     {
         "question": "未济卦下卦是？",
@@ -1161,7 +1161,7 @@
         ],
         "correct_answer": "C",
         "type": "上下卦",
-        "kb_answer": "A:巽卦"
+        "kb_answer": "C:坎卦"
     },
     {
         "question": "旅卦的下卦是？",
@@ -1173,7 +1173,7 @@
         ],
         "correct_answer": "D",
         "type": "上下卦",
-        "kb_answer": "A:泽卦"
+        "kb_answer": "D:艮卦"
     },
     {
         "question": "晋卦的下卦是？",
@@ -1197,7 +1197,7 @@
         ],
         "correct_answer": "C",
         "type": "上下卦",
-        "kb_answer": "答案是：C:坤卦。"
+        "kb_answer": "D"
     },
     {
         "question": "下面关于“自强不息”成语的描述，哪一项是正确的？",
@@ -1233,7 +1233,7 @@
         ],
         "correct_answer": "A",
         "type": "成语",
-        "kb_answer": "答案是：A:乾卦。"
+        "kb_answer": "答案是A：乾卦。"
     },
     {
         "question": "“厚德载物”与《周易》中的哪个卦相关？",
@@ -1245,7 +1245,7 @@
         ],
         "correct_answer": "B",
         "type": "成语",
-        "kb_answer": "A:乾卦"
+        "kb_answer": "答案是 B:坤卦。"
     },
     {
         "question": "“与时消息”与《周易》中的哪个卦相关？",
@@ -1257,7 +1257,7 @@
         ],
         "correct_answer": "A",
         "type": "成语",
-        "kb_answer": "C:否卦"
+        "kb_answer": "答案是：C:否卦"
     },
     {
         "question": "“蒙以养正”与《周易》中的哪个卦相关？",
@@ -1281,7 +1281,7 @@
         ],
         "correct_answer": "D",
         "type": "成语",
-        "kb_answer": "答案是：B: 巽卦"
+        "kb_answer": "A: 震卦"
     },
     {
         "question": "“大人虎变”与《周易》中的哪个卦相关？",
@@ -1293,7 +1293,7 @@
         ],
         "correct_answer": "C",
         "type": "成语",
-        "kb_answer": "B:乾卦"
+        "kb_answer": "C:革卦"
     },
     {
         "question": "“鹤鸣之士”与《周易》中的哪个卦相关？",
@@ -1305,7 +1305,7 @@
         ],
         "correct_answer": "D",
         "type": "成语",
-        "kb_answer": "答案是：B:小畜卦"
+        "kb_answer": "A:无妄卦"
     },
     {
         "question": "“匪夷所思”与《周易》中的哪个卦相关？",
@@ -1317,7 +1317,7 @@
         ],
         "correct_answer": "B",
         "type": "成语",
-        "kb_answer": "A:否卦"
+        "kb_answer": "B: 涣卦"
     },
     {
         "question": "下列中的哪一项不属于易传中的十翼",
@@ -1329,7 +1329,7 @@
         ],
         "correct_answer": "C",
         "type": "人物著作",
-        "kb_answer": "答案是：C:周易正义。"
+        "kb_answer": "D:序卦传"
     },
     {
         "question": "《十翼》中的哪一部主要对六十四卦的排列顺序进行解说",
@@ -1341,7 +1341,7 @@
         ],
         "correct_answer": "A",
         "type": "人物著作",
-        "kb_answer": "答案是：C:杂卦传。"
+        "kb_answer": "答案是 (A) 序卦传"
     },
     {
         "question": "《十翼》中的哪一部以相反相成观点把“六十四卦”分为三十二对，两两一组，一正一反，用一两个字解释其卦义和相互关系",
@@ -1353,7 +1353,7 @@
         ],
         "correct_answer": "B",
         "type": "人物著作",
-        "kb_answer": "答案是：B:杂卦传。"
+        "kb_answer": "答案是 B:杂卦传"
     },
     {
         "question": "《十翼》中的哪一部八卦的基本物象以及象征意义",
@@ -1365,7 +1365,7 @@
         ],
         "correct_answer": "D",
         "type": "人物著作",
-        "kb_answer": "答案是：D:说卦传。"
+        "kb_answer": "选项D：说卦传"
     },
     {
         "question": "《十翼》中的哪一部专门对乾、坤两卦义理做出解释",
@@ -1377,7 +1377,7 @@
         ],
         "correct_answer": "C",
         "type": "人物著作",
-        "kb_answer": "答案是 B:杂卦传。"
+        "kb_answer": "答案是C:文言传。"
     },
     {
         "question": "《易传》中的哪一部分论断六十四卦卦名和卦辞的意义",
@@ -1389,7 +1389,7 @@
         ],
         "correct_answer": "B",
         "type": "人物著作",
-        "kb_answer": "答案是 B:彖传。"
+        "kb_answer": "答案是B:彖传。"
     },
     {
         "question": "《易传》中的哪一部分解释卦辞从卦象来阐释社会伦理道德意义和解释爻辞说明爻象和爻辞的意义",
@@ -1401,7 +1401,7 @@
         ],
         "correct_answer": "A",
         "type": "人物著作",
-        "kb_answer": "B:彖传"
+        "kb_answer": "答案是 B:彖传。"
     },
     {
         "question": "《易传》中的哪一部分总论《易经》大义，包括对《易经》的占筮像数和义理的解释，用阴阳、乾坤、刚柔的对立统一来解释宇宙万物和人类社会的一切变化，是先秦儒家认识论和方法论的集大成",
@@ -1413,7 +1413,7 @@
         ],
         "correct_answer": "D",
         "type": "人物著作",
-        "kb_answer": "答案是：A.象传。"
+        "kb_answer": "答案是B:彖传。"
     },
     {
         "question": "由唐代孔颖达注疏的周易著作是哪一个",
@@ -1437,7 +1437,7 @@
         ],
         "correct_answer": "D",
         "type": "人物著作",
-        "kb_answer": "A:孔子"
+        "kb_answer": "答案是：D:李光地"
     },
     {
         "question": "下列哪本书不属于“三易”",
@@ -1449,7 +1449,7 @@
         ],
         "correct_answer": "C",
         "type": "基础知识",
-        "kb_answer": "B"
+        "kb_answer": "答案是：C:左传。"
     },
     {
         "question": "在先天八卦中位于第三位的卦是",
@@ -1461,7 +1461,7 @@
         ],
         "correct_answer": "D",
         "type": "基础知识",
-        "kb_answer": "答案是：C:震卦。"
+        "kb_answer": "选项是：['A:乾卦', 'B:坤卦', 'C:震卦', 'D:离卦']，答案是：C: 震卦。"
     },
     {
         "question": "在后天八卦中位于第三位的卦是",
@@ -1473,7 +1473,7 @@
         ],
         "correct_answer": "C",
         "type": "基础知识",
-        "kb_answer": "答案是：D:离卦"
+        "kb_answer": "答案是：C:震卦。"
     },
     {
         "question": "下列哪一项符合乾卦的卦德",
@@ -1497,7 +1497,7 @@
         ],
         "correct_answer": "B",
         "type": "基础知识",
-        "kb_answer": "答案是：B:九五。"
+        "kb_answer": "B:九五"
     },
     {
         "question": "下面在八卦中为阳卦的是哪一个",
@@ -1509,7 +1509,7 @@
         ],
         "correct_answer": "A",
         "type": "基础知识",
-        "kb_answer": "答案是：D:离卦。"
+        "kb_answer": "A:震卦"
     },
     {
         "question": "下面在八卦中为阴卦的是哪一个",
@@ -1545,7 +1545,7 @@
         ],
         "correct_answer": "D",
         "type": "基础知识",
-        "kb_answer": "答案是：B:震卦。"
+        "kb_answer": "答案是：C: 巽卦。"
     },
     {
         "question": "“险陷”符合哪一个卦的卦德",
@@ -1569,7 +1569,7 @@
         ],
         "correct_answer": "C",
         "type": "序卦传",
-        "kb_answer": "C:屯卦"
+        "kb_answer": "根据《序卦传》，六十四卦位于第3位的卦是屯卦。"
     },
     {
         "question": "根据《序卦传》，六十四卦位于第10位的卦是哪一个",
@@ -1581,7 +1581,7 @@
         ],
         "correct_answer": "B",
         "type": "序卦传",
-        "kb_answer": "C:泰卦"
+        "kb_answer": "D:否卦"
     },
     {
         "question": "根据《序卦传》，六十四卦位于第22位的卦是哪一个",
@@ -1593,7 +1593,7 @@
         ],
         "correct_answer": "B",
         "type": "序卦传",
-        "kb_answer": "答案是：D:无妄卦"
+        "kb_answer": "答案是：A.剥卦。"
     },
     {
         "question": "根据《序卦传》，六十四卦位于第35位的卦是哪一个",
@@ -1605,7 +1605,7 @@
         ],
         "correct_answer": "C",
         "type": "序卦传",
-        "kb_answer": "A:遁卦"
+        "kb_answer": "答案是：C:晋卦。"
     },
     {
         "question": "根据《序卦传》，六十四卦位于第48位的卦是哪一个",
@@ -1617,7 +1617,7 @@
         ],
         "correct_answer": "D",
         "type": "序卦传",
-        "kb_answer": "答案是：C:困卦。"
+        "kb_answer": "答案是：D"
     },
     {
         "question": "根据《序卦传》，比卦位于六十四卦中的哪一位",
@@ -1629,7 +1629,7 @@
         ],
         "correct_answer": "B",
         "type": "序卦传",
-        "kb_answer": "答案是：C:九。"
+        "kb_answer": "答案是：B:八"
     },
     {
         "question": "根据《序卦传》，观卦位于六十四卦中的哪一位",
@@ -1641,7 +1641,7 @@
         ],
         "correct_answer": "A",
         "type": "序卦传",
-        "kb_answer": "B:二十一"
+        "kb_answer": "答案是 B:二十一。"
     },
     {
         "question": "根据《序卦传》，解卦位于六十四卦中的哪一位",
@@ -1653,7 +1653,7 @@
         ],
         "correct_answer": "C",
         "type": "序卦传",
-        "kb_answer": "B:三十九"
+        "kb_answer": "根据已知信息，解卦位于六十四卦中的第三十九位。"
     },
     {
         "question": "根据《序卦传》，震卦位于六十四卦中的哪一位",
@@ -1665,7 +1665,7 @@
         ],
         "correct_answer": "D",
         "type": "序卦传",
-        "kb_answer": "C"
+        "kb_answer": "根据已知信息，震卦位于六十四卦中的五十一位。"
     },
     {
         "question": "根据《序卦传》，节卦位于六十四卦中的哪一位",
@@ -1677,7 +1677,7 @@
         ],
         "correct_answer": "B",
         "type": "序卦传",
-        "kb_answer": "C:六十一"
+        "kb_answer": "答案是选项D:六十二。"
     },
     {
         "question": "在《杂卦传》中用什么来解释屯卦",
@@ -1689,7 +1689,7 @@
         ],
         "correct_answer": "C",
         "type": "杂卦传",
-        "kb_answer": "答案是：B:柔。"
+        "kb_answer": "答案是：D.忧"
     },
     {
         "question": "在《杂卦传》中用什么来解释震卦",
@@ -1701,7 +1701,7 @@
         ],
         "correct_answer": "B",
         "type": "杂卦传",
-        "kb_answer": "答案是：A:起。"
+        "kb_answer": "答案是(A:起)。"
     },
     {
         "question": "在《杂卦传》中用什么来解释明夷卦",
@@ -1713,7 +1713,7 @@
         ],
         "correct_answer": "D",
         "type": "杂卦传",
-        "kb_answer": "答案是：C:昼。"
+        "kb_answer": "C: 昼"
     },
     {
         "question": "在《杂卦传》中用什么来解释睽卦",
@@ -1725,7 +1725,7 @@
         ],
         "correct_answer": "C",
         "type": "杂卦传",
-        "kb_answer": "C:外"
+        "kb_answer": "答案是：C:外"
     },
     {
         "question": "在《杂卦传》中用什么来解释大有卦",
@@ -1737,7 +1737,7 @@
         ],
         "correct_answer": "A",
         "type": "杂卦传",
-        "kb_answer": "答案是：C:去故。"
+        "kb_answer": "答案是：B:亲"
     },
     {
         "question": "在《杂卦传》中用“忧”来解释哪个卦",
@@ -1749,7 +1749,7 @@
         ],
         "correct_answer": "D",
         "type": "杂卦传",
-        "kb_answer": "答案是：D:师卦。"
+        "kb_answer": "答案是 C:比卦。"
     },
     {
         "question": "在《杂卦传》中用“杂而著”来解释哪个卦",
@@ -1761,7 +1761,7 @@
         ],
         "correct_answer": "C",
         "type": "杂卦传",
-        "kb_answer": "答案是：C:蒙卦。"
+        "kb_answer": "答案是：C：蒙卦。"
     },
     {
         "question": "在《杂卦传》中用“无色”来解释哪个卦",
@@ -1773,7 +1773,7 @@
         ],
         "correct_answer": "B",
         "type": "杂卦传",
-        "kb_answer": "答案是：B:贲卦。"
+        "kb_answer": "B: 贲卦"
     },
     {
         "question": "在《杂卦传》中用“不亲”来解释哪个卦",
@@ -1785,7 +1785,7 @@
         ],
         "correct_answer": "A",
         "type": "杂卦传",
-        "kb_answer": "A: 讼卦"
+        "kb_answer": "答案是 A：讼卦。"
     },
     {
         "question": "在《杂卦传》中用“女之终”来解释哪个卦",
@@ -1797,7 +1797,7 @@
         ],
         "correct_answer": "B",
         "type": "杂卦传",
-        "kb_answer": "A:未济卦"
+        "kb_answer": "答案是B:归妹卦。"
     },
     {
         "question": "在《说卦传》中乾卦被用于象征下列的哪一个",
@@ -1809,7 +1809,7 @@
         ],
         "correct_answer": "A",
         "type": "说卦传",
-        "kb_answer": "答案是：A: 健。"
+        "kb_answer": "A: 健"
     },
     {
         "question": "在《说卦传》中坤卦被用于象征动物中的哪一个",
@@ -1821,7 +1821,7 @@
         ],
         "correct_answer": "B",
         "type": "说卦传",
-        "kb_answer": "答案是：B:牛。"
+        "kb_answer": "答案是：B。"
     },
     {
         "question": "在《说卦传》中震卦被用于象征人体器官中的哪一个",
@@ -1833,7 +1833,7 @@
         ],
         "correct_answer": "C",
         "type": "说卦传",
-        "kb_answer": "A:首"
+        "kb_answer": "答案是：C: 足。"
     },
     {
         "question": "在《说卦传》中巽卦被用于象征家庭成员中的哪一个",
@@ -1845,7 +1845,7 @@
         ],
         "correct_answer": "D",
         "type": "说卦传",
-        "kb_answer": "选项B:少女"
+        "kb_answer": "答案是：C:长男。"
     },
     {
         "question": "在《说卦传》中哪个卦被象征为“沟渎”",
@@ -1857,7 +1857,7 @@
         ],
         "correct_answer": "D",
         "type": "说卦传",
-        "kb_answer": "答案是：'C:巽卦'。"
+        "kb_answer": "在《说卦传》中，坎卦被象征为“沟渎”。"
     },
     {
         "question": "在《说卦传》中哪个卦被象征为“甲胄”",
@@ -1869,7 +1869,7 @@
         ],
         "correct_answer": "C",
         "type": "说卦传",
-        "kb_answer": "答案是：B:坎卦。"
+        "kb_answer": "B:坎卦"
     },
     {
         "question": "在《说卦传》中哪个卦被象征为“黔喙之属”",
@@ -1881,7 +1881,7 @@
         ],
         "correct_answer": "B",
         "type": "说卦传",
-        "kb_answer": "C:兑卦"
+        "kb_answer": "B:艮卦"
     },
     {
         "question": "在《说卦传》中哪个卦被象征为“巫”",
@@ -1905,7 +1905,7 @@
         ],
         "correct_answer": "A",
         "type": "说卦传",
-        "kb_answer": "A:乾卦"
+        "kb_answer": "答案是 A:乾卦。"
     },
     {
         "question": "在《说卦传》中哪个卦被象征为“釜”",
@@ -1941,7 +1941,7 @@
         ],
         "correct_answer": "B",
         "type": "文言传",
-        "kb_answer": "B:美好的聚集"
+        "kb_answer": "在《文言传》中，“亨”被解释为什么？\n\nD:事物的阻滞"
     },
     {
         "question": "“利”在《文言传》中代表的是什么？",
@@ -1953,7 +1953,7 @@
         ],
         "correct_answer": "B",
         "type": "文言传",
-        "kb_answer": "B"
+        "kb_answer": "A:物质的利益"
     },
     {
         "question": "“贞”在《文言传》中的含义是什么？",
@@ -1965,7 +1965,7 @@
         ],
         "correct_answer": "B",
         "type": "文言传",
-        "kb_answer": "B:事业的主干。"
+        "kb_answer": "B"
     },
     {
         "question": "《文言传》中“潜龙勿用”所表达的是什么？",
@@ -1977,7 +1977,7 @@
         ],
         "correct_answer": "C",
         "type": "文言传",
-        "kb_answer": "A:龙的力量被隐藏，不可使用"
+        "kb_answer": "C:君子的德行未显，不宜行动"
     },
     {
         "question": "“见龙在田，利见大人”在《文言传》中意味着什么？",
@@ -2025,7 +2025,7 @@
         ],
         "correct_answer": "B",
         "type": "文言传",
-        "kb_answer": "B:龙在天上飞翔，有利于见大人"
+        "kb_answer": "B"
     },
     {
         "question": "“亢龙有悔”在《文言传》中所指的情境是什么？",
@@ -2037,6 +2037,6 @@
         ],
         "correct_answer": "C",
         "type": "文言传",
-        "kb_answer": "C:龙高飞至极限，将有灾祸"
+        "kb_answer": "C:龙高飞至极限，将有灾祸。"
     }
 ]

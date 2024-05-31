@@ -6,10 +6,12 @@ import requests
 
 from evalute.evaluate import is_xlsx
 from evalute.interface.chat_interface import chat_interface
+from evalute.interface.impl.Qwen_14B_kb import qianwen_kb
 from evalute.interface.impl.origin_llm import origin_llm
 from evalute.interface.impl.origin_llm_kb import origin_llm_kb
 from evalute.interface.impl.zhipu_ai import zhipu_ai
 from evalute.interface.impl.zhouyi_ft import zhouyi_ft
+from evalute.interface.impl.zhouyi_ft_kb import zhouyi_ft_kb
 
 
 def init_models(configuration: json) -> dict[str, chat_interface]:
@@ -37,17 +39,20 @@ def init_models(configuration: json) -> dict[str, chat_interface]:
     ft_3 = zhouyi_ft(3)
     m['yizhou-ft-3'] = ft_3
     # ft-100-kb 微调100轮带知识库
-    ft_100_kb = zhouyi_ft(0)
+    ft_100_kb = zhouyi_ft_kb(0)
     m['yizhou-ft-100-kb'] = ft_100_kb
     # ft-50-kb 微调50轮带知识库
-    ft_50_kb = zhouyi_ft(1)
+    ft_50_kb = zhouyi_ft_kb(1)
     m['yizhou-ft-50-kb'] = ft_50_kb
     # ft-30-kb 微调30轮带知识库
-    ft_30_kb = zhouyi_ft(2)
+    ft_30_kb = zhouyi_ft_kb(2)
     m['yizhou-ft-30-kb'] = ft_30_kb
     # ft-3-kb 微调3轮带知识库
-    ft_3_kb = zhouyi_ft(3)
+    ft_3_kb = zhouyi_ft_kb(3)
     m['yizhou-ft-3-kb'] = ft_3_kb
+    # Qwen-14B-ft-1000-kb 千问1000轮微调带知识库
+    Qwen_14B = qianwen_kb(0)
+    m['Qwen-14B-ft-1000-kb'] = Qwen_14B
     return m
 
 
@@ -58,7 +63,7 @@ def release_models(model_name: str, configuration: json) -> bool:
             "keep_origin": False
         }
         response = requests.post(url=configuration["test_args"]["release_url"], json=data)
-        sleep(30)  # 异步响应
+        sleep(120)  # 异步响应
         print(f'切换大模型至{model_name}的响应为:{response.text}')
         if "msg" not in response.json():
             return False
@@ -95,7 +100,7 @@ if __name__ == '__main__':
 
                 ans_key = "text"
                 for ak, mn in config["test_args"]["ans_key"].items():
-                    if chat == mn:
+                    if chat in mn:
                         ans_key = ak
                         break
 
@@ -104,4 +109,4 @@ if __name__ == '__main__':
                     json_str = json.dumps(dicts, ensure_ascii=False, indent=4)
                     tf.write(json_str)
                 print(f"{chat} evaluated {src}")
-                os.system('cls')
+                # os.system('cls')
