@@ -149,7 +149,8 @@ import { useRoute, useRouter } from 'vue-router';
         if(res.code === 200){
           console.log(res.data);
           console.log(res.data.answer);
-          aiCurrentChat= res.data.answer;//????
+          // aiCurrentChat= res.data.answer;//????
+          aiCurrentChat = res.data.answer.replace(/\n/g, '<br>');
       //将ai回复加入list
           AIReplay(aiCurrentChat);
           
@@ -170,7 +171,7 @@ import { useRoute, useRouter } from 'vue-router';
 					message: '输入内容不能为空！',
 					type: 'error'
 				})
-      
+      return;
     }
     //如果空对话，创建新对话
     //加入了onMounted后，如果不是在新建对话界面而是直接跳转就会不对
@@ -317,6 +318,7 @@ import { useRoute, useRouter } from 'vue-router';
         color:#000;
         width: 100%;
         font-size: 22px;
+        //文本居中
         text-align: center;
         line-height: 40px;
       }
@@ -350,6 +352,9 @@ import { useRoute, useRouter } from 'vue-router';
             max-width: 600px;
             background-color: #364d79;
             border-radius: 10px;
+            //显示换行符
+            white-space: pre-wrap;
+            text-align: left;
           }
         }
    
