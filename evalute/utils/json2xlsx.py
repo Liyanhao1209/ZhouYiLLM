@@ -3,6 +3,11 @@ import os
 import sys
 from openpyxl import Workbook
 
+
+def is_xlsx(file_path: str) -> bool:
+    return file_path.endswith('.xlsx')
+
+
 if __name__ == '__main__':
     args = sys.argv
 

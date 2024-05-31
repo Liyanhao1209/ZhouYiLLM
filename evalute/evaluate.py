@@ -4,9 +4,7 @@ from typing import List
 import requests
 from openpyxl import load_workbook
 
-
-def is_xlsx(path: str) -> bool:
-    return path.endswith('.xlsx')
+from evalute.utils.json2xlsx import is_xlsx
 
 
 def deal_one_out_of_four_xlsx(path: str) -> List[dict]:

@@ -8,7 +8,8 @@ from evalute.interface.chat_interface import chat_interface
 
 class zhipu_ai(chat_interface):
 
-    def __init__(self, config: json):
+    def __init__(self, config: json, llm_model: str):
+        super().__init__(llm_model)
         args = config['test_args']['zhipu_ai']
         self.client = ZhipuAI(api_key=args['api_key'])
         self.model = args['model']

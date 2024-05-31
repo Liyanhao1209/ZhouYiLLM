@@ -1,5 +1,7 @@
 import json
 import re
+from collections import defaultdict
+from typing import Union, List
 
 """
 现在的需求是，统计这个json数组一共有多少json对象，统计这些json对象中，correct_answer和kb_answer能够对应的有多少？
@@ -22,15 +24,18 @@ def contains_letters(text):
     return bool(re.search(r'[a-dA-D]', text))
 
 
-def count_up(jsons, llm_name):
+def count_up(jsons: Union[json, List[dict]], llm_name: str) -> tuple[dict[str, float | str], list]:
     total_num = len(jsons)
     solved_num = 0
     unsolved = []
+    type_map = defaultdict(lambda: [0, 0])  # 统计某一个类型里总共几个问题，对了几个
     for j in jsons:
+        type_map[j['type']][1] += 1
         correct_answer = str(j['correct_answer'])
         kb_answer = str(j['kb_answer'])
         if kb_answer.find(correct_answer) != -1 or kb_answer.find(correct_answer.lower()) != -1:
             solved_num += 1
+            type_map[j['type']][0] += 1
         if not contains_letters(kb_answer):
             unsolved.append(j)
     rate = format(solved_num / total_num, '.4f')
@@ -38,7 +43,8 @@ def count_up(jsons, llm_name):
         "Tot_problem_nums": total_num,
         "Solved_problem_nums": solved_num,
         "Solve_rate": rate,
-        "llm_name": llm_name
+        "llm_name": llm_name,
+        "type_stats": {k: f'{v[0]}/{v[1]}' for k, v in type_map.items()}
     }, unsolved
 
 

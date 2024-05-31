@@ -5,6 +5,8 @@ from openpyxl import load_workbook
 
 
 class chat_interface(ABC):
+    def __init__(self, llm_model: str):
+        self.llm_model = llm_model
 
     @abstractmethod
     def request_chat(self, query: str, config: json) -> Union[dict, json]:

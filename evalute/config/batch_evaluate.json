@@ -1,6 +1,6 @@
 {
   "sources": ["./source/test_data.xlsx"],
-  "targets": ["./target/target1"],
+  "targets": ["./target_files/answer/json_answer"],
   "prompt": {
     "one_out_of_four": "我现在有一个关于周易的问题，是一个四选一选择题，请你帮我回答。题目是：{question}，选项是：{options}，答案是：(请你回答)。请直接回答，不要解释。"
   },
@@ -11,30 +11,24 @@
       "yizhou-ft-50": "yizhou-ft-50",
       "yizhou-ft-30": "yizhou-ft-30",
       "yizhou-ft-3": "yizhou-ft-3",
-      "yizhou-ft-100-kb": "yizhou-ft-100",
-      "yizhou-ft-50-kb": "yizhou-ft-50",
-      "yizhou-ft-30-kb": "yizhou-ft-30",
-      "yizhou-ft-3-kb": "yizhou-ft-3",
-      "origin_llm": "chatglm3-6b",
-      "origin_llm_kb": "chatglm3-6b",
-      "Qwen-14B-ft-1000-kb": "Qwen-14B-ft-1000"
+      "chatglm3-6b": "chatglm3-6b",
+      "Qwen-14B-ft-1000": "Qwen-14B-ft-1000",
+      "Qwen-14B": "Qwen-14B"
     },
     "ans_key": {
       "text": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30","yizhou-ft-3", "origin_llm"],
       "answer": ["zhipu_ai","origin_llm_kb","yizhou-ft-100-kb","yizhou-ft-50-kb","yizhou-ft-3-kb","yizhou-ft-30-kb","Qwen-14B-ft-1000-kb"]
     },
-    "origin_llm": {
-      "url": "http://zy.tessky.top/chat/chat",
-      "history_len": -1,
-      "temperature": 0.7,
-      "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
-      "prompt_name": ["default","with_history","py"]
+    "llm_chat": {
+        "url": "http://zy.tessky.top/chat/chat",
+        "history_len": -1,
+        "temperature": 0.7,
+        "prompt_name": ["default","with_history","py"]
     },
-    "origin_llm_kb": {
+    "kb_chat": {
         "url": "http://zy.tessky.top/chat/knowledge_base_chat",
         "top_k": 20,
         "score_threshold": 1.00,
-        "llm_models": ["chatglm3-6b", "zhipu-api", "openai-api"],
         "prompt_name": ["default","text","empty"],
         "knowledge_base_name": "faiss_zhouyi",
         "temperature": 0.7
@@ -42,47 +36,27 @@
     "zhipu_ai": {
         "api_key": "you should never know this,my dear friends,use your own api keys",
         "model": "glm-4"
-    },
-    "zhouyi_ft": {
-        "url": "http://zy.tessky.top/chat/chat",
-        "history_len": -1,
-        "temperature": 0.7,
-        "llm_models": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30","yizhou-ft-3"],
-        "prompt_name": ["default","with_history","py"]
-    },
-    "zhouyi_ft_kb": {
-        "url": "http://zy.tessky.top/chat/knowledge_base_chat",
-        "history_len": -1,
-        "temperature": 0.7,
-        "llm_models": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30","yizhou-ft-3"],
-        "prompt_name": ["default","with_history","py"],
-        "knowledge_base_name": "faiss_zhouyi",
-        "top_k": 20,
-        "score_threshold": 1.00
-    },
-    "Qwen-14B-ft-1000-kb": {
-        "url": "http://zy.tessky.top/chat/knowledge_base_chat",
-        "history_len": -1,
-        "temperature": 0.7,
-        "llm_models": ["Qwen-14B-ft-1000"],
-        "prompt_name": ["default","with_history","py"],
-        "knowledge_base_name": "faiss_zhouyi",
-        "top_k": 20,
-        "score_threshold": 1.00
     }
   },
   "completion": {
-    "origin_llm_kb": true,
-    "zhipu_ai": true,
-    "origin_llm": true,
-    "yizhou-ft-100": true,
-    "yizhou-ft-50": true,
-    "yizhou-ft-30": true,
-    "yizhou-ft-3": true,
-    "yizhou-ft-100-kb": false,
-    "yizhou-ft-50-kb": false,
-    "yizhou-ft-30-kb": false,
-    "yizhou-ft-3-kb": false,
-    "Qwen-14B-ft-1000-kb": true
+    "llm_chat": {
+      "chatglm3-6b": false,
+      "yizhou-ft-100": false,
+      "yizhou-ft-50": false,
+      "yizhou-ft-30": false,
+      "yizhou-ft-3": false,
+      "Qwen-14B": true
+    },
+    "kb_chat": {
+      "chatglm3-6b": false,
+      "yizhou-ft-100": false,
+      "yizhou-ft-50": false,
+      "yizhou-ft-30": false,
+      "yizhou-ft-3": false,
+      "Qwen-14B": true
+    },
+    "online_chat": {
+      "zhipu_ai": false
+    }
   }
 }
