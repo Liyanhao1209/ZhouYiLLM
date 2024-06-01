@@ -24,7 +24,7 @@ def contains_letters(text):
     return bool(re.search(r'[a-dA-D]', text))
 
 
-def count_up(jsons: Union[json, List[dict]], llm_name: str) -> tuple[dict[str, float | str], list]:
+def count_up(jsons: Union[json, List[dict]], llm_name: str) -> tuple[dict[str, float | str], List[json]]:
     total_num = len(jsons)
     solved_num = 0
     unsolved = []

@@ -16,8 +16,8 @@
       "Qwen-14B": "Qwen-14B"
     },
     "ans_key": {
-      "text": ["yizhou-ft-100","yizhou-ft-50","yizhou-ft-30","yizhou-ft-3", "origin_llm"],
-      "answer": ["zhipu_ai","origin_llm_kb","yizhou-ft-100-kb","yizhou-ft-50-kb","yizhou-ft-3-kb","yizhou-ft-30-kb","Qwen-14B-ft-1000-kb"]
+      "text": ["llm_chat"],
+      "answer": ["online_chat","kb_chat"]
     },
     "llm_chat": {
         "url": "http://zy.tessky.top/chat/chat",
@@ -34,7 +34,7 @@
         "temperature": 0.7
     },
     "zhipu_ai": {
-        "api_key": "you should never know this,my dear friends,use your own api keys",
+        "api_key": "f283bb78734240c773568def32ec3bcb.T2plYvRz2yltocZT",
         "model": "glm-4"
     }
   },
@@ -45,7 +45,8 @@
       "yizhou-ft-50": false,
       "yizhou-ft-30": false,
       "yizhou-ft-3": false,
-      "Qwen-14B": true
+      "Qwen-14B": true,
+      "Qwen-14B-ft-1000": true
     },
     "kb_chat": {
       "chatglm3-6b": false,
@@ -53,7 +54,8 @@
       "yizhou-ft-50": false,
       "yizhou-ft-30": false,
       "yizhou-ft-3": false,
-      "Qwen-14B": true
+      "Qwen-14B": true,
+      "Qwen-14B-ft-1000": true
     },
     "online_chat": {
       "zhipu_ai": false

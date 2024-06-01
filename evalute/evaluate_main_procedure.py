@@ -26,6 +26,7 @@ if __name__ == '__main__':
             for chat, handlers in chats.items():
                 for handler in handlers:
                     model_name = handler.llm_model
+                    full_name = f'{chat}_{model_name}'
                     if config["completion"][chat][model_name]:  # 不至于每加一个大模型就把之前跑过的大模型全部重跑一遍，这一块要人工手动维护了
                         continue
 
@@ -35,18 +36,18 @@ if __name__ == '__main__':
                         if not flag:
                             continue
 
-                    print(f"{chat}组别{model_name}大模型 evaluating {src} ......")
+                    print(f"{full_name} evaluating {src} ......")
 
                     ans_key = "text"
                     for ak, mn in config["test_args"]["ans_key"].items():
-                        if model_name in mn:
+                        if chat in mn:
                             ans_key = ak
                             break
 
                     dicts = handler.deal_one_out_of_four_xlsx(src, config, ans_key)
 
-                    if not is_prior_best or is_prior_best and absolute_prior_best(dicts, f'{chat}_{model_name}', stats_config):
-                        with open(os.path.join(target, f"{model_name}.json"), 'w', encoding='utf-8') as tf:
+                    if not is_prior_best or is_prior_best and absolute_prior_best(dicts, f'{full_name}', stats_config):
+                        with open(os.path.join(target, f"{full_name}.json"), 'w', encoding='utf-8') as tf:
                             json_str = json.dumps(dicts, ensure_ascii=False, indent=4)
                             tf.write(json_str)
-                    print(f"{chat}组别{model_name}大模型 evaluated {src}")
+                    print(f"{full_name} evaluated {src}")

@@ -1,5 +1,5 @@
 {
   "target": "./target_files/statistic/solve_rate/solve_rate.json",
-  "unresolved_loc": "../target_files/statistic/unresolved",
-  "is_prior_best": false
+  "unresolved_loc": "./target_files/statistic/unresolved",
+  "is_prior_best": true
 }

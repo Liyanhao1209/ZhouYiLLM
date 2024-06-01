@@ -39,6 +39,7 @@ def absolute_prior_best(dicts: List[dict], llm_model: str, configuration: json) 
                     json_str = json.dumps(unresolved_file, ensure_ascii=False, indent=4)
                     unresolved_file.write(json_str)
 
+                stats.seek(0)
                 json.dump(stats_data, stats, ensure_ascii=False, indent=4)
 
                 return True
@@ -47,9 +48,10 @@ def absolute_prior_best(dicts: List[dict], llm_model: str, configuration: json) 
 
         # 改写solve_rate
         stats_data.append(res)
+        stats.seek(0)
         json.dump(stats_data, stats, ensure_ascii=False, indent=4)
         with open(os.path.join(unresolved_loc, f'{llm_model}_unresolved.json'),
                   "w", encoding="utf-8") as unresolved_file:
-            json_str = json.dumps(unresolved_file, ensure_ascii=False, indent=4)
+            json_str = json.dumps(unresolved, ensure_ascii=False, indent=4)
             unresolved_file.write(json_str)
         return True
