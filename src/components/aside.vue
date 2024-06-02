@@ -71,7 +71,6 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
-<<<<<<< HEAD
 const router = useRouter();
 //传参给知识库
 const toKnowledge = () =>{
