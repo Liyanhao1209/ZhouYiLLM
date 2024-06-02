@@ -52,7 +52,7 @@ import {Comment} from '@element-plus/icons-vue'
 
 //写死的目的是方便测试，因为登录注册没想明白怎么绕过菜单
 // 我的建议是
-const user_id = "c3f1f73cec3c43458d6c2a6572cb327b";  
+const user_id = "d078b124cf27413bbb99f6484782e98c";
 const chatHistory = ref(null); // 使用 ref 创建一个响应式引用  
 
 function getChatList() {  

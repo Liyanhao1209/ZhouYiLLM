@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const request = axios.create({
     baseURL: 'http://127.0.0.1:9090/',
-    timeout: 20000,
+    // timeout: 20000,
     headers: {
         'content-type': 'application/json'
     },
@@ -10,7 +10,7 @@ const request = axios.create({
 
 const requestGet = axios.create({
     baseURL: 'http://127.0.0.1:9090/',
-    timeout: 20000,
+    // timeout: 20000,
     headers: {
     },
 })
