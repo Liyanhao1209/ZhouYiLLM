@@ -36,7 +36,8 @@ Accept: application/json
 # 用户请求知识库对话
 POST http://127.0.0.1:9090/conversation/knowledge-base-chat
 Content-Type: application/json
-Accept: application/json
+#Accept: application/json
+Accept: text/event-stream
 
 {
   "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
@@ -73,7 +74,8 @@ Accept: application/json
 # 用户请求混合机制对话
 POST http://127.0.0.1:9090/conversation/mix-chat
 Content-Type: application/json
-Accept: application/json
+#Accept: application/json
+Accept: text/event-stream
 
 {
   "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
@@ -83,3 +85,13 @@ Accept: application/json
 
 ###
 GET http://zy.tessky.top/knowledge_base/list_knowledge_bases
+
+###
+# 用户请求sse流式输出
+POST http://127.0.0.1:9090/sse/kb_chat
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+
+}

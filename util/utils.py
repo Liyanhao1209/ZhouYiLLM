@@ -1,7 +1,39 @@
 import json
+from typing import AsyncIterable
 
 import requests
+from aiohttp import ClientSession
+from fastapi.responses import StreamingResponse
+
 import db
+
+
+async def forward_request_to_kernel(url: str, request_body: dict) -> AsyncIterable:
+    async with ClientSession() as session:
+        async with session.post(url, json=request_body) as response:
+            if response.status != 200:
+                raise Exception(f"Failed to get response from knowledge base: {response.text()}")
+
+            async for chunk in response.content:
+                line = chunk.decode()
+                if line.startswith("data: "):
+                    # 提取data字段后面的内容，并去除尾部的换行符
+                    json_data = line[len("data: "):].strip()
+                    # 产生JSON数据
+                    yield json.loads(json_data)
+
+
+async def stream_response(url: str, request_body: dict) -> StreamingResponse:
+    async def generate_sse():
+        async for data in forward_request_to_kernel(url, request_body):
+            event_data = json.dumps(data)
+            yield f"{event_data}\n\n"
+
+    response = StreamingResponse(generate_sse(), media_type="text/event-stream")
+    response.headers["Cache-Control"] = "no-cache"
+    response.headers["Connection"] = "keep-alive"
+
+    return response
 
 
 async def request(url: str, request_body: dict, prefix: str) -> dict:
