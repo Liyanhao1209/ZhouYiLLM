@@ -101,13 +101,14 @@ async def request_mix_chat(mc: MixChat) -> Any:
 
         async for data in forward_request_to_kernel(CHAT_ARGS["url"], mix_request_body):
             event_data = json.dumps(data)
-            ma = ma.join(data["text"])
+            ma = ma + data["text"]
             yield f"{event_data}\n\n"
 
         # 确保问题和回答原子性地入库
         with record_lock:
             add_record_to_conversation(mc.conv_id, mc.query, False)
-            add_record_to_conversation(mc.conv_id, json.dumps({"answer": ma, "docs": kb_docs}), True)
+            add_record_to_conversation(mc.conv_id, json.dumps({"answer": ma, "docs": kb_docs}, ensure_ascii=False),
+                                       True)
 
     sse = StreamingResponse(generate_multi_turn_sse(), media_type="text/event-stream")
     sse.headers["Cache-Control"] = "no-cache"
