@@ -29,7 +29,14 @@ const routes = [
       path: '/history_chats',
       name: 'history_chats',
       component: () => import('@/views/history_chats.vue')
-    },]
+    },
+    {
+      path: '/knowledge_base',
+      name: 'knowledge_base',
+      component: () => import('@/views/knowledge_base.vue')
+    },
+  ]
+    
   }
 
 ]
