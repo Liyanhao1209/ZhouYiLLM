@@ -36,7 +36,8 @@ Accept: application/json
 # 用户请求知识库对话
 POST http://127.0.0.1:9090/conversation/knowledge-base-chat
 Content-Type: application/json
-Accept: application/json
+#Accept: application/json
+Accept: text/event-stream
 
 {
   "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",

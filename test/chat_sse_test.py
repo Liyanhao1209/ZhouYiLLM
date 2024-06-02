@@ -32,14 +32,14 @@ async def forward_request_to_kernel(request_body: dict) -> AsyncIterable:
 
 
 @app.post("/sse/kb_chat")
-async def sse_kb_chat():
+async def sse_kb_chat() -> StreamingResponse:
     request_body = {
         "query": "如何理解逆向格义？",
         "knowledge_base_name": "faiss_zhouyi",
         "score_threshold": 1.0,
         "top_k": 20,
         "stream": True,
-        "model_name": "yizhou-ft-100",
+        "model_name": "chatglm3-6b",
         "temperature": 0.7,
         "prompt_name": "default"
     }

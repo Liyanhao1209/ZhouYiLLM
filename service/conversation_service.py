@@ -1,7 +1,7 @@
 import datetime
 import logging
 import uuid
-from typing import List
+from typing import List, Union, Any
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -14,7 +14,9 @@ from db.create_db import Conversation, Record
 from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History, \
     OnlineLLMChat
 from message_model.response_model.response import BaseResponse
-from util.utils import request, serialize_conversation, serialize_record
+from util.utils import request, serialize_conversation, serialize_record, stream_response
+
+from fastapi.responses import StreamingResponse
 
 
 async def new_conversation(nc: NewConv) -> BaseResponse:
@@ -115,7 +117,7 @@ async def request_llm_chat(ca: LLMChat) -> dict:
     return await request(url=CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
 
 
-async def request_knowledge_base_chat(kb: KBChat) -> dict:
+async def request_knowledge_base_chat(kb: KBChat) -> Any:
     """
     生成知识库对话请求
     参数：
@@ -136,17 +138,22 @@ async def request_knowledge_base_chat(kb: KBChat) -> dict:
         # "history": "",
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
-        "prompt_name": kb.prompt_name
+        "prompt_name": kb.prompt_name,
+        "stream": KB_CHAT_ARGS["stream"]
     }
 
     # 获取历史记录
     # history = await gen_history(conv_id=kb.conv_id)
     # request_body["history"] = history  #json.dumps([h.dict() for h in history])
 
-    return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+    if not KB_CHAT_ARGS["stream"]:
+        return await request(url=KB_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+    else:
+        return await stream_response(url=KB_CHAT_ARGS["url"], request_body=request_body)
 
 
-async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜索引擎一直超时 需要解决  (别解决了，这个功能0.2.x版本不支持)
+async def request_search_engine_chat(sc: SEChat) -> Any:
+    # todo:duckduckgo搜索引擎一直超时 需要解决  (别解决了，这个功能0.2.x版本不支持)
     """
     生成搜索引擎对话请求
     1. query
@@ -164,14 +171,17 @@ async def request_search_engine_chat(sc: SEChat) -> dict:  # todo:duckduckgo搜�
         # "history": "",
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
-        "prompt_name": sc.prompt_name
+        "prompt_name": sc.prompt_name,
+        "stream": SE_CHAT_ARGS["stream"]
     }
 
     # 获取历史记录
     # history = await gen_history(conv_id=sc.conv_id)
     # request_body["history"] = history
-
-    return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+    if SE_CHAT_ARGS["stream"]:
+        return await request(url=SE_CHAT_ARGS["url"], request_body=request_body, prefix="data: ")
+    else:
+        return await stream_response(url=SE_CHAT_ARGS["url"], request_body=request_body)
 
 
 async def request_online_llm(olc: OnlineLLMChat) -> BaseResponse:

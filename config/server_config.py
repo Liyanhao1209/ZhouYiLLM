@@ -26,12 +26,14 @@ CHAT_ARGS = {
 KB_CHAT_ARGS = {
     "top_k": 20,
     "score_threshold": 1.01,
+    "stream": True,
     # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
     "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/knowledge_base_chat'
 }
 
 SE_CHAT_ARGS = {
     # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/search_engine_chat'
+    "stream": True,
     "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/search_engine_chat'
 }
 
