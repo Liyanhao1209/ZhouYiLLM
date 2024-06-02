@@ -44,3 +44,13 @@ def serialize_record(record: db.create_db.Record) -> dict:
         'is_ai': record.is_ai,
         'conv_id': record.conv_id
     }
+
+
+def serialize_blog(blog: db.create_db.Blog) -> dict:
+    return {
+        'id': blog.id,
+        'title': blog.title,
+        'content': blog.content,
+        'create_time': blog.create_time.isoformat() if blog.create_time else None,
+        'user_id': blog.user_id
+    }

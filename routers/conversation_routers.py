@@ -20,7 +20,10 @@ class ConversationRouter(routers_mount_interface):
                  summary="请求知识库聊天接口")(request_knowledge_base_chat)
         app.post(self.generate_route_path(["search-engine-chat"]), tags=self.tag,
                  summary="请求搜索引擎聊天接口")(request_search_engine_chat)
-        app.post(self.generate_route_path(["online-llm-chat"]), tags=self.tag, summary="请求在线LLM聊天接口")(request_online_llm)
+        app.post(self.generate_route_path(["online-llm-chat"]), tags=self.tag, summary="请求在线LLM聊天接口")(
+            request_online_llm)
         app.post(self.generate_route_path(["mix-chat"]), tags=self.tag, summary="请求混合聊天接口")(request_mix_chat)
-        app.get(self.generate_route_path(["get-user-conversation"]), tags=self.tag, summary="获取会话列表")(get_user_conversations)
-        app.get(self.generate_route_path(["get-conversation-record"]), tags=self.tag, summary="获取会话详情")(get_conversation_record)
+        app.get(self.generate_route_path(["get-user-conversation"]), tags=self.tag, summary="获取会话列表")(
+            get_user_conversations)
+        app.get(self.generate_route_path(["get-conversation-record"]), tags=self.tag, summary="获取会话详情")(
+            get_conversation_record)

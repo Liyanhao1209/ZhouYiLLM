@@ -11,7 +11,7 @@ from config.server_config import JWT_ARGS
 from component.DB_engine import engine
 from component.email_server import send_email
 from component.redis_server import get_redis_instance
-from component.token_server import create_access_token,get_current_active_user
+from component.token_server import create_access_token, get_current_active_user
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
 
@@ -76,7 +76,8 @@ async def login_user(login_form: LoginForm):
         access_token = create_access_token(
             data={"sub": user.email}, expires_delta=access_token_expires
         )
-        return {"code": 200, "message": "登录成功", "data": {"token": access_token, "token_type": "bearer"}}
+        return {"code": 200, "message": "登录成功",
+                "data": {"token": access_token, "token_type": "bearer", "user_id": user.id}}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail="登录失败，请重试")
