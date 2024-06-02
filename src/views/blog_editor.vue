@@ -34,6 +34,7 @@ export default {
     },
     mounted() {
         this.vidtor = new Vditor('vidtor', {
+            height: 500,
             after: () => {
                 this.vidtor.setValue(this.content)
             }
