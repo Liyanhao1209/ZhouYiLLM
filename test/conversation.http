@@ -83,3 +83,13 @@ Accept: application/json
 
 ###
 GET http://zy.tessky.top/knowledge_base/list_knowledge_bases
+
+###
+# 用户请求sse流式输出
+POST http://127.0.0.1:9090/sse/kb_chat
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+
+}
