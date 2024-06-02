@@ -1,7 +1,8 @@
 import datetime
+import json
 import logging
 import uuid
-from typing import List, Union, Any
+from typing import List, Any
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -14,7 +15,7 @@ from db.create_db import Conversation, Record
 from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History, \
     OnlineLLMChat
 from message_model.response_model.response import BaseResponse
-from util.utils import request, serialize_conversation, serialize_record, stream_response
+from util.utils import request, serialize_conversation, serialize_record, stream_response, forward_request_to_kernel
 
 from fastapi.responses import StreamingResponse
 
@@ -40,7 +41,7 @@ async def new_conversation(nc: NewConv) -> BaseResponse:
     return BaseResponse(code=200, msg="会话创建成功", data={"conv_id": conv_id})
 
 
-async def request_mix_chat(mc: MixChat) -> BaseResponse:
+async def request_mix_chat(mc: MixChat) -> Any:
     """
     混合对话
     1. 先请求大模型以自身能力给出解答
@@ -53,44 +54,66 @@ async def request_mix_chat(mc: MixChat) -> BaseResponse:
     if not llm_response["success"]:
         return BaseResponse(code=500, msg="大模型请求失败", data={"error": f'{llm_response["error"]}'})
 
-    # 请求知识库
-    kb_response = await request_knowledge_base_chat(KBChat(query=mc.query, conv_id=mc.conv_id))
-    if not kb_response["success"]:
-        return BaseResponse(code=500, msg="知识库请求失败", data={"error": f'{kb_response["error"]}'})
+    async def generate_multi_turn_sse():
+        # 请求知识库，流式输出docs
+        kb_request_body = {
+            "query": mc.query,
+            "knowledge_base_name": mc.knowledge_base_id if not mc.knowledge_base_id == "-1" else "faiss_zhouyi",
+            "top_k": KB_CHAT_ARGS["top_k"],
+            "score_threshold": KB_CHAT_ARGS["score_threshold"],
+            # "history": "",
+            "model_name": CHAT_ARGS["llm_models"][0],
+            "temperature": CHAT_ARGS["temperature"],
+            "prompt_name": mc.prompt_name,
+            "stream": KB_CHAT_ARGS["stream"]
+        }
+        kb_response = {"data": {}}
+        kb_response["data"]["answer"] = ""
+        kb_docs = None
 
-    # 请求搜索引擎
-    # (this part has been deprecated by langchain-core 0.2.x while the 0.3.x version in the future will support this function)
-    # search_response = await request_search_engine_chat(SEChat(query=mc.query, conv_id=mc.conv_id))
-    # if not search_response["success"]:
-    #     return BaseResponse(code=500, msg="搜索引擎请求失败", data={"error": f'{search_response["error"]}'})
+        async for data in forward_request_to_kernel(KB_CHAT_ARGS["url"], kb_request_body):
+            if "docs" in data:
+                event_data = json.dumps(data)
+                kb_docs = data
+                # print(kb_docs)
+                yield f"{event_data}\n\n"
+            elif "answer" in data:
+                kb_response["data"]["answer"] = kb_response["data"]["answer"].join(data["answer"])
 
-    # 请求在线大模型
-    # online_llm_response = await request_online_llm(OnlineLLMChat(query=mc.query, conv_id=mc.conv_id))
-    # if not online_llm_response.code == 200:
-    #     return BaseResponse(code=500, msg="在线大模型请求失败", data={"error": f'{online_llm_response.msg}'})
+        # 生成prompt模板
+        prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
+                                     answer1=llm_response["data"]["text"], answer2=kb_response["data"]["answer"],
+                                     answer3="")  # answer3=online_llm_response["data"]["answer"]
 
-    # 生成prompt
-    prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
-                                 answer1=llm_response["data"]["text"], answer2=kb_response["data"]["answer"],
-                                 answer3="")  # answer3=online_llm_response["data"]["answer"]
+        # 请求大模型
+        mix_request_body = {
+            "query": prompt,
+            "conversation_id": mc.conv_id,
+            # "history_len": CHAT_ARGS["history_len"],
+            "history_len": -1,
+            "model_name": CHAT_ARGS["llm_models"][0],
+            "temperature": CHAT_ARGS["temperature"],
+            "prompt_name": mc.prompt_name,
+            "stream": True
+        }
 
-    # 请求大模型
-    response = await request_llm_chat(LLMChat(query=prompt, conv_id=mc.conv_id, prompt_name=mc.prompt_name))
+        ma = ""
 
-    if response["success"]:
+        async for data in forward_request_to_kernel(CHAT_ARGS["url"], mix_request_body):
+            event_data = json.dumps(data)
+            ma = ma.join(data["text"])
+            yield f"{event_data}\n\n"
+
         # 确保问题和回答原子性地入库
         with record_lock:
             add_record_to_conversation(mc.conv_id, mc.query, False)
-            add_record_to_conversation(mc.conv_id, response["data"]["text"], True)
+            add_record_to_conversation(mc.conv_id, json.dumps({"answer": ma, "docs": kb_docs}), True)
 
-        return BaseResponse(code=200, msg="混合对话请求成功",
-                            data={
-                                "answer": response["data"]["text"],
-                                "docs": kb_response["data"]["docs"]
-                            }
-                            )
+    sse = StreamingResponse(generate_multi_turn_sse(), media_type="text/event-stream")
+    sse.headers["Cache-Control"] = "no-cache"
+    sse.headers["Connection"] = "keep-alive"
 
-    return BaseResponse(code=500, msg="混合对话请求失败", data={"error": f'{response["error"]}'})
+    return sse
 
 
 async def request_llm_chat(ca: LLMChat) -> dict:
@@ -222,6 +245,8 @@ async def get_conversation_record(conv_id: str) -> BaseResponse:
 
 async def gen_history(conv_id: str) -> List[History]:
     records = await get_conversation_history(conv_id)
+    if len(records) % 2 != 0:
+        return []
     history = []
     for i in range(0, len(records), 2):
         history.append(
