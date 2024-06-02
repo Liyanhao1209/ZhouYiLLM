@@ -18,5 +18,5 @@ class BlogRouter(routers_mount_interface):
                 summary="获取列表")(
             blog_service.get_blog)
         app.get(self.generate_route_path(['delete', '{blog_id}']), tags=self.tag,
-                summary="删除列表")(
+                summary="删除博客")(
             blog_service.delete_blog)

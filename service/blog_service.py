@@ -17,7 +17,7 @@ def add_blog(blog: BlogModel) -> BaseResponse:
             time = datetime.now()
 
             if blog.blog_id is None or blog.blog_id == '':
-                blog_id = blog.blouuid.uuid4().hex
+                blog_id = uuid.uuid4().hex
                 session.add(
                     Blog(id=blog_id, title=blog.title, content=blog.content, create_time=time, user_id=blog.user_id))
             else:
