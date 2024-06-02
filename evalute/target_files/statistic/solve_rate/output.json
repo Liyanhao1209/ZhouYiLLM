@@ -1,0 +1,44 @@
+[
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 80,
+        "Solve_rate": "0.4706",
+        "llm_name": "origin_llm"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 115,
+        "Solve_rate": "0.6765",
+        "llm_name": "origin_llm_kb"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 121,
+        "Solve_rate": "0.7118",
+        "llm_name": "zhipu_ai"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 104,
+        "Solve_rate": "0.6118",
+        "llm_name": "yizhou-ft-3-kb"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 105,
+        "Solve_rate": "0.6176",
+        "llm_name": "yizhou-ft-30-kb"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 100,
+        "Solve_rate": "0.5882",
+        "llm_name": "yizhou-ft-50-kb"
+    },
+    {
+        "Tot_problem_nums": 170,
+        "Solved_problem_nums": 94,
+        "Solve_rate": "0.5529",
+        "llm_name": "yizhou-ft-100-kb"
+    }
+]
