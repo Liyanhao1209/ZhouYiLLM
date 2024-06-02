@@ -70,6 +70,8 @@
 import { login, sendVerifyCode, register } from '@/service/authService.js'
 import { checkPass } from '@/utils/register_utils.js'
 import { ElMessage } from 'element-plus'
+import store from './store';
+
 export default {
 	name: "login",
 	data() {
@@ -111,7 +113,7 @@ export default {
 		return {
 			overlaylong: 'overlaylong',
 			overlaytitle: 'overlaytitle',
-			disfiex: 1,
+			disfiex: 0,
 			time: 0,
 			buttonText: '发送验证码',
 			loginForm: {
@@ -164,9 +166,20 @@ export default {
 		login() {
 			this.$refs["loginForm"].validate(valid => {
 				if (valid) {
-					console.log('valid', valid);
 					login(this.loginForm).then(res => {
-						console.log(res)
+						
+						if(res.data.code===200){
+							this.$router.push('/chat')
+							ElMessage({
+								message: '登录成功',
+								type: 'success'
+							})
+							//保存登录信息
+							store.commit('login', res.data.data)
+							console.log(store.state.user_id, store.state.token);
+							localStorage.setItem('user_id', res.data.data.user_id)
+						}
+						
 					}).cache(e => {
 						console.log(e)
 					})
@@ -179,10 +192,12 @@ export default {
 			this.$refs["registerForm"].validate(valid => {
 				if (valid) {
 					register(this.registerForm).then(res => {
+						// if(res.code === 200)
 						ElMessage({
 							message: '注册成功',
 							type: 'success'
 						})
+						this.disfiex = 0;
 					})
 				} else {
 					ElMessage({

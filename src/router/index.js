@@ -4,10 +4,16 @@ import Layout from "@/Layout/Layout";
 
 const routes = [
   {
+
+    path: '/login',
+    name: 'login',
+    component: () => import('@/login.vue')
+  }, 
+  {
     path: '/',
     name: 'Layout',
     component: Layout,
-    redirect: "chat",   //重定向，路由自动跳转，输入/自动访问home
+    redirect: "login",   //重定向，路由自动跳转，输入/自动访问home
     children: [
       {
       path: 'home',
@@ -35,9 +41,17 @@ const routes = [
       name: 'knowledge_base',
       component: () => import('@/views/knowledge_base.vue')
     },
-  ]
-    
-  }
+    {
+      path: '/blog',
+      name: 'blog',
+      component: () => import('@/views/blog.vue')
+    },
+    {
+      path: '/blog_editor',
+      name: 'blog_editor',
+      component: () => import('@/views/blog_editor.vue')
+    },
+  ]}
 
 ]
 

@@ -1,24 +1,18 @@
 <template>
-  
+
   <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
     <el-radio-button :value="false">expand</el-radio-button>
     <el-radio-button :value="true">collapse</el-radio-button>
   </el-radio-group> -->
   <!-- <h5 class="mb-2" ></h5> -->
-  <el-container>
-  <el-aside width="200px" height="100%" >
-    <template #title>
-          <!-- <el-icon><document /></el-icon> -->
-          周易在线大模型
-        </template>
-  <el-menu
-    router
-    :default-active="$route.path"
-    class="el-menu-vertical-demo"
-    :collapse="isCollapse" 
-    @open="handleOpen"
-    @close="handleClose"
-  >
+  <el-container width="200px">
+    <el-aside width="200px" height="100%">
+      <template #title>
+        <!-- <el-icon><document /></el-icon> -->
+        周易在线大模型
+      </template>
+      <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
+        @open="handleOpen" @close="handleClose">
 
   <el-menu-item index="/chat" >
     
@@ -63,7 +57,10 @@ import {
   Menu as IconMenu,
   Location,
   Setting,
+  Upload
 } from '@element-plus/icons-vue'
+
+const router = useRouter();
 
 const isCollapse = ref(false)
 // 历史对话是否显示
@@ -74,6 +71,7 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
+<<<<<<< HEAD
 const router = useRouter();
 //传参给知识库
 const toKnowledge = () =>{
@@ -83,6 +81,13 @@ const toKnowledge = () =>{
   });
 }
 
+=======
+const logout = () => {
+  router.push('/login')
+}
+// const router = useRouter();
+// router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
+>>>>>>> f941a3da44ed53dd61068ad43c3e9c537d414510
 
 
 </script>
@@ -100,13 +105,15 @@ const toKnowledge = () =>{
 }
 
 .el-container {
-  height: 100vh; /* 设置容器的高度为视口高度 */
+  height: 100vh;
+  /* 设置容器的高度为视口高度 */
   margin: 0;
 }
 
 .el-aside {
   position: relative;
-  height: 100%; /* 设置aside的高度为容器的高度 */
+  height: 100%;
+  /* 设置aside的高度为容器的高度 */
   padding: 0px;
   /* background-color: #545c64; */
 }

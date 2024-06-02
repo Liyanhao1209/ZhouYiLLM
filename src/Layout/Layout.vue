@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--    头部-->
-    <Header/>
+    <!-- <Header/> -->
 
     <!--    主体-->
     <div style="display: flex">
