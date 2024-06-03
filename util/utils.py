@@ -1,9 +1,13 @@
+import decimal
 import json
+import datetime
 from typing import AsyncIterable
 
 import requests
 from aiohttp import ClientSession
 from fastapi.responses import StreamingResponse
+from sqlalchemy.orm import Query
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 import db
 
@@ -85,4 +89,25 @@ def serialize_blog(blog: db.create_db.Blog) -> dict:
         'content': blog.content,
         'create_time': blog.create_time.isoformat() if blog.create_time else None,
         'user_id': blog.user_id
+    }
+
+
+def blog_user_to_dict(blog) -> dict:
+    return {
+        'id': blog[0],
+        'title': blog[1],
+        'content': blog[2],
+        'create_time': blog[3].isoformat() if blog[3] else None,
+        'user_id': blog[4],
+        'user_name': blog[5]
+    }
+
+
+def serialize_comment(comment: db.create_db.Comment) -> dict:
+    return {
+        'id': comment.id,
+        'content': comment.content,
+        'create_time': comment.create_time.isoformat() if comment.create_time else None,
+        'user_id': comment.user_id,
+        'blog_id': comment.blog_id
     }

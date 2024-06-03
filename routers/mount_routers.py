@@ -57,6 +57,7 @@ def create_app() -> FastAPI:
     from routers.knowledge_base_routers import KnowledgeBaseRouters
     from routers.option_router import OptionRouter
     from routers.blog_routers import BlogRouter
+    from routers.forum_routers import ForumRouter
     SampleRouter(prefix='sample', tag=['sample']).mount(app)
     ConversationRouter(prefix='conversation', tag=['conversation management']).mount(app)
     AdministratorRouter(prefix='admin', tag=['admin management']).mount(app)
@@ -64,5 +65,6 @@ def create_app() -> FastAPI:
     KnowledgeBaseRouters(prefix='knowledge_base', tag=['knowledge base management']).mount(app)
     OptionRouter(prefix='option', tag=['options management']).mount(app)
     BlogRouter(prefix='blog', tag=['blog management']).mount(app)
+    ForumRouter(prefix='forum', tag=['forum management']).mount(app)
 
     return app
