@@ -7,10 +7,9 @@
   <!-- <h5 class="mb-2" ></h5> -->
   <el-container width="200px">
     <el-aside width="200px" height="100%">
-      <template #title>
-        <!-- <el-icon><document /></el-icon> -->
+      <!-- <template #title>
         周易在线大模型
-      </template>
+      </template> -->
       <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
         @open="handleOpen" @close="handleClose">
 
