@@ -11,7 +11,7 @@
         周易在线大模型
       </template> -->
       <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
-        @open="handleOpen" @close="handleClose">
+               @open="handleOpen" @close="handleClose">
 
         <el-menu-item index="/chat">
           <el-icon>
@@ -83,17 +83,13 @@ const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
 
-
-const router = useRouter();
 //传参给知识库
-const toKnowledge = () => {
+const toKnowledge = () =>{
   router.push({
     name: 'knowledge_base',
-    query: { user_id: 'c3f1f73cec3c43458d6c2a6572cb327b' }
-
+    query: {user_id: 'd078b124cf27413bbb99f6484782e98c' }
   });
 }
-
 
 const logout = () => {
   router.push('/login')
@@ -101,8 +97,6 @@ const logout = () => {
   localStorage.setItem('islogin', false)
   localStorage.removeItem('user_id')
 }
-// const router = useRouter();
-// router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
 
 
 </script>
