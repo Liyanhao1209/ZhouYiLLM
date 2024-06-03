@@ -50,6 +50,12 @@
           </el-icon>
           <template #title>个人信息</template>
         </el-menu-item>
+        <el-menu-item>
+          <el-icon>
+            <Upload />
+          </el-icon>
+          登出
+        </el-menu-item>
       </el-menu>
     </el-aside>
   </el-container>
