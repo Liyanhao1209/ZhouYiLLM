@@ -79,7 +79,7 @@ Accept: text/event-stream
 
 {
   "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
-  "query": "王弼还写过什么著作？",
+  "query": "什么是生生哲学？",
   "knowledge_base_id": "faiss_zhouyi"
 }
 
