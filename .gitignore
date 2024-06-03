@@ -6,5 +6,4 @@ target
 test
 source_files
 Text_split_target
-target_files
 *venv*

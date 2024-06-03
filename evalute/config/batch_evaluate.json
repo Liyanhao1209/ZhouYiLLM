@@ -27,7 +27,7 @@
     },
     "kb_chat": {
         "url": "http://zy.tessky.top/chat/knowledge_base_chat",
-        "top_k": 20,
+        "top_k": 3,
         "score_threshold": 1.00,
         "prompt_name": ["default","text","empty"],
         "knowledge_base_name": "faiss_zhouyi",
@@ -40,25 +40,25 @@
   },
   "completion": {
     "llm_chat": {
-      "chatglm3-6b": false,
-      "yizhou-ft-100": false,
-      "yizhou-ft-50": false,
-      "yizhou-ft-30": false,
-      "yizhou-ft-3": false,
+      "chatglm3-6b": true,
+      "yizhou-ft-100": true,
+      "yizhou-ft-50": true,
+      "yizhou-ft-30": true,
+      "yizhou-ft-3": true,
       "Qwen-14B": true,
       "Qwen-14B-ft-1000": true
     },
     "kb_chat": {
-      "chatglm3-6b": false,
-      "yizhou-ft-100": false,
-      "yizhou-ft-50": false,
-      "yizhou-ft-30": false,
-      "yizhou-ft-3": false,
-      "Qwen-14B": true,
+      "chatglm3-6b": true,
+      "yizhou-ft-100": true,
+      "yizhou-ft-50": true,
+      "yizhou-ft-30": true,
+      "yizhou-ft-3": true,
+      "Qwen-14B": false,
       "Qwen-14B-ft-1000": true
     },
     "online_chat": {
-      "zhipu_ai": false
+      "zhipu_ai": true
     }
   }
 }
