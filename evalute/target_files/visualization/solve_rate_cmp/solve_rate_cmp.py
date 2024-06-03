@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-with open('../../../../evaluate/config/visualize.json', 'r', encoding='utf-8') as f:
+with open('../../../config/visualize.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
 
 # 使用with语句打开文件，确保最后文件会被正确关闭
@@ -99,14 +99,14 @@ def draw_pict1(df):
 
 def draw_pict2(df):
     colors = [
-        "#FF5733", "#FFD700", "#F6FF33", "#FF33A6", "#A633FF", "#33FFF6", "#3357FF"
+        "#FF5733", "#FFD700", "#F6FF33", "#FF33A6", "#A633FF", "#33FFF6", "#3357FF",   "#993366", "#996633"
     ]
 
     attributes = df.columns[1:]
-    bar_width = 0.1
+    bar_width = 0.075
     index = np.arange(len(attributes))
 
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, ax = plt.subplots(figsize=(20, 8))
 
     # 同样的道理，这里一次绘画出一个模型的所有类别的柱状图
     for i, model in enumerate(df['llm_name']):
