@@ -21,38 +21,6 @@ const routes = [
     },
     children: [
       {
-<<<<<<< HEAD
-      path: 'home',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/chat',
-      name: 'chat',
-      component: () => import('@/views/chat.vue')
-    },
-    {
-      path: '/history_chats',
-      name: 'history_chats',
-      component: () => import('@/views/history_chats.vue')
-    },
-    {
-      path: '/knowledge_base',
-      name: 'knowledge_base',
-      component: () => import('@/views/knowledge_base.vue')
-    },
-    {
-      path: '/blog',
-      name: 'blog',
-      component: () => import('@/views/blog.vue')
-    },
-    {
-      path: '/blog_editor',
-      name: 'blog_editor',
-      component: () => import('@/views/blog_editor.vue')
-    },
-  ]}
-=======
         path: 'home',
         name: 'home',
         component: HomeView
@@ -89,7 +57,6 @@ const routes = [
       },
     ]
   }
->>>>>>> 98f74695cd6412e0c09ceca5540b37c6066c436d
 
 ]
 

@@ -84,7 +84,6 @@ const handleClose = (key, keyPath) => {
 }
 
 //传参给知识库
-<<<<<<< HEAD
 const toKnowledge = () =>{
   router.push({ 
     name: 'knowledge_base', 
@@ -92,29 +91,12 @@ const toKnowledge = () =>{
   });
 }
 
-=======
-const toKnowledge = () => {
-  router.push({
-    name: 'knowledge_base',
-    query: { user_id: 'c3f1f73cec3c43458d6c2a6572cb327b' }
-  });
-}
-
-
->>>>>>> 98f74695cd6412e0c09ceca5540b37c6066c436d
 const logout = () => {
   router.push('/login')
   store.commit('logout')
   localStorage.setItem('islogin', false)
   localStorage.removeItem('user_id')
 }
-<<<<<<< HEAD
-
-=======
-// const router = useRouter();
-// router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
-// >>>>>>> f941a3da44ed53dd61068ad43c3e9c537d414510
->>>>>>> 98f74695cd6412e0c09ceca5540b37c6066c436d
 
 
 </script>
