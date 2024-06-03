@@ -95,41 +95,47 @@ function getConversationRecord(data) {
 }
 
 //用户创建知识库
-function createKnowledgeBase(data){
-    return request.post('knowledge_base/create-knowledge-base/',data).then(res=>{
+function createKnowledgeBase(data) {
+    return request.post('knowledge_base/create-knowledge-base/', data).then(res => {
         return res.data;
-    }).catch(e =>{
+    }).catch(e => {
         console.log(e);
     })
 }
 
 //得到用户知识库列表
-function getUserKnowledgeBaseList(data){
-    return requestGet.get('/knowledge_base/get-knowledge-base/',{params : data}).then(res=>{
+function getUserKnowledgeBaseList(data) {
+    return requestGet.get('/knowledge_base/get-knowledge-base/', { params: data }).then(res => {
         return res.data;
-    }).catch(e =>{
+    }).catch(e => {
         console.log(e);
     })
 }
 
 //用户上传知识库文件
-function uploadKnowledgeDoc(data){
-    return requestFile.post('knowledge_base/upload-knowledge-files/',data).then(res=>{
+function uploadKnowledgeDoc(data) {
+    return requestFile.post('knowledge_base/upload-knowledge-files/', data).then(res => {
         return res.data;
-    }).catch(e =>{
+    }).catch(e => {
         console.log(e);
     })
 }
 
 
 //获取知识库文件
-function getKnowledgeBaseDoc(data){
-    return requestGet.get('/knowledge_base/get-kb-files/',{params : data}).then(res=>{
+function getKnowledgeBaseDoc(data) {
+    return requestGet.get('/knowledge_base/get-kb-files/', { params: data }).then(res => {
         return res.data;
-    }).catch(e =>{
+    }).catch(e => {
         console.log(e);
     })
 }
+
+function update_info(data) {
+    return request.post('user/update_info/', data)
+}
+
+
 export {
     login,
     sendVerifyCode,
@@ -142,6 +148,7 @@ export {
     createKnowledgeBase,
     getUserKnowledgeBaseList,
     uploadKnowledgeDoc,
-    getKnowledgeBaseDoc
+    getKnowledgeBaseDoc,
+    update_info
 }
 

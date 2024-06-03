@@ -7,46 +7,57 @@
   <!-- <h5 class="mb-2" ></h5> -->
   <el-container width="200px">
     <el-aside width="200px" height="100%">
-      <template #title>
-        <!-- <el-icon><document /></el-icon> -->
+      <!-- <template #title>
         周易在线大模型
-      </template>
+      </template> -->
       <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
         @open="handleOpen" @close="handleClose">
 
-  <el-menu-item index="/chat" >
-    
-      <el-icon><document /></el-icon>
-      <template #title>新建对话</template>
-  </el-menu-item>
+        <el-menu-item index="/chat">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>新建对话</template>
+        </el-menu-item>
 
-  <el-menu-item index="/history_chats" >
-        
-        <template #title>
-          <el-icon><document /></el-icon>
-          历史对话
-        </template>
+        <el-menu-item index="/history_chats">
 
-    </el-menu-item>
+          <template #title>
+            <el-icon>
+              <document />
+            </el-icon>
+            历史对话
+          </template>
 
-
-
-    <!-- 被禁用了 -->
-    <el-menu-item index="/knowledge_base" @click="toKnowledge">
-      <el-icon><document /></el-icon>
-      <template #title>知识库</template>
-    </el-menu-item>
-    <el-menu-item index="4" >
-      <el-icon><document /></el-icon>
-      <template #title>博客</template>
-    </el-menu-item>
-    <el-menu-item index="5">
-      <el-icon><setting /></el-icon>
-      <template #title>个人信息</template>
-    </el-menu-item>
-  </el-menu>
-</el-aside>
-</el-container>
+        </el-menu-item>
+        <!-- 被禁用了 -->
+        <el-menu-item index="/knowledge_base" @click="toKnowledge">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>知识库</template>
+        </el-menu-item>
+        <el-menu-item index="blog">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>博客</template>
+        </el-menu-item>
+        <el-menu-item index="info">
+          <el-icon>
+            <setting />
+          </el-icon>
+          <template #title>个人信息</template>
+        </el-menu-item>
+        <el-menu-item>
+          <el-icon>
+            <Upload />
+          </el-icon>
+          <el-button type="danger" @click="logout">登出</el-button>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+  </el-container>
 </template>
 
 <script setup>
@@ -59,8 +70,8 @@ import {
   Setting,
   Upload
 } from '@element-plus/icons-vue'
+import store from '@/store';
 
-const router = useRouter();
 
 const isCollapse = ref(false)
 // 历史对话是否显示
@@ -72,21 +83,26 @@ const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
 
+
+const router = useRouter();
 //传参给知识库
-const toKnowledge = () =>{
-  router.push({ 
-    name: 'knowledge_base', 
-    query: {user_id: 'd078b124cf27413bbb99f6484782e98c' }
+const toKnowledge = () => {
+  router.push({
+    name: 'knowledge_base',
+    query: { user_id: 'c3f1f73cec3c43458d6c2a6572cb327b' }
+
   });
 }
 
 
 const logout = () => {
   router.push('/login')
+  store.commit('logout')
+  localStorage.setItem('islogin', false)
+  localStorage.removeItem('user_id')
 }
 // const router = useRouter();
 // router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
-
 
 
 </script>

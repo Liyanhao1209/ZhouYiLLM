@@ -4,13 +4,13 @@
             <el-header>
                 <el-row :gutter="4">
                     <el-col :span="2" :offset="1">
-                        <el-button type="primary" @click="new_blog">写博客</el-button>
+                        <el-button type="success" @click="new_blog">写博客</el-button>
                     </el-col>
                     <el-col :span="2" :offset="1">
                         <el-button type="primary" @click="edit_blog()">编辑博客</el-button>
                     </el-col>
                     <el-col :span="2" :offset="1">
-                        <el-button type="primary" @click="delete_blog()">删除博客</el-button>
+                        <el-button type="danger" @click="delete_blog()">删除博客</el-button>
                     </el-col>
                 </el-row>
             </el-header>
@@ -65,6 +65,7 @@ export default {
     },
 
     created() {
+        this.init_bloglist();
 
     },
     methods: {
