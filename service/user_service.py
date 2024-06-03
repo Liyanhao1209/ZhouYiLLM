@@ -85,7 +85,7 @@ async def login_user(login_form: LoginForm):
         session.close()
 
 
-async def update_info(info_form: InfoForm, current_user: User = Depends(get_current_active_user)):
+async def update_info(info_form: InfoForm):
     """
        用户更新个人信息接口
        info_form 包含 name ,age,sex,description 字段
@@ -93,7 +93,7 @@ async def update_info(info_form: InfoForm, current_user: User = Depends(get_curr
     session = Session(bind=engine)
     try:
         # 根据用户ID查询用户
-        user = session.query(User).filter(User.email == info_form.email).first()
+        user = session.query(User).filter(User.id == info_form.user_id).first()
         if not user:
             raise HTTPException(status_code=404, detail="用户不存在")
 

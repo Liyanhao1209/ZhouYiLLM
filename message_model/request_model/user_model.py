@@ -13,7 +13,7 @@ class LoginForm(BaseModel):
 
 
 class InfoForm(BaseModel):
-    email: str
+    user_id: str
     name: str | None
     age: int
     sex: str | None
