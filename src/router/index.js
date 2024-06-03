@@ -4,9 +4,11 @@ import Layout from "@/Layout/Layout";
 
 const routes = [
   {
-
     path: '/login',
     name: 'login',
+    meta: {
+      requireLogin: false
+    },
     component: () => import('@/login.vue')
   },
   {
@@ -14,6 +16,9 @@ const routes = [
     name: 'Layout',
     component: Layout,
     redirect: "login",   //重定向，路由自动跳转，输入/自动访问home
+    meta: {
+      requireLogin: true
+    },
     children: [
       {
         path: 'home',

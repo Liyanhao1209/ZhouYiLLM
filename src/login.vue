@@ -176,8 +176,9 @@ export default {
 							})
 							//保存登录信息
 							store.commit('login', res.data.data)
-							console.log(store.state.user_id, store.state.token);
+							// console.log(store.state.user_id, store.state.token);
 							localStorage.setItem('user_id', res.data.data.user_id)
+							localStorage.setItem('islogin', true)
 						}
 						
 					}).cache(e => {
