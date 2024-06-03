@@ -9,7 +9,6 @@ from rouge import Rouge
 from zhipuai import ZhipuAI
 
 
-
 def json_to_string(json_obj):
     """将JSON对象转换为字符串"""
     return json.dumps(json_obj, ensure_ascii=False, sort_keys=True)
@@ -99,13 +98,12 @@ def gen_prompt(text: str) -> str:
     prompt = "你是一名研究周易的专家。现在有10个关于的周易问答，内容为：\n[" + text + "]\n"
     prompt += ("请从回答的长度和回答的角度从其中满足条件的QA对，都不满足请回答不满足即可。\n"
                "条件如下：\n"
-             " 1.回答至少包含三个角度。\n"
-             " 2.回答长度大于60个字符。\n"
-              "3.回答对问题有详细的解释。\n")
+               " 1.回答至少包含三个角度。\n"
+               " 2.回答长度大于60个字符。\n"
+               "3.回答对问题有详细的解释。\n")
     prompt += "请按照以下格式生成问题与回答：\n"
     prompt += "问题1：......\n回答1：......\n\n问题2：......\n回答2：......"
     return prompt
-
 
 
 def do_task(task):
@@ -125,14 +123,14 @@ def do_task(task):
     except Exception as e:
         print(f"发生错误：{e}")
 
-#回答
+    #回答
     qa = response.choices[0].message.content
     print(qa)
 
     qa_pairs = extract_qa_pairs(qa)
     with open('self_qa_correct.json', 'r+', encoding='utf-8') as target_json:
         context = target_json.read()
-        print("context:"+context)
+        print("context:" + context)
         ed = []
         if context:
             target_json.seek(0)
@@ -144,10 +142,11 @@ def do_task(task):
         target_json.write(qa_json)
 
 
-
 #从已有的self_qa.json中循环提取循环问
 with open('E:\zhouyi\项目资料\QA-fini\self_qa.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
+
+
 def judgeQA():
     # 确定列表的长度
     num_records = len(data)
@@ -165,11 +164,11 @@ def judgeQA():
         # 获取当前批次的记录
         batch = data[start_index:end_index]
 
-        text=''
+        text = ''
         count = 0
         # 对当前批次的记录进行处理
         for record in batch:
-            count+=1
+            count += 1
             # 这里写上你的处理逻辑
             # print(f"处理记录{i} {count}：{record}")
 
@@ -180,9 +179,10 @@ def judgeQA():
             formatted_string = f'问题:{question}‘回答’:{answer}'
 
             # 将格式化后的字符串添加到text中
-            text += f"{count}."+formatted_string
+            text += f"{count}." + formatted_string
         # print(text)
         do_task(text)
+
 
 if __name__ == '__main__':
     args = sys.argv

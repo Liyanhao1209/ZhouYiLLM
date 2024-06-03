@@ -2,9 +2,12 @@ import json
 from rouge import Rouge
 import sys
 
+
 def json_to_string(json_obj):
     """将JSON对象转换为字符串"""
     return json.dumps(json_obj, ensure_ascii=False, sort_keys=True)
+
+
 def compute_rouge_l_score(reference, summary):
     """
     计算ROUGE-L分数
@@ -21,7 +24,7 @@ def compute_rouge_l_score(reference, summary):
     return scores['rouge-l']
 
 
-def update_source_with_extension(source, extension,output_file, rouge_l_threshold=0.7):
+def update_source_with_extension(source, extension, output_file, rouge_l_threshold=0.7):
     """
     根据ROUGE-L分数更新source列表，将extension中与source中元素不相似（ROUGE-L分数不大于阈值）的元素添加到source中。
 
@@ -53,7 +56,6 @@ def update_source_with_extension(source, extension,output_file, rouge_l_threshol
         json.dump(source, f, ensure_ascii=False, indent=4)
 
 
-
 if __name__ == '__main__':
     args = sys.argv
 
@@ -66,4 +68,4 @@ if __name__ == '__main__':
     with open(target_file, 'r', encoding='utf-8') as target_json:
         target_lists = json.load(target_json)
 
-    update_source_with_extension(src_lists, target_lists,output_file)
+    update_source_with_extension(src_lists, target_lists, output_file)
