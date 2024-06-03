@@ -44,7 +44,7 @@
           </el-icon>
           <template #title>博客</template>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="info">
           <el-icon>
             <setting />
           </el-icon>
@@ -54,7 +54,7 @@
           <el-icon>
             <Upload />
           </el-icon>
-          登出
+          <el-button type="danger" @click="logout">登出</el-button>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -71,6 +71,7 @@ import {
   Setting,
   Upload
 } from '@element-plus/icons-vue'
+import store from '@/store';
 
 
 const isCollapse = ref(false)
@@ -94,6 +95,9 @@ const toKnowledge = () => {
 
 const logout = () => {
   router.push('/login')
+  store.commit('logout')
+  localStorage.setItem('islogin', false)
+  localStorage.removeItem('user_id')
 }
 // const router = useRouter();
 // router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });

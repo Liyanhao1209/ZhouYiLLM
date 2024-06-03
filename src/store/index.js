@@ -17,6 +17,8 @@ export default createStore({
 
     logout(state){
       state.logged_in = false
+      state.user_id = ''
+      state.token = ''
     }
   },
   actions: {

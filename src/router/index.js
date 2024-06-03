@@ -50,6 +50,11 @@ const routes = [
         name: 'blog_editor',
         component: () => import('@/views/blog_editor.vue')
       },
+      {
+        path: '/info',
+        name: 'info',
+        component: () => import('@/views/info.vue')
+      },
     ]
   }
 
