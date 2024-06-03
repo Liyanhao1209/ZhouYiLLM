@@ -71,22 +71,19 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
-const router = useRouter();
+
 //传参给知识库
 const toKnowledge = () =>{
   router.push({ 
     name: 'knowledge_base', 
-    query: {user_id: 'c3f1f73cec3c43458d6c2a6572cb327b' }
+    query: {user_id: 'fb18845ed0604498812f8a0135255253' }
   });
 }
 
-=======
 const logout = () => {
   router.push('/login')
 }
-// const router = useRouter();
-// router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
->>>>>>> f941a3da44ed53dd61068ad43c3e9c537d414510
+
 
 
 </script>

@@ -20,12 +20,6 @@ const routes = [
       name: 'home',
       component: HomeView
     },
-  
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/login.vue')
-    },
     {
       path: '/chat',
       name: 'chat',
