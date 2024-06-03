@@ -5,7 +5,6 @@ from typing import List
 from sqlalchemy import ForeignKey, create_engine, Column, Text, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 Base = declarative_base()
 
 
