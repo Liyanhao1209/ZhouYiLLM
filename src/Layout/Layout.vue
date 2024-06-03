@@ -10,7 +10,7 @@
       <Aside></Aside>
 
       <!--      内容区域:-->
-      <router-view s/>
+      <router-view s />
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@
 import Aside from "@/components/aside";
 export default {
   // name: "Layout.vue",
-  components:{
+  components: {
     // Header,
     Aside
   }
@@ -28,16 +28,16 @@ export default {
 </script>
 
 <style scoped>
-.rightDiv
-{
-    float: left;
-    margin-left: 400px; /* Or whatever */
-    width: 400px;
+.rightDiv {
+  float: left;
+  margin-left: 400px;
+  /* Or whatever */
+  width: 400px;
 }
-.leftDiv
-{
-    float: right;
-    margin-right: 400px;
-    width: 400px;
+
+.leftDiv {
+  float: right;
+  margin-right: 400px;
+  width: 400px;
 }
 </style>

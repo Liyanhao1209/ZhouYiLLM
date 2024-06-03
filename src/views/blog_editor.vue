@@ -34,6 +34,7 @@ export default {
     },
     mounted() {
         this.vidtor = new Vditor('vidtor', {
+            height: 500,
             after: () => {
                 this.vidtor.setValue(this.content)
             }
@@ -62,7 +63,7 @@ export default {
                     user_id: localStorage.getItem('user_id'),
                 }
                 // console.log('blog_editor:submit:', data);
-
+                // 编辑和添加公用
                 add_blog(data).then(res => {
                     // console.log('blog_editor:addblog:', res);
 
@@ -75,12 +76,12 @@ export default {
                     }
 
                 })
-                this.$router.push('/blog')
+                this.$router.back()
             }
 
         },
         cancel() {
-            this.$router.push('/blog')
+            this.$router.back()
         }
     }
 }
