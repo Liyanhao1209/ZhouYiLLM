@@ -60,7 +60,6 @@ import {
   Upload
 } from '@element-plus/icons-vue'
 
-const router = useRouter();
 
 const isCollapse = ref(false)
 // 历史对话是否显示
@@ -80,13 +79,13 @@ const toKnowledge = () =>{
   });
 }
 
-=======
+
 const logout = () => {
   router.push('/login')
 }
 // const router = useRouter();
 // router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
->>>>>>> f941a3da44ed53dd61068ad43c3e9c537d414510
+// >>>>>>> f941a3da44ed53dd61068ad43c3e9c537d414510
 
 
 </script>
