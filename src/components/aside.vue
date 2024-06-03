@@ -14,101 +14,39 @@
       <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
         @open="handleOpen" @close="handleClose">
 
-        <el-menu-item index="/chat">
+  <el-menu-item index="/chat" >
+    
+      <el-icon><document /></el-icon>
+      <template #title>新建对话</template>
+  </el-menu-item>
 
-          <el-icon>
-            <document />
-          </el-icon>
-          <template #title>新建对话</template>
-        </el-menu-item>
-        <!-- 只把这个作为标题，没有侧拉框？ -->
-        <el-menu-item index="/history_chats" @click="router">
-
-          <!-- 嵌套一个menu -->
-          <template #title>
-            <el-icon>
-              <document />
-            </el-icon>
-            历史对话
-          </template>
-          <!-- <el-sub-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          :collapse="chatIsCollapse"
-          @open="chatHandleOpen"
-          @close="chatHandleClose"
-        > -->
-          <!-- 历史问答： -->
-          <!-- 
-        <el-card
-        v-for="(chat, index) in chatHistory"
-        :key="index"
-        class="box-card"
-        style="margin-bottom: 10px;"
-      >
-        <template #header>
-          <div class="card-header">
-            <span>{{ chat.timestamp }}</span>
-            <el-button class="button" type="text">详情</el-button>
-          </div>
+  <el-menu-item index="/history_chats" >
+        
+        <template #title>
+          <el-icon><document /></el-icon>
+          历史对话
         </template>
-        <div class="text item">
-          {{ chat.content }}
-        </div>
-      </el-card> -->
-          <!-- 侧拉栏内容，搞成固定的？ -->
+
+    </el-menu-item>
 
 
-          <!-- <span>历史对话</span> -->
 
-          <!-- <el-menu-item-group>
-        <template #title><span>Group One</span></template>
-        <el-menu-item index="1-1">item one</el-menu-item>
-        <el-menu-item index="1-2">item two</el-menu-item>
-      </el-menu-item-group>
-
-      <el-menu-item-group title="Group Two">
-        <el-menu-item index="1-3">item three</el-menu-item>
-      </el-menu-item-group>
-      <el-sub-menu index="1-4">
-        <template #title><span>item four</span></template>
-        <el-menu-item index="1-4-1">item one</el-menu-item>
-      </el-sub-menu> -->
-        </el-menu-item>
-
-        <!-- <el-sub-menu index="2">
-
-    </el-sub-menu> -->
-
-
-        <!-- 被禁用了 -->
-        <el-menu-item index="3">
-          <el-icon>
-            <document />
-          </el-icon>
-          <template #title>创建知识库</template>
-        </el-menu-item>
-        <el-menu-item index="/blog">
-          <el-icon>
-            <document />
-          </el-icon>
-          <template #title>博客</template>
-        </el-menu-item>
-        <el-menu-item index="5">
-          <el-icon>
-            <setting />
-          </el-icon>
-          <template #title>个人信息</template>
-        </el-menu-item>
-        <el-menu-item >
-          <el-icon>
-            <upload/>
-          </el-icon>
-          <el-button type="danger" @click="logout">登出</el-button>
-        </el-menu-item>
-      </el-menu>
-    </el-aside>
-  </el-container>
+    <!-- 被禁用了 -->
+    <el-menu-item index="/knowledge_base" @click="toKnowledge">
+      <el-icon><document /></el-icon>
+      <template #title>知识库</template>
+    </el-menu-item>
+    <el-menu-item index="4" >
+      <el-icon><document /></el-icon>
+      <template #title>博客</template>
+    </el-menu-item>
+    <el-menu-item index="5">
+      <el-icon><setting /></el-icon>
+      <template #title>个人信息</template>
+    </el-menu-item>
+  </el-menu>
+</el-aside>
+</el-container>
 </template>
 
 <script setup>
@@ -133,11 +71,22 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
+const router = useRouter();
+//传参给知识库
+const toKnowledge = () =>{
+  router.push({ 
+    name: 'knowledge_base', 
+    query: {user_id: 'c3f1f73cec3c43458d6c2a6572cb327b' }
+  });
+}
+
+=======
 const logout = () => {
   router.push('/login')
 }
 // const router = useRouter();
 // router.push({ name: 'history_chats', user_id: "c3f1f73cec3c43458d6c2a6572cb327b" });
+>>>>>>> f941a3da44ed53dd61068ad43c3e9c537d414510
 
 
 </script>
