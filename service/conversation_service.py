@@ -68,15 +68,20 @@ async def request_mix_chat(mc: MixChat) -> Any:
             "stream": KB_CHAT_ARGS["stream"]
         }
         kb_response = {"data": {}}
+
         kb_response["data"]["answer"] = ""
         kb_docs = None
 
         async for data in forward_request_to_kernel(KB_CHAT_ARGS["url"], kb_request_body):
+            #符合sse格式
             if "docs" in data:
-                event_data = json.dumps(data)
+                # event_data = json.dumps(data)
+                event_data = json.dumps({"data":data})
                 kb_docs = data
                 # print(kb_docs)
-                yield f"{event_data}\n\n"
+                # yield f"{event_data}\n\n"
+                yield f"event: message\ndata: {event_data}\n\n"
+
             elif "answer" in data:
                 kb_response["data"]["answer"] = kb_response["data"]["answer"].join(data["answer"])
 
@@ -98,11 +103,13 @@ async def request_mix_chat(mc: MixChat) -> Any:
         }
 
         ma = ""
-
+        #符合sse格式
         async for data in forward_request_to_kernel(CHAT_ARGS["url"], mix_request_body):
-            event_data = json.dumps(data)
+            # event_data = json.dumps(data)
+            event_data = json.dumps({"data":data})
             ma = ma + data["text"]
-            yield f"{event_data}\n\n"
+            # yield f"{event_data}\n\n"
+            yield f"event: message\ndata: {event_data}\n\n"
 
         # 确保问题和回答原子性地入库
         with record_lock:
