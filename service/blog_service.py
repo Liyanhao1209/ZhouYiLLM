@@ -54,3 +54,13 @@ def delete_blog(blog_id: str) -> BaseResponse:
         print(e)
         return BaseResponse(msg="删除失败")
     return BaseResponse(code=200, msg='删除成功')
+
+
+def blog(blog_id: str) -> BaseResponse:
+    try:
+        with Session(engine) as session:
+            result = session.query(Blog).filter(Blog.id == blog_id).first()
+    except Exception as e:
+        print(e)
+        return BaseResponse(msg="查询失败")
+    return BaseResponse(code=200, msg='查询成功', data=serialize_blog(result))

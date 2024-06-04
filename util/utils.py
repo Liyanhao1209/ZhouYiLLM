@@ -111,3 +111,16 @@ def serialize_comment(comment: db.create_db.Comment) -> dict:
         'user_id': comment.user_id,
         'blog_id': comment.blog_id
     }
+
+
+def serialize_comment_user(row) -> dict:
+    """连表查询返回user.name"""
+    comment = row[0]
+    return {
+        'id': comment.id,
+        'content': comment.content,
+        'create_time': comment.create_time.isoformat() if comment.create_time else None,
+        'user_id': comment.user_id,
+        'blog_id': comment.blog_id,
+        'user_name': row[1]
+    }
