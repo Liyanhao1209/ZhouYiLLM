@@ -51,6 +51,8 @@ async def upload_knowledge_files(
         files: List[UploadFile] = File(..., description="上传文件,支持多文件"),
         kb_id: str = Form(..., description="知识库id")
 ) -> BaseResponse:
+    print(files)
+    print(kb_id)
     # 表单参数
     form_data = {
         'knowledge_base_name': kb_id,
@@ -77,8 +79,8 @@ async def upload_knowledge_files(
 
     try:
         if response.ok:
-            print(response.text)
             json_res = response.json()
+            print(json_res)
             return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json_res["data"]["failed_files"]})
     except (fastapi.exceptions.ResponseValidationError, RequestException) as e:
         return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": None, "error": f'{e}'})

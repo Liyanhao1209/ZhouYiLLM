@@ -6,7 +6,6 @@ WEB_SERVER = {
 }
 
 LANGCHAIN_SERVER = {
-    # "host": '121.250.210.123',
     "host": 'zy.tessky.top',
     "release": 'release.tessky.top',
     "port": 7861
@@ -24,7 +23,7 @@ CHAT_ARGS = {
 }
 
 KB_CHAT_ARGS = {
-    "top_k": 20,
+    "top_k": 10,
     "score_threshold": 1.01,
     "stream": True,
     # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
