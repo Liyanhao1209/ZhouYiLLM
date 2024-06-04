@@ -20,6 +20,6 @@ class ForumRouter(routers_mount_interface):
         app.get(self.generate_route_path(['get_comment', '{blog_id}']), tags=self.tag,
                 summary="获取博客的评论")(
             forum_service.get_comment)
-        app.post(self.generate_route_path(['delete_comment', '{blog_id}', '{user_id}']), tags=self.tag,
+        app.post(self.generate_route_path(['delete_comment', '{comment_id}', '{blog_id}', '{user_id}']), tags=self.tag,
                  summary="删除评论")(
             forum_service.delete_comment)

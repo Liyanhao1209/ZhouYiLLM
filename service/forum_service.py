@@ -56,16 +56,17 @@ def get_comment(blog_id: str) -> BaseResponse:
     except Exception as e:
         print(e)
         return BaseResponse(code=500, message=str(e))
-    return BaseResponse(code=200, msg='success', data=[serialize_comment_user(comment) for comment in res])
+    return BaseResponse(code=200, msg='success',
+                        data={'comment_list': [serialize_comment_user(comment) for comment in res]})
 
 
-def delete_comment(blog_id: str, user_id: str) -> BaseResponse:
+def delete_comment(comment_id: str, blog_id: str, user_id: str) -> BaseResponse:
     """
     删除博客的评论，注意权限判断
     """
     try:
         with Session(engine) as session:
-            res = session.query(Comment).filter(Comment.blog_id == blog_id).first()
+            res = session.query(Comment).filter(Comment.id == comment_id).first()
             if res is None:
                 return BaseResponse(code=400, msg='没有这个评论')
             if res.user_id == user_id:  # 删除者是评论本人
