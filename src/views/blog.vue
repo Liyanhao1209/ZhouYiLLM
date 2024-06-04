@@ -16,7 +16,7 @@
             </el-header>
             <el-container>
                 <el-aside width="200px">
-                    <el-menu mode="vertical">
+                    <el-menu mode="vertical" default-active="active_item_index">
                         <el-menu-item v-for="(val, key, index) in bloglist" @click="click_blog" :index="val.id">
                             {{ val.title }}
                         </el-menu-item>
@@ -65,10 +65,12 @@ export default {
     },
     mounted() {
         this.init_bloglist();
+        
     },
 
     created() {
         this.init_bloglist();
+        this.blog_id = this.$route.query.blog_id
 
     },
     methods: {

@@ -43,6 +43,12 @@
           </el-icon>
           <template #title>博客</template>
         </el-menu-item>
+        <el-menu-item index="forum">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>论坛</template>
+        </el-menu-item>
         <el-menu-item index="info">
           <el-icon>
             <setting />

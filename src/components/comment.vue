@@ -16,6 +16,9 @@
                 </template>
                 {{ item.content }}
             </el-card>
+            <div style="width: 100%; text-align: end; margin-top: 5px">
+                <el-button @click="delete_comment_(item.id)">删除评论</el-button>
+            </div>
         </template>
     </el-card>
 </template>
@@ -23,6 +26,7 @@
 <script>
 import { UserFilled } from '@element-plus/icons-vue'
 import { formatDateTime } from '@/utils/utils';
+import { ElMessage } from 'element-plus';
 export default {
     name: 'comment',
     props: {
@@ -30,7 +34,20 @@ export default {
         comment_list: [],
     },
     computed: {
-        
+
+    },
+    methods: {
+        delete_comment_(id) {
+            console.log('删除评论', id);
+            ElMessage({
+                type: 'success',
+                message: '功能没实现'
+            })
+            ElMessage({
+                type: 'error',
+                message: '没权限'
+            })
+        },
     }
 }
 
