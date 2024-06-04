@@ -43,6 +43,12 @@
           </el-icon>
           <template #title>博客</template>
         </el-menu-item>
+        <el-menu-item index="forum">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>论坛</template>
+        </el-menu-item>
         <el-menu-item index="info">
           <el-icon>
             <setting />
@@ -62,7 +68,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { createRouter, useRoute, useRouter } from 'vue-router';
 import {
   Document,
   Menu as IconMenu,
@@ -90,7 +96,7 @@ const toKnowledge = () =>{
     query: {user_id: 'd078b124cf27413bbb99f6484782e98c' }
   });
 }
-
+const router = useRouter()
 const logout = () => {
   router.push('/login')
   store.commit('logout')
