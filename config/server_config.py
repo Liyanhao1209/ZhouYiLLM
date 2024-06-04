@@ -11,7 +11,7 @@ LANGCHAIN_SERVER = {
     "port": 7861
 }
 
-LLM_MODELS = ["chatglm3-6b", "zhipu-api", "openai-api"]
+LLM_MODELS = ["yizhou-ft-100", "Qwen-14B-ft-1000", "chatglm3-6b", "yizhou-ft-50", "yizhou-ft-30"]
 
 CHAT_ARGS = {
     "llm_models": LLM_MODELS,
@@ -23,7 +23,7 @@ CHAT_ARGS = {
 }
 
 KB_CHAT_ARGS = {
-    "top_k": 10,
+    "top_k": 5,
     "score_threshold": 1.01,
     "stream": True,
     # "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'

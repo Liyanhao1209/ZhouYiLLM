@@ -50,7 +50,7 @@ async def request_mix_chat(mc: MixChat) -> Any:
     4. 最终将解答融合在一起返回
     """
     # 先请求大模型以自身能力给出解答
-    llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id))
+    llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id, prompt_name="default"))
     if not llm_response["success"]:
         return BaseResponse(code=500, msg="大模型请求失败", data={"error": f'{llm_response["error"]}'})
 
@@ -73,22 +73,21 @@ async def request_mix_chat(mc: MixChat) -> Any:
         kb_docs = None
 
         async for data in forward_request_to_kernel(KB_CHAT_ARGS["url"], kb_request_body):
-            #符合sse格式
+            # 符合sse格式
             if "docs" in data:
-                # event_data = json.dumps(data)
-                event_data = json.dumps({"data":data})
+                event_data = json.dumps({"data": data})
                 kb_docs = data
-                # print(kb_docs)
-                # yield f"{event_data}\n\n"
                 yield f"event: message\ndata: {event_data}\n\n"
 
             elif "answer" in data:
-                kb_response["data"]["answer"] = kb_response["data"]["answer"].join(data["answer"])
+                kb_response["data"]["answer"] = kb_response["data"]["answer"] + data["answer"]
+                # print(kb_response["data"]["answer"])
 
         # 生成prompt模板
         prompt = get_mix_chat_prompt(question=mc.query, history=await gen_history(mc.conv_id),
                                      answer1=llm_response["data"]["text"], answer2=kb_response["data"]["answer"],
                                      answer3="")  # answer3=online_llm_response["data"]["answer"]
+        # print(prompt)
 
         # 请求大模型
         mix_request_body = {
@@ -103,12 +102,10 @@ async def request_mix_chat(mc: MixChat) -> Any:
         }
 
         ma = ""
-        #符合sse格式
+
         async for data in forward_request_to_kernel(CHAT_ARGS["url"], mix_request_body):
-            # event_data = json.dumps(data)
-            event_data = json.dumps({"data":data})
+            event_data = json.dumps({"data": data})
             ma = ma + data["text"]
-            # yield f"{event_data}\n\n"
             yield f"event: message\ndata: {event_data}\n\n"
 
         # 确保问题和回答原子性地入库
@@ -139,7 +136,7 @@ async def request_llm_chat(ca: LLMChat) -> dict:
         "query": ca.query,
         "conversation_id": ca.conv_id,
         # "history_len": CHAT_ARGS["history_len"],
-        "history_len": -1,
+        "history_len": CHAT_ARGS["history_len"] if ca.prompt_name == "with_history" else -1,
         "model_name": CHAT_ARGS["llm_models"][0],
         "temperature": CHAT_ARGS["temperature"],
         "prompt_name": ca.prompt_name
@@ -306,3 +303,17 @@ async def get_user_chat_records(user_id: str) -> dict:
             res[conv.id] = conv_records
 
     return res
+
+
+async def delete_user_conversation(conv_id: str) -> BaseResponse:
+    try:
+        with Session(engine) as session:
+            # 连带删除这个conversation下的所有records
+            related_records = session.query(Record).filter(Record.conv_id == conv_id).all()
+            for rec in related_records:
+                session.delete(rec)
+            session.delete(session.query(Conversation).filter(Conversation.id == conv_id).first())
+            session.commit()
+        return BaseResponse(code=200, msg=f'删除会话{conv_id}成功', data={})
+    except Exception as e:
+        return BaseResponse(code=500, msg=f'删除会话{conv_id}失败', data={'error': f'{e}'})

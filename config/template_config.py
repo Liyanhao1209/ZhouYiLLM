@@ -20,7 +20,7 @@ PROMPT_TEMPLATES = {
     # """
     "mix_chat": """
     你是一个知无不言言无不尽的易学（周易）专家。先前我问了你一个易学方面的问题，你通过自身的能力、知识库检索的方式，给出了两个答案。\n
-    现在请你将这两个答案系统地整理成一篇针对原始问题的中文回答。\n
+    现在请你将这两个答案系统地整理成一篇针对原始问题的中文回答。并且尽可能多地融合这两个答案中在易学方面有价值的内容，使得答案尽可能饱满。\n
     请你直接了当地给出回答，请一定不要添加任何与实际答案无关紧要的话！\n
     此外，给出回答时，你一定不要重复原始问题！请务必记住，任何与答案正文无关的文本，均不要出现在回答中。再次强调一遍，你不需要跟我讲礼貌，请你按我说的，仅仅给出答案的正文！\n
     原始问题:\n
@@ -46,6 +46,7 @@ PROMPT_TEMPLATES = {
 
 
 def get_mix_chat_prompt(question, history, answer1, answer2, answer3, template_name="mix_chat"):
+    print(f'llm_chat:{answer1}\nkb_chat:{answer2}\nsearch_engine_chat:{answer3}')
     return PROMPT_TEMPLATES[template_name].format(question=question, history=history, answer1=answer1, answer2=answer2,
                                                   answer3=answer3)
 

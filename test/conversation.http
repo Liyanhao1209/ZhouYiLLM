@@ -95,3 +95,9 @@ Accept: text/event-stream
 {
 
 }
+
+###
+# 删除指定会话
+GET http://127.0.0.1:9090/conversation/delete-conversation?conv_id=8c0cd4fbfa6341cbaa397c8ccb15072a
+Content-Type: application/json
+Accept: application/json
