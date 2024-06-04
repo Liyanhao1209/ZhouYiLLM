@@ -18,15 +18,6 @@ from util.utils import request, serialize_knowledge_base
 
 async def create_knowledge_base(kb: KnowledgeBase) -> BaseResponse:
     kb_id = uuid.uuid4().hex
-
-    try:
-        with Session(engine) as session:
-            session.add(db.create_db.KnowledgeBase(id=kb_id, name=kb.kb_name, description=kb.desc,
-                                                   create_time=datetime.datetime.utcnow(), user_id=kb.user_id))
-            session.commit()
-    except Exception as e:
-        return BaseResponse(code=500, msg="创建知识库失败", data={"error": f'{e}'})
-
     """
     创建知识库
     1. knowledge_base_name
@@ -42,6 +33,15 @@ async def create_knowledge_base(kb: KnowledgeBase) -> BaseResponse:
     response = await request(url=KB_ARGS['url'], request_body=request_body, prefix="")
 
     if response["success"]:
+
+        try:
+            with Session(engine) as session:
+                session.add(db.create_db.KnowledgeBase(id=kb_id, name=kb.kb_name, description=kb.desc,
+                                                       create_time=datetime.datetime.utcnow(), user_id=kb.user_id))
+                session.commit()
+        except Exception as e:
+            return BaseResponse(code=500, msg="创建知识库失败", data={"error": f'{e}'})
+
         return BaseResponse(code=200, msg="创建知识库成功", data={"kb_id": kb_id})
 
     return BaseResponse(code=500, msg="创建知识库失败", data={"error": response["error"]})
@@ -81,7 +81,10 @@ async def upload_knowledge_files(
         if response.ok:
             json_res = response.json()
             print(json_res)
-            return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json_res["data"]["failed_files"]})
+            if json_res["code"] == 200:
+                return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json_res["data"]["failed_files"]})
+            elif json_res["code"] == 404:
+                return BaseResponse(code=json_res["code"],msg=json_res["msg"],data=json_res["data"])
     except (fastapi.exceptions.ResponseValidationError, RequestException) as e:
         return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": None, "error": f'{e}'})
 
