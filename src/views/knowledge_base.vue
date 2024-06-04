@@ -2,7 +2,7 @@
   <el-container class="container">
     <el-main class="main">
       <!-- 选择知识库 -->
-      <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList"
+      <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList"
       @change="changeKnowledge">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
@@ -148,7 +148,7 @@ function newKnowledge() {
       let knowledgeId = res.data.kb_id;
       console.log("创建知识库id为：" + knowledgeId);
       //直接强制改了,没问题，有点小问题，因为显示的变成了id，但是点击一下就好了，暂时不想改了私密马赛。
-      KnowledgeValue.value=KnowledgeBaseName//knowledgeId;
+      KnowledgeValue.value=KnowledgeBaseName.value//knowledgeId;
 
 
       //清空 
@@ -240,7 +240,8 @@ function uploadAllFile() {
   }
 
   //得到知识库id
-  const currentKbId=  options.value.find(item => item.label === KnowledgeValue.value);
+  let currentKbId=  options.value.find(item => item.label === KnowledgeValue.value);
+  console.log(currentKbId);
   //多文件上传
   for (let i = 0; i < fileLists.value.length; i++) {
     // 若是新添加文件即存在fileLists.value.raw,则调用上传接口，否则不需调用
