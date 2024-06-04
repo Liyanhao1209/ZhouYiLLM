@@ -42,24 +42,33 @@
 </template>
 
 <script setup>
-import { ref,reactive} from 'vue'
+import { ref,reactive,onMounted} from 'vue'
 import {getUserAllConversation}from  '@/service/authService.js'
 import { formatDateTime}  from '@/utils/utils.js'
 // import Chats from './chats.vue';
 import { useRoute, useRouter } from 'vue-router';
 import {Comment} from '@element-plus/icons-vue'
 
+let user_id = ref(null);
+const route = useRoute();
+//得到userid
+onMounted(() => {
+  // if(! localStorage.getItem('user_id')) localStorage.getItem('user_id')//
+  user_id.value= localStorage.getItem('user_id');
+  console.log(route.query.user_id,localStorage.getItem('user_id'),user_id.value);
 
-//写死的目的是方便测试，因为登录注册没想明白怎么绕过菜单
-// 我的建议是
-const user_id = "d078b124cf27413bbb99f6484782e98c";
-const chatHistory = ref(null); // 使用 ref 创建一个响应式引用  
+  // 调用 getChatList 函数
+  getChatList();
+});
+//写死的目的是方便测试
+
+const chatHistory = ref(null); // 使用 ref 创建一个响应式引用
 
 function getChatList() {
-  let data = { "user_id": user_id };
+  let data = { "user_id": user_id.value };
   getUserAllConversation(data).then(res => {
     if (res.code === 200) {
-      chatHistory.value = res.data.conversations; // 使用 .value 来更新 ref 的值  
+      chatHistory.value = res.data.conversations; // 使用 .value 来更新 ref 的值
       chatHistory.value.reverse();
       chatHistory.value.forEach(chat => {
         chat.formattedCreateTime = formatDateTime(chat.create_time); // 添加一个新字段来保存格式化后的时间
@@ -74,8 +83,7 @@ function getChatList() {
   });
 }
 
-// 调用 getChatList 函数  
-getChatList();
+
 
 
 //稀里糊涂就传参成功了？？？？
@@ -88,7 +96,6 @@ const setCurrentChat = (chat) => {
   router.push({ name: 'chat', query: {
       conv_id:currentChat.id,
       conv_name:currentChat.conv_name,
-      user_id: currentChat.user_id,
     } });
 }
 

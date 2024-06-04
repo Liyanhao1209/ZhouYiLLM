@@ -35,6 +35,10 @@
             </button>
           </div>
         </div>
+          <!-- 选择知识库 一个对话可以对应多个知识库的 用户根据选择切换知识库 -->
+          <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList" @change="changeKnowledge">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="{ id: item.value, name: item.label }" />
+          </el-select>
       </div>
     </main>
   </div>
@@ -42,15 +46,25 @@
 
 <script setup>
 import { ref, reactive, nextTick, onMounted } from "vue";
-import { createConversion, mixChat, getConversationRecord } from '@/service/authService.js'
+import { createConversion, mixChat, getConversationRecord,getUserKnowledgeBaseList} from '@/service/authService.js'
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from 'vue-router';
 import store from '../store';
 import { fetchEventSource,EventStreamContentType } from '@microsoft/fetch-event-source';
 
 
+const KnowledgeValue = ref('');
+let options = ref(null);
+//初始值
+options.value = [
+  {
+    value: "faiss_zhouyi",//值 加载出
+    label: '初始知识库',//文本
+  }
+];
 
-let user_id = "c3f1f73cec3c43458d6c2a6572cb327b";
+
+let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
 let conv_id = null;
 //默认为用户第一句
@@ -59,6 +73,7 @@ let aiCurrentChat = null;
 const value = ref("");
 const msgList = reactive([
 ]);
+let currentKB=ref('faiss_zhouyi');
 
 //接受history的传参：
 // 接收路由参数
@@ -67,16 +82,16 @@ const route = useRoute();
 
 onMounted(() => {
   //判断一下是否有传参，无传参就退出
-  if (!route.query.conv_id || !route.query.conv_name || !route.query.user_id) {
+  if (!route.query.conv_id || !route.query.conv_name ) {
     return;
   }
   //有传参说明是历史对话
   conv_id = route.query.conv_id || '';
   conv_name.value = route.query.conv_name || '';
-  user_id = route.query.user_id || '';
+  user_id = localStorage.getItem('user_id')
   console.log(conv_name, conv_id, user_id)
 
-  if (conv_id.v !== null && conv_name.value !== null) {
+  if (conv_id !== null && conv_name.value !== null) {
     console.log(conv_name.value, conv_id);
     //加载历史聊天进入msgList
     let data = { "conv_id": conv_id };
@@ -149,7 +164,7 @@ const signal = controller.signal;
     let currentMessage = {
         "conv_id": conv_id,
         "query": query,
-        "knowledge_base_id": "faiss_zhouyi"
+        "knowledge_base_id":  currentKB.value
       }
       //url可替换 
       fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
@@ -190,8 +205,8 @@ const signal = controller.signal;
             }
             else if('text' in parsedData.data){
 
-                    // 将ai回复加入list
-                let lastAI = msgList.find((msg) => msg.content === resultAnswer.value);
+                    // 将ai回复加入list  确定是ai的
+                let lastAI = msgList.find((msg) => msg.content === resultAnswer.value&&msg.type==='ai');
                 console.log(lastAI);
                 resultAnswer.value +=parsedData.data.text;
                 //如果没有回答就创建新的：
@@ -299,6 +314,57 @@ const onSend = () => {
     value.value = "";
   }
 };
+
+
+
+
+
+//更改list
+const addKnowledgeBase = (knowledge_base) => {
+  var currentKB = {
+    //   content: replay,
+    //   type: "ai",
+    value: knowledge_base.id,//值 加载出的
+    label: knowledge_base.name,//文本  
+  };
+  options.value.push(currentKB);
+  nextTick(() => { });
+};
+//options，然后更新 用focus
+function getKnowledgeBaseList() {
+
+  let data = { 'user_id': user_id };
+  console.log('用户id',user_id);
+  getUserKnowledgeBaseList(data).then(res => {
+    if (res.code === 200) {
+      console.log('获取用户知识库成功');
+      console.log(res);
+      //每次获取时强制将其options还原为新建知识库
+      options.value = [
+        {
+          value: "faiss_zhouyi",//值 加载出
+          label: '初始知识库',//文本
+        }
+      ];
+      res.data.user_kbs.forEach(knowledge_base => {
+        addKnowledgeBase(knowledge_base);
+      });
+      console.log(options.value);
+    }
+    else {
+      console.log(res);
+      ElMessage.error(res.code, res.msg);
+    }
+  })
+
+}
+
+//data 为option的value绑定的对象
+const  changeKnowledge =(data)=>{
+  console.log('当前知识库',data);
+  currentKB.value=data.id;
+  KnowledgeValue.value=data.name;
+}
 </script>
 
 

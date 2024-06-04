@@ -2,7 +2,8 @@
   <el-container class="container">
     <el-main class="main">
       <!-- 选择知识库 -->
-      <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList">
+      <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList"
+      @change="changeKnowledge">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <!-- 新建知识库 -->
@@ -20,9 +21,9 @@
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
 
-            • HTML, HTM, MHTML, MD, JSON, JSONL, CSV, PDF, DOCX, DOC, PPT, PPTX, PNG, JPG, JPEG, <br>
-            BMP, EML, MSG, RST, RTF, TXT, XML, EPUB, ODT, TSV, EML, MSG, EPUB, XLSX, XLS, XLSD, <br>
-            IPYNB, ODT, PY, RST, RTF, SRT, TOML, TSV, DOCX, DOC, XML, PPT, PPTX, ENEX<br>
+            • HTML, HTM, MHTML, MD, JSON, JSONL, CSV, PDF, DOCX, DOC, PPT, PPTX,  <br>
+            EML, MSG, RST, RTF, TXT, XML, EPUB, ODT, TSV, EML, MSG, EPUB, <br>
+            XLSX, XLS, XLSD,IPYNB, PY, SRT, TOML,  ENEX<br>
             <br>
             Drop file here or <em>click to upload</em>
           </div>
@@ -37,7 +38,7 @@
         <el-button class="ml-3" type="success" @click="submitUpload">
           上传文件
         </el-button>
-        <div style="width: 400px; align: center;">
+        <div style="width: 400px; ">
           <!-- 显示当前知识库文件，支持分页？算了 -->
 
           当前知识库已有文件：
@@ -83,6 +84,7 @@ const hasKnowledge = computed(() => {
 //初始化时，接受用户id
 onMounted(() => {
   hasKnowledge.value = true;
+  user_id.value = localStorage.getItem('user_id')
   //判断一下是否有传参，无传参就退出
   if (!route.query.user_id) {
     return;
@@ -146,7 +148,8 @@ function newKnowledge() {
       let knowledgeId = res.data.kb_id;
       console.log("创建知识库id为：" + knowledgeId);
       //直接强制改了,没问题，有点小问题，因为显示的变成了id，但是点击一下就好了，暂时不想改了私密马赛。
-      KnowledgeValue.value = knowledgeId;
+      KnowledgeValue.value=KnowledgeBaseName//knowledgeId;
+
 
       //清空 
       KnowledgeBaseName = null;
@@ -235,6 +238,9 @@ function uploadAllFile() {
     ElMessage.error("请上传文件！");
     return;
   }
+
+  //得到知识库id
+  const currentKbId=  options.value.find(item => item.label === KnowledgeValue.value);
   //多文件上传
   for (let i = 0; i < fileLists.value.length; i++) {
     // 若是新添加文件即存在fileLists.value.raw,则调用上传接口，否则不需调用
@@ -244,7 +250,9 @@ function uploadAllFile() {
       console.log("当前文件", fileLists.value[i].raw)
 
       fileData.append('files', fileLists.value[i].raw);
-      fileData.append('kb_id', KnowledgeValue.value);
+
+      //得到当前知识库id：
+      fileData.append('kb_id', currentKbId);
       uploadFile(fileData, fileLists.value[i].name);//上传文件
       //上传完之后一个个删除上传的文件
     }
@@ -284,16 +292,21 @@ function uploadFile(fileData, name) {
 //得到当前文件：
 
 let getFileLists = ref(null);
-watch(KnowledgeValue, (newValue, oldValue) => {
-  if (newValue !== '新建知识库') {
-    getFileListsMethod();
-  }
-});
-function getFileListsMethod() {
 
+const  changeKnowledge =(data)=>{
+  console.log('当前zhi'+data);
+  getFileListsMethod(data);
+}
+// watch(KnowledgeValue, (newValue, oldValue) => {
+//   if (newValue !== '新建知识库') {
+//     getFileListsMethod();
+//   }
+// });
+function getFileListsMethod(currentKbId) {
+  console.log('当前知识库id'+currentKbId);
   if (KnowledgeValue.value !== '新建知识库') {
     let data = {
-      'kb_id': KnowledgeValue.value
+      'kb_id': currentKbId
     }
     getKnowledgeBaseDoc(data).then(res => {
       if (res.code === 200) {
