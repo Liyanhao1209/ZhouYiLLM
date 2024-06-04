@@ -7,7 +7,7 @@ from component.DB_engine import engine
 from db.create_db import Blog, User, Comment
 from message_model.request_model.forum_model import CommentModel
 from message_model.response_model.response import BaseResponse
-from util.utils import serialize_blog, blog_user_to_dict, serialize_comment
+from util.utils import serialize_blog, blog_user_to_dict, serialize_comment, serialize_comment_user
 
 
 def get_all_blogs() -> BaseResponse:
@@ -51,14 +51,18 @@ def get_comment(blog_id: str) -> BaseResponse:
     """
     try:
         with Session(engine) as session:
-            res = session.query(Comment).filter(Comment.blog_id == blog_id).all()
+            res = session.query(Comment, User.name).join(User, Comment.user_id == User.id).filter(
+                Comment.blog_id == blog_id).all()
     except Exception as e:
         print(e)
         return BaseResponse(code=500, message=str(e))
-    return BaseResponse(code=200, msg='success', data=[serialize_comment(comment) for comment in res])
+    return BaseResponse(code=200, msg='success', data=[serialize_comment_user(comment) for comment in res])
 
 
 def delete_comment(blog_id: str, user_id: str) -> BaseResponse:
+    """
+    删除博客的评论，注意权限判断
+    """
     try:
         with Session(engine) as session:
             res = session.query(Comment).filter(Comment.blog_id == blog_id).first()
