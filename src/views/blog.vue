@@ -16,7 +16,7 @@
             </el-header>
             <el-container>
                 <el-aside width="200px">
-                    <el-menu mode="vertical">
+                    <el-menu mode="vertical" default-active="active_item_index">
                         <el-menu-item v-for="(val, key, index) in bloglist" @click="click_blog" :index="val.id">
                             {{ val.title }}
                         </el-menu-item>
@@ -25,6 +25,8 @@
                 <el-main>
                     <h1>{{ edit_blog.title }}</h1>
                     <div v-html="html"></div>
+                    <el-divider />
+                    <Comment v-if="this.blog_id" :comment_list="comment_list" @refresh_comment_list="get_comment_"/>
                 </el-main>
             </el-container>
 
@@ -38,9 +40,9 @@
 <script>
 import store from '../store'
 import MarkdownIt from 'markdown-it';
-import { get_blog_list, delete_blog } from '@/service/blog_service';
+import { get_blog_list, delete_blog, get_comment_list } from '@/service/blog_service';
 import { ElMessageBox, ElMessage } from 'element-plus';
-
+import Comment from '@/components/comment.vue';
 export default {
     name: 'blog',
     data() {
@@ -50,6 +52,7 @@ export default {
             // 保存当前blogid
             blog_id: '',
             bloglist: [],
+            comment_list: [],
             md_config: {
                 html: true,
                 breaks: true,
@@ -58,17 +61,27 @@ export default {
         }
     },
     components: {
-
+        Comment
     },
     mounted() {
         this.init_bloglist();
+        
     },
 
     created() {
         this.init_bloglist();
+        this.blog_id = this.$route.query.blog_id
 
     },
     methods: {
+        //获取博客评论
+        get_comment_() {
+            get_comment_list(this.blog_id).then(res => {
+                this.comment_list = res.data.data.comment_list
+                console.log(this.comment_list);
+            })
+        },
+
         //获取博客列表
         init_bloglist() {
             //传入user_id
@@ -113,6 +126,7 @@ export default {
             let index = this.bloglist.findIndex(item => item.id === e.index)
             this.render_md(this.bloglist[index].content)
             this.blog_id = e.index
+            this.get_comment_()
         },
         // 渲染md
         render_md(src) {
@@ -133,10 +147,6 @@ export default {
                 })
             }
         }
-
-
-
-
     }
 }
 </script>

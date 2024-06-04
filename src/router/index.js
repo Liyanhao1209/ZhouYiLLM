@@ -55,6 +55,16 @@ const routes = [
         name: 'info',
         component: () => import('@/views/info.vue')
       },
+      {
+        path: '/forum',
+        name: 'forum',
+        component: () => import('@/views/forum.vue')
+      },
+      {
+        path: '/forum_blog',
+        name: 'forum_blog',
+        component: () => import('@/views/forum_blog.vue')
+      },
     ]
   }
 

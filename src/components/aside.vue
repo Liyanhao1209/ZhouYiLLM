@@ -43,6 +43,12 @@
           </el-icon>
           <template #title>博客</template>
         </el-menu-item>
+        <el-menu-item index="forum">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>论坛</template>
+        </el-menu-item>
         <el-menu-item index="info">
           <el-icon>
             <setting />
@@ -62,7 +68,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { createRouter, useRoute, useRouter } from 'vue-router';
 import {
   Document,
   Menu as IconMenu,
@@ -83,7 +89,6 @@ const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
 
-const router = useRouter();
 //传参给知识库
 const toKnowledge = () =>{
   // router.push({ 
@@ -91,7 +96,7 @@ const toKnowledge = () =>{
   //   query: {user_id: 'fb18845ed0604498812f8a0135255253' }
   // });
 }
-
+const router = useRouter()
 const toChat = ()=>{
     // router.push('/chat');
 }

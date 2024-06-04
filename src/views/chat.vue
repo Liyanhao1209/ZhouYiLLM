@@ -46,11 +46,11 @@
 
 <script setup>
 import { ref, reactive, nextTick, onMounted } from "vue";
-import { createConversion, mixChat, getConversationRecord,getUserKnowledgeBaseList} from '@/service/authService.js'
+import { createConversion, mixChat, getConversationRecord, getUserKnowledgeBaseList } from '@/service/authService.js'
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from 'vue-router';
 import store from '../store';
-import { fetchEventSource,EventStreamContentType } from '@microsoft/fetch-event-source';
+import { fetchEventSource, EventStreamContentType } from '@microsoft/fetch-event-source';
 
 
 const KnowledgeValue = ref('');
@@ -68,12 +68,12 @@ let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
 let conv_id =  ref(null);
 //默认为用户第一句
-let conv_name =  ref(null);
+let conv_name = ref(null);
 let aiCurrentChat = null;
 const value = ref("");
 const msgList = reactive([
 ]);
-let currentKB=ref('faiss_zhouyi');
+let currentKB = ref('faiss_zhouyi');
 
 //接受history的传参：
 // 接收路由参数
@@ -125,7 +125,7 @@ onMounted(() => {
             } 
             if(content.answer!==null&&content.answer!=='') AIReplay(content.answer,'history');
             //  AIReplay(chat.content); 
-            } 
+          }
           else { userQuestion(chat.content); }
         });
         scrollToNew();
@@ -183,9 +183,11 @@ const controller = new AbortController();
 const signal = controller.signal;
 let currentAiReply = ref(false);
 
+
+
   const sseAiChat = (query) =>{
   // 发送文本
-  let resultAnswer=ref('');
+  let resultAnswer = ref('');
 
     let currentMessage = {
         "conv_id": conv_id.value,
@@ -259,8 +261,8 @@ let currentAiReply = ref(false);
           }
       });
 
-  }
-    
+}
+
 //原来的
 //ai对话  首先得到doc 然后得到继续回答
 const aiChat = (query) => {
@@ -380,7 +382,7 @@ const addKnowledgeBase = (knowledge_base) => {
 function getKnowledgeBaseList() {
 
   let data = { 'user_id': user_id };
-  console.log('用户id',user_id);
+  console.log('用户id', user_id);
   getUserKnowledgeBaseList(data).then(res => {
     if (res.code === 200) {
       console.log('获取用户知识库成功');
@@ -406,10 +408,10 @@ function getKnowledgeBaseList() {
 }
 
 //data 为option的value绑定的对象
-const  changeKnowledge =(data)=>{
-  console.log('当前知识库',data);
-  currentKB.value=data.id;
-  KnowledgeValue.value=data.name;
+const changeKnowledge = (data) => {
+  console.log('当前知识库', data);
+  currentKB.value = data.id;
+  KnowledgeValue.value = data.name;
 }
 </script>
 
