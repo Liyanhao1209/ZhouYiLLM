@@ -6,36 +6,36 @@
         <h1>历史会话</h1>
       </div>
 
-      <el-scrollbar style="margin: 0; padding: 0; border: none;">
-        <div class="card-container"> <!-- 添加一个类来包裹所有的el-card -->
-          <el-card
-              v-for="(chat, index) in chatHistory"
-              :key="index"
-              class="box-card"
-              style="margin-bottom: 10px;"
-          >
-            <div class="card-content">
-              <div class="card-header">
-                <div class="left-items">
-                  <el-icon class="text item" style="left: 0%;font-size: 24px;">
-                    <Comment />
-                  </el-icon>
-                  <span class="text item" style="text-align: left;font-size: 18px;">{{ chat.conv_name }}</span>
-                </div>
+      <!-- <el-scrollbar style="margin: 0; padding: 0; border: none;"> -->
+      <div class="card-container"> <!-- 添加一个类来包裹所有的el-card -->
+        <el-card
+            v-for="(chat, index) in chatHistory"
+            :key="index"
+            class="box-card"
+            style="margin-bottom: 10px;"
+        >
+          <div class="card-content">
+            <div class="card-header">
+              <div class="left-items">
+                <el-icon class="text item" style="left: 0%;font-size: 24px;">
+                  <Comment />
+                </el-icon>
+                <span class="text item" style="text-align: left;font-size: 18px;">{{ chat.conv_name }}</span>
+              </div>
 
-                <div class="right-items">
-                  <div class="text item" style="font-size: 15px;right: 0%">
-                    {{ chat.formattedCreateTime }}
-                  </div>
-                  <el-button class="text item" type="text" @click="setCurrentChat(chat)" style="text-align: right;" >
-                    对话详情
-                  </el-button>
+              <div class="right-items">
+                <div class="text item" style="font-size: 15px;right: 0%">
+                  {{ chat.formattedCreateTime }}
                 </div>
+                <el-button class="text item" type="text" @click="setCurrentChat(chat)" style="text-align: right;" >
+                  对话详情
+                </el-button>
               </div>
             </div>
-          </el-card>
-        </div>
-      </el-scrollbar>
+          </div>
+        </el-card>
+      </div>
+      <!-- </el-scrollbar> -->
 
     </el-main>
   </el-container>
