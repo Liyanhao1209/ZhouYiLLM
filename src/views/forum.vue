@@ -6,6 +6,8 @@
             <BlogCard :blog_title="item.title" :blog_author="item.user_name" :blog_content="item.content" :blog_id="item.id"
              />
         </template>
+        <el-empty v-if="this.blog_list.length == 0" description="空空如也"></el-empty>
+        
     </div>
 </template>
 

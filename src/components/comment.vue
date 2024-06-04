@@ -1,7 +1,7 @@
 <template>
     <el-card shadow="hover">
         <template #header>
-            <h2 style="text-align: left">评论</h2>
+            <h2 style="text-align: left">评论区</h2>
         </template>
         <template v-for="(item, index) in comment_list">
             <el-card shadow="never" class="comment-card">
@@ -20,32 +20,49 @@
                 <el-button @click="delete_comment_(item.id)">删除评论</el-button>
             </div>
         </template>
+        <el-empty v-if="this.comment_list.length == 0" description="还没有评论……"></el-empty>
     </el-card>
 </template>
 
 <script>
-import { UserFilled } from '@element-plus/icons-vue'
-import { formatDateTime } from '@/utils/utils';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { delete_comment } from '@/service/forum_service';
 export default {
     name: 'comment',
     props: {
         //存放评论列表
         comment_list: [],
+        blog_id: ''
     },
     computed: {
 
     },
     methods: {
         delete_comment_(id) {
-            console.log('删除评论', id);
-            ElMessage({
-                type: 'success',
-                message: '功能没实现'
-            })
-            ElMessage({
-                type: 'error',
-                message: '没权限'
+            console.log(id);
+            ElMessageBox.confirm(
+                '确定要删除吗？',
+                '消息',
+                {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }
+            ).then(() => {
+                let user_id = localStorage.getItem('user_id')
+                delete_comment(id, user_id, this.blog_id).then(res => {
+                    if (res.data.code == 200) {
+                        ElMessage({
+                            type: 'success',
+                            message: '删除成功'
+                        })
+                        this.$emit('refresh_comment_list')
+                    } else {
+                        ElMessage({
+                            type: 'error',
+                            message: res.data.msg
+                        })
+                    }
+                })
             })
         },
     }

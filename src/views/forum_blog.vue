@@ -13,7 +13,7 @@
                 <el-main>
                     <div v-html="html"></div>
                     <el-divider />
-                    <Comment :comment_list="comment_list" />
+                    <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_"/>
                     <el-input v-model="comment" type="textarea" style="margin-top: 50px;" placeholder="输入内容"></el-input>
                     <div style="width: 100%; text-align: end; margin-top: 20px">
                         <el-button @click="add_comment_" type="success">评论</el-button>
@@ -65,8 +65,7 @@ export default {
         //获取博客评论
         get_comment_() {
             get_comment_list(this.blog_id).then(res => {
-                this.comment_list = res.data.data
-                console.log(this.comment_list);
+                this.comment_list = res.data.data.comment_list
             })
         },
 

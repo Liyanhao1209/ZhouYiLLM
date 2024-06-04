@@ -26,7 +26,7 @@
                     <h1>{{ edit_blog.title }}</h1>
                     <div v-html="html"></div>
                     <el-divider />
-                    <Comment :comment_list="comment_list"/>
+                    <Comment v-if="this.blog_id" :comment_list="comment_list" @refresh_comment_list="get_comment_"/>
                 </el-main>
             </el-container>
 
@@ -77,7 +77,7 @@ export default {
         //获取博客评论
         get_comment_() {
             get_comment_list(this.blog_id).then(res => {
-                this.comment_list = res.data.data
+                this.comment_list = res.data.data.comment_list
                 console.log(this.comment_list);
             })
         },
