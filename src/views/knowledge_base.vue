@@ -240,7 +240,8 @@ function uploadAllFile() {
   }
 
   //得到知识库id
-  const currentKbId=  options.value.find(item => item.label === KnowledgeValue.value);
+  // const currentKbId=  options.value.find(item => item.label === KnowledgeValue.value);
+  let currentKbId = '8a9c9f3eef2f4568b3bc7ad0c2033a04'
   //多文件上传
   for (let i = 0; i < fileLists.value.length; i++) {
     // 若是新添加文件即存在fileLists.value.raw,则调用上传接口，否则不需调用
@@ -253,6 +254,8 @@ function uploadAllFile() {
 
       //得到当前知识库id：
       fileData.append('kb_id', currentKbId);
+      console.log("当前知识库id",currentKbId)
+      console.log("当前表单中知识库Id",fileData.get('kb_id'))
       uploadFile(fileData, fileLists.value[i].name);//上传文件
       //上传完之后一个个删除上传的文件
     }
@@ -273,6 +276,7 @@ const submitUpload = () => {
 //上传文件 在默认的文件上传前被调用，为了禁止文件上传，需要返回false
 function uploadFile(fileData, name) {
 
+  console.log(fileData)
   console.log("给后端的data", fileData);
   uploadKnowledgeDoc(fileData).then(res => {
     console.log(res);
@@ -294,7 +298,7 @@ function uploadFile(fileData, name) {
 let getFileLists = ref(null);
 
 const  changeKnowledge =(data)=>{
-  console.log('当前zhi'+data);
+  console.log('当前值'+data);
   getFileListsMethod(data);
 }
 // watch(KnowledgeValue, (newValue, oldValue) => {
