@@ -229,6 +229,7 @@ function handleRemove(file, fileList) {
 //     }
 // }
 
+let currentKbId=  ref('');
 function uploadAllFile() {
   if (KnowledgeValue.value === '新建知识库') {
     ElMessage.error("请选择知识库！");
@@ -240,8 +241,8 @@ function uploadAllFile() {
   }
 
   //得到知识库id
-  let currentKbId=  options.value.find(item => item.label === KnowledgeValue.value);
-  console.log(currentKbId);
+//options.value.find(item => item.label === KnowledgeValue.value);
+  console.log('当前知识库id：    '+currentKbId.value);
   //多文件上传
   for (let i = 0; i < fileLists.value.length; i++) {
     // 若是新添加文件即存在fileLists.value.raw,则调用上传接口，否则不需调用
@@ -253,7 +254,7 @@ function uploadAllFile() {
       fileData.append('files', fileLists.value[i].raw);
 
       //得到当前知识库id：
-      fileData.append('kb_id', currentKbId);
+      fileData.append('kb_id', currentKbId.value);
       uploadFile(fileData, fileLists.value[i].name);//上传文件
       //上传完之后一个个删除上传的文件
     }
@@ -268,6 +269,7 @@ const submitUpload = () => {
   uploadRef.value.submit();
   // 清空 el-upload 组件中的文件列表 删太快啦，就这样吧
   uploadRef.value.clearFiles();
+  getFileListsMethod();
 };
 
 
@@ -295,19 +297,21 @@ function uploadFile(fileData, name) {
 let getFileLists = ref(null);
 
 const  changeKnowledge =(data)=>{
-  console.log('当前zhi'+data);
-  getFileListsMethod(data);
+  console.log('当前： '+data);
+  currentKbId.value=data;
+  getFileListsMethod();
 }
 // watch(KnowledgeValue, (newValue, oldValue) => {
 //   if (newValue !== '新建知识库') {
 //     getFileListsMethod();
 //   }
 // });
-function getFileListsMethod(currentKbId) {
-  console.log('当前知识库id'+currentKbId);
+function getFileListsMethod() {
+  console.log('得到文件的当前知识库id '+currentKbId.value);
+
   if (KnowledgeValue.value !== '新建知识库') {
     let data = {
-      'kb_id': currentKbId
+      'kb_id': currentKbId.value
     }
     getKnowledgeBaseDoc(data).then(res => {
       if (res.code === 200) {
