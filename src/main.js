@@ -7,7 +7,6 @@ import ElementPlus, { ElMessage } from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'vditor/dist/index.css'
 
-
 const app = createApp(App)
 
 router.beforeEach((to, from, next) => {

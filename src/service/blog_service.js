@@ -22,9 +22,14 @@ function delete_blog(blog_id) {
     return request.get('blog/delete/' + blog_id)
 }
 
+function get_comment_list(blog_id) {
+    return request.get('forum/get_comment/' + blog_id)
+}
+
 
 export {
     add_blog,
     get_blog_list,
-    delete_blog
+    delete_blog,
+    get_comment_list
 }

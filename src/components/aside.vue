@@ -62,7 +62,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { createRouter, useRoute, useRouter } from 'vue-router';
 import {
   Document,
   Menu as IconMenu,
@@ -90,7 +90,7 @@ const toKnowledge = () =>{
     query: {user_id: 'fb18845ed0604498812f8a0135255253' }
   });
 }
-
+const router = useRouter()
 const logout = () => {
   router.push('/login')
   store.commit('logout')

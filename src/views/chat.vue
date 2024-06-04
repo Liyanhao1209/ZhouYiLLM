@@ -35,10 +35,12 @@
             </button>
           </div>
         </div>
-          <!-- 选择知识库 一个对话可以对应多个知识库的 用户根据选择切换知识库 -->
-          <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList" @change="changeKnowledge">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="{ id: item.value, name: item.label }" />
-          </el-select>
+        <!-- 选择知识库 一个对话可以对应多个知识库的 用户根据选择切换知识库 -->
+        <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList"
+          @change="changeKnowledge">
+          <el-option v-for="item in options" :key="item.value" :label="item.label"
+            :value="{ id: item.value, name: item.label }" />
+        </el-select>
       </div>
     </main>
   </div>
@@ -46,11 +48,11 @@
 
 <script setup>
 import { ref, reactive, nextTick, onMounted } from "vue";
-import { createConversion, mixChat, getConversationRecord,getUserKnowledgeBaseList} from '@/service/authService.js'
+import { createConversion, mixChat, getConversationRecord, getUserKnowledgeBaseList } from '@/service/authService.js'
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from 'vue-router';
 import store from '../store';
-import { fetchEventSource,EventStreamContentType } from '@microsoft/fetch-event-source';
+import { fetchEventSource, EventStreamContentType } from '@microsoft/fetch-event-source';
 
 
 const KnowledgeValue = ref('');
@@ -68,12 +70,12 @@ let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
 let conv_id = null;
 //默认为用户第一句
-let conv_name =  ref(null);
+let conv_name = ref(null);
 let aiCurrentChat = null;
 const value = ref("");
 const msgList = reactive([
 ]);
-let currentKB=ref('faiss_zhouyi');
+let currentKB = ref('faiss_zhouyi');
 
 //接受history的传参：
 // 接收路由参数
@@ -82,7 +84,7 @@ const route = useRoute();
 
 onMounted(() => {
   //判断一下是否有传参，无传参就退出
-  if (!route.query.conv_id || !route.query.conv_name ) {
+  if (!route.query.conv_id || !route.query.conv_name) {
     return;
   }
   //有传参说明是历史对话
@@ -106,14 +108,14 @@ onMounted(() => {
         records.value.forEach(chat => {
           if (chat.is_ai) {
             // chat.content.answer
-          //解析成json格式
-            let content= JSON.parse(chat.content);
+            //解析成json格式
+            let content = JSON.parse(chat.content);
             // let content_1=content.answer+ '参考：'+content.docs.docs;
-            
-            if(content.docs.docs!==null&&content.docs.docs!=='') AIReplay('参考：'+content.docs.docs);
-            if(content.answer!==null&&content.answer!=='') AIReplay(content.answer);
+
+            if (content.docs.docs !== null && content.docs.docs !== '') AIReplay('参考：' + content.docs.docs);
+            if (content.answer !== null && content.answer !== '') AIReplay(content.answer);
             //  AIReplay(chat.content); 
-            } 
+          }
           else { userQuestion(chat.content); }
         });
 
@@ -157,75 +159,75 @@ const controller = new AbortController();
 const signal = controller.signal;
 
 
-  const sseAiChat = (query) =>{
+const sseAiChat = (query) => {
   // 发送文本
-  let resultAnswer=ref('');
+  let resultAnswer = ref('');
 
-    let currentMessage = {
-        "conv_id": conv_id,
-        "query": query,
-        "knowledge_base_id":  currentKB.value
-      }
-      //url可替换 
-      fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
-          method: 'POST',
-          signal: signal,
-          headers: {
-              'Content-Type': 'application/json',
-              // token: window.sessionStorage.getItem('token'),
-          },
-          body:JSON.stringify(currentMessage),
-          
-          async onopen(response) {
-            console.log(response);
-            //有log，但是一开始为空
-            if (response.ok && response.headers.get('content-type') === 'text/event-stream') {
-              console.log(response);
-                return; // everything's good
-            } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-                // client-side errors are usually non-retriable:
-                console.log("回应错误")
-            } else {
-                // throw new RetriableError();
-            }
-        },
-          onmessage(msg) {
-            //后端的返回值一定要按照对应的格式！不然无法解析
-            // console.log(msg);
-            const parsedData = JSON.parse(msg.data);
-            console.log(parsedData); // 
-            //doc也要改
-            if('docs' in parsedData.data){
-                let aiCurrentChatDocs = JSON.stringify(parsedData.data.docs);
-                //有的\n\n无法被更改
-                aiCurrentChatDocs = aiCurrentChatDocs.replace(/\n/g, '<br>');
-                // aiCurrentChatDocs = aiCurrentChatDocs.replace(/^\[/, '').replace(/\]$/, '');
-                  // 将ai回复加入list
-                AIReplay('参考：'+ aiCurrentChatDocs);
-            }
-            else if('text' in parsedData.data){
-
-                    // 将ai回复加入list  确定是ai的
-                let lastAI = msgList.find((msg) => msg.content === resultAnswer.value&&msg.type==='ai');
-                console.log(lastAI);
-                resultAnswer.value +=parsedData.data.text;
-                //如果没有回答就创建新的：
-                if(!lastAI){
-                    AIReplay(resultAnswer.value);
-                }
-                else{
-                  lastAI.content=resultAnswer.value;
-                }
-            }
-                  
-          },
-          onerror(err) {
-            throw err;    //必须throw才能停止 
-          }
-      });
-
+  let currentMessage = {
+    "conv_id": conv_id,
+    "query": query,
+    "knowledge_base_id": currentKB.value
   }
-    
+  //url可替换 
+  fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
+    method: 'POST',
+    signal: signal,
+    headers: {
+      'Content-Type': 'application/json',
+      // token: window.sessionStorage.getItem('token'),
+    },
+    body: JSON.stringify(currentMessage),
+
+    async onopen(response) {
+      console.log(response);
+      //有log，但是一开始为空
+      if (response.ok && response.headers.get('content-type') === 'text/event-stream') {
+        console.log(response);
+        return; // everything's good
+      } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+        // client-side errors are usually non-retriable:
+        console.log("回应错误")
+      } else {
+        // throw new RetriableError();
+      }
+    },
+    onmessage(msg) {
+      //后端的返回值一定要按照对应的格式！不然无法解析
+      // console.log(msg);
+      const parsedData = JSON.parse(msg.data);
+      console.log(parsedData); // 
+      //doc也要改
+      if ('docs' in parsedData.data) {
+        let aiCurrentChatDocs = JSON.stringify(parsedData.data.docs);
+        //有的\n\n无法被更改
+        aiCurrentChatDocs = aiCurrentChatDocs.replace(/\n/g, '<br>');
+        // aiCurrentChatDocs = aiCurrentChatDocs.replace(/^\[/, '').replace(/\]$/, '');
+        // 将ai回复加入list
+        AIReplay('参考：' + aiCurrentChatDocs);
+      }
+      else if ('text' in parsedData.data) {
+
+        // 将ai回复加入list  确定是ai的
+        let lastAI = msgList.find((msg) => msg.content === resultAnswer.value && msg.type === 'ai');
+        console.log(lastAI);
+        resultAnswer.value += parsedData.data.text;
+        //如果没有回答就创建新的：
+        if (!lastAI) {
+          AIReplay(resultAnswer.value);
+        }
+        else {
+          lastAI.content = resultAnswer.value;
+        }
+      }
+
+    },
+    onerror(err) {
+      throw err;    //必须throw才能停止 
+    }
+  });
+
+}
+
 //原来的
 //ai对话  首先得到doc 然后得到继续回答
 const aiChat = (query) => {
@@ -282,7 +284,7 @@ const onSend = () => {
         //将对话名命名为第一个问句
         conv_name = value.value;
         userQuestion(value.value);
-          //TODO:
+        //TODO:
         // aiChat(value.value);
         sseAiChat(value.value);
 
@@ -334,7 +336,7 @@ const addKnowledgeBase = (knowledge_base) => {
 function getKnowledgeBaseList() {
 
   let data = { 'user_id': user_id };
-  console.log('用户id',user_id);
+  console.log('用户id', user_id);
   getUserKnowledgeBaseList(data).then(res => {
     if (res.code === 200) {
       console.log('获取用户知识库成功');
@@ -360,10 +362,10 @@ function getKnowledgeBaseList() {
 }
 
 //data 为option的value绑定的对象
-const  changeKnowledge =(data)=>{
-  console.log('当前知识库',data);
-  currentKB.value=data.id;
-  KnowledgeValue.value=data.name;
+const changeKnowledge = (data) => {
+  console.log('当前知识库', data);
+  currentKB.value = data.id;
+  KnowledgeValue.value = data.name;
 }
 </script>
 
