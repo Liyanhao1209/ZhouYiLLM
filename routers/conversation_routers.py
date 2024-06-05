@@ -5,7 +5,8 @@ from fastapi import FastAPI
 from message_model.response_model.response import BaseResponse
 from routers.mount_routers import routers_mount_interface
 from service.conversation_service import new_conversation, request_llm_chat, request_knowledge_base_chat, \
-    request_mix_chat, request_search_engine_chat, get_user_conversations, get_conversation_record, request_online_llm
+    request_mix_chat, request_search_engine_chat, get_user_conversations, get_conversation_record, request_online_llm, \
+    delete_user_conversation
 
 
 class ConversationRouter(routers_mount_interface):
@@ -27,3 +28,4 @@ class ConversationRouter(routers_mount_interface):
             get_user_conversations)
         app.get(self.generate_route_path(["get-conversation-record"]), tags=self.tag, summary="获取会话详情")(
             get_conversation_record)
+        app.get(self.generate_route_path(["delete-conversation"]),tags=self.tag, summary="删除会话")(delete_user_conversation)
