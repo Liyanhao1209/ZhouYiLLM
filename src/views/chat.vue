@@ -36,10 +36,8 @@
           </div>
         </div>
         <!-- 选择知识库 一个对话可以对应多个知识库的 用户根据选择切换知识库 -->
-        <el-select v-model="KnowledgeValue" placeholder="Select" style="width: 240px" @focus="getKnowledgeBaseList"
-          @change="changeKnowledge">
-          <el-option v-for="item in options" :key="item.value" :label="item.label"
-            :value="{ id: item.value, name: item.label }" />
+        <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList" @change="changeKnowledge">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="{ id: item.value, name: item.label }" />
         </el-select>
       </div>
     </main>
@@ -68,7 +66,7 @@ options.value = [
 
 let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
-let conv_id = null;
+let conv_id =  ref(null);
 //默认为用户第一句
 let conv_name = ref(null);
 let aiCurrentChat = null;
@@ -83,20 +81,24 @@ let currentKB = ref('faiss_zhouyi');
 const route = useRoute();
 
 onMounted(() => {
+  user_id = localStorage.getItem('user_id');
   //判断一下是否有传参，无传参就退出
-  if (!route.query.conv_id || !route.query.conv_name) {
-    return;
+  if (!route.query.conv_id || !route.query.conv_name ) {
+
+    msgList.value=([]);
+    conv_name.value='周易问答';
+    return ;
   }
   //有传参说明是历史对话
-  conv_id = route.query.conv_id || '';
+  conv_id.value = route.query.conv_id || '';
   conv_name.value = route.query.conv_name || '';
-  user_id = localStorage.getItem('user_id')
-  console.log(conv_name, conv_id, user_id)
 
-  if (conv_id !== null && conv_name.value !== null) {
-    console.log(conv_name.value, conv_id);
+  console.log(conv_name, conv_id.value, user_id)
+
+  if (conv_id.value !== '' && conv_name.value !== '') {
+    console.log(conv_name.value, conv_id.value);
     //加载历史聊天进入msgList
-    let data = { "conv_id": conv_id };
+    let data = { "conv_id": conv_id.value };
     console.log(data);
     //当前历史记录
     const records = ref("");
@@ -109,16 +111,24 @@ onMounted(() => {
           if (chat.is_ai) {
             // chat.content.answer
             //解析成json格式
-            let content = JSON.parse(chat.content);
+            let content= JSON.parse(chat.content);
+            // let content= chat.content;
             // let content_1=content.answer+ '参考：'+content.docs.docs;
 
-            if (content.docs.docs !== null && content.docs.docs !== '') AIReplay('参考：' + content.docs.docs);
-            if (content.answer !== null && content.answer !== '') AIReplay(content.answer);
+            if(content.docs.docs!==null&&content.docs.docs!==''){
+              let docs =content.docs.docs.map(doc => {
+                return removeHttpLinks(doc);
+              });
+              console.log(docs);
+              AIReplay('参考：'+docs.join(''),'history');
+              // AIReplay('参考：'+content.docs.docs,'history');
+            }
+            if(content.answer!==null&&content.answer!=='') AIReplay(content.answer,'history');
             //  AIReplay(chat.content); 
           }
           else { userQuestion(chat.content); }
         });
-
+        scrollToNew();
 
       } else {
         console.log(res.msg);
@@ -127,6 +137,12 @@ onMounted(() => {
       console.error('获取历史对话记录失败:', e);
     });
   }
+  else{
+    msgList.value=([]);
+    conv_name.value='周易问答';
+    return ;
+  }
+
 });
 
 //有新的对话默认继续滚动，但是这里的滚动条很丑，并且滚动幅度很小，建议修改
@@ -146,29 +162,39 @@ const userQuestion = (question) => {
   msgList.push(userMsg);
 };
 
-const AIReplay = (replay) => {
+//历史记录的aiReply
+const AIReplay = (replay,aitype) => {
   var autoReplyMsg = {
     content: replay,
     type: "ai",
+    aiType: aitype
   };
   msgList.push(autoReplyMsg);
 };
 
+//删除docs中的链接
+function removeHttpLinks(text) {
+  const urlRegex = /\((http[^)]+)\)/g;
+  return text.replace(urlRegex, '');
+}
+
 //sse
 const controller = new AbortController();
 const signal = controller.signal;
+let currentAiReply = ref(false);
 
 
-const sseAiChat = (query) => {
+
+const sseAiChat = (query) =>{
   // 发送文本
   let resultAnswer = ref('');
 
   let currentMessage = {
-    "conv_id": conv_id,
+    "conv_id": conv_id.value,
     "query": query,
     "knowledge_base_id": currentKB.value
   }
-  //url可替换 
+  //url可替换
   fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
     method: 'POST',
     signal: signal,
@@ -179,7 +205,8 @@ const sseAiChat = (query) => {
     body: JSON.stringify(currentMessage),
 
     async onopen(response) {
-      console.log(response);
+      currentAiReply.value = true;
+      console.log('onopen: ' + currentAiReply.value);
       //有log，但是一开始为空
       if (response.ok && response.headers.get('content-type') === 'text/event-stream') {
         console.log(response);
@@ -193,41 +220,42 @@ const sseAiChat = (query) => {
     },
     onmessage(msg) {
 
-      function removeHttpLinks(text) {
-        const urlRegex = /\((http[^)]+)\)/g;
-        return text.replace(urlRegex, '');
-      }
-
       //后端的返回值一定要按照对应的格式！不然无法解析
-      // console.log(msg);
+      console.log('onmessage:' + currentAiReply.value);
+      currentAiReply.value = true;
       const parsedData = JSON.parse(msg.data);
-      console.log(parsedData); // 
+      console.log(parsedData); //
 
       if ('docs' in parsedData.data) {
-        let texts = parsedData.data.docs.map(doc => {
+        let docs = parsedData.data.docs.map(doc => {
           return removeHttpLinks(doc);
         });
         // 将ai回复加入list
-        AIReplay('参考：\n' + texts.join(''));
-      }
-      else if ('text' in parsedData.data) {
-
+        AIReplay('参考：\n' + docs.join(''), 'docs');
+      } else if ('text' in parsedData.data) {
+        //如果用户继续提问就完蛋了，
         // 将ai回复加入list  确定是ai的
-        let lastAI = msgList.find((msg) => msg.content === resultAnswer.value && msg.type === 'ai');
-        console.log(lastAI);
+        //这样还是不对，直接定位最后一条好了 同时加上新的aiType判断
+        let latestMsg = msgList[msgList.length - 1];
+
         resultAnswer.value += parsedData.data.text;
-        //如果没有回答就创建新的：
-        if (!lastAI) {
-          AIReplay(resultAnswer.value);
-        }
-        else {
-          lastAI.content = resultAnswer.value;
+        //如果aiType为docs,就建立新的
+        if (latestMsg.aiType === 'docs') {
+          AIReplay(resultAnswer.value, 'text');
+        } else {
+          latestMsg.content = resultAnswer.value;
         }
       }
+      scrollToNew();
 
     },
     onerror(err) {
-      throw err;    //必须throw才能停止 
+      currentAiReply.value = false;//暂停回答
+      throw err;    //必须throw才能停止
+    },
+    onclose(err) {
+      currentAiReply.value = false;//暂停回答
+      throw err; //
     }
   });
 
@@ -238,7 +266,7 @@ const sseAiChat = (query) => {
 const aiChat = (query) => {
   //发送文本
   let currentMessage = {
-    "conv_id": conv_id,
+    "conv_id": conv_id.value,
     "query": query,
     "knowledge_base_id": "faiss_zhouyi"
   }
@@ -253,8 +281,7 @@ const aiChat = (query) => {
       //将ai回复加入list
       AIReplay(aiCurrentChat);
 
-    }
-    else {
+    } else {
       ElMessage.error(res.data);
     }
   })
@@ -271,7 +298,7 @@ const onSend = () => {
   }
   //如果空对话，创建新对话
   //加入了onMounted后，如果不是在新建对话界面而是直接跳转就会不对
-  if (conv_id === null || conv_id === '') {
+  if (conv_id.value === null || conv_id.value === '') {
     //第一条
     let firstMessage = {
       user_id: localStorage.getItem('user_id'),
@@ -284,46 +311,50 @@ const onSend = () => {
       if (res.code === 200) {
         console.log("成功建立！")
         console.log(res);
-        conv_id = res.data.conv_id;
+        conv_id.value = res.data.conv_id;
 
         //将对话名命名为第一个问句
         conv_name = value.value;
-        userQuestion(value.value);
-        //TODO:
-        // aiChat(value.value);
-        sseAiChat(value.value);
 
+        if (currentAiReply.value === false) {
+          userQuestion(value.value);
+          sseAiChat(value.value);
+        } else {
+          ElMessage({
+            message: '请等待当前回答结束！',
+            type: 'error'
+          })
+        }
 
         //自动滚动
         scrollToNew();
         //置空
         value.value = "";
-      }
-      else {
+      } else {
         console.log(res);
       }
     })
 
-  }
-  else if (conv_id !== null && value.value.trim() !== "") {
-    // 将用户问题加入list
-    userQuestion(value.value);
+  } else if (conv_id.value !== null && value.value.trim() !== "") {
 
-    //TODO:
-    // AI回复;
-    // aiChat(value.value);
-    sseAiChat(value.value);
 
-    // AIReplay(aiCurrentChat);
+    if (currentAiReply.value === false) {
+      // 将用户问题加入list
+      userQuestion(value.value);
+      sseAiChat(value.value);
+    } else {
+      ElMessage({
+        message: '请等待当前回答结束！',
+        type: 'error'
+      })
+    }
+
     //自动滚动
     scrollToNew();
     //置空
     value.value = "";
   }
 };
-
-
-
 
 
 //更改list
@@ -335,12 +366,14 @@ const addKnowledgeBase = (knowledge_base) => {
     label: knowledge_base.name,//文本  
   };
   options.value.push(currentKB);
-  nextTick(() => { });
+  nextTick(() => {
+  });
 };
+
 //options，然后更新 用focus
 function getKnowledgeBaseList() {
 
-  let data = { 'user_id': user_id };
+  let data = {'user_id': user_id};
   console.log('用户id', user_id);
   getUserKnowledgeBaseList(data).then(res => {
     if (res.code === 200) {
@@ -357,8 +390,7 @@ function getKnowledgeBaseList() {
         addKnowledgeBase(knowledge_base);
       });
       console.log(options.value);
-    }
-    else {
+    } else {
       console.log(res);
       ElMessage.error(res.code, res.msg);
     }

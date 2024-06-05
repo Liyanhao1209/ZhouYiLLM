@@ -6,7 +6,7 @@
         <h1>历史会话</h1>
       </div>
 
-      <el-scrollbar style="margin: 0; padding: 0; border: none;">
+      <!-- <el-scrollbar style="margin: 0; padding: 0; border: none;"> -->
         <div class="card-container"> <!-- 添加一个类来包裹所有的el-card -->  
           <el-card
             v-for="(chat, index) in chatHistory"
@@ -35,7 +35,7 @@
           </div>
           </el-card>
         </div>
-      </el-scrollbar>
+      <!-- </el-scrollbar> -->
 
     </el-main>
   </el-container>
