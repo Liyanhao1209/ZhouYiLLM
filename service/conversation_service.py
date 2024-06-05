@@ -73,10 +73,10 @@ async def request_mix_chat(mc: MixChat) -> Any:
         kb_docs = None
 
         async for data in forward_request_to_kernel(KB_CHAT_ARGS["url"], kb_request_body):
-            #符合sse格式
+            # 符合sse格式
             if "docs" in data:
                 # event_data = json.dumps(data)
-                event_data = json.dumps({"data":data})
+                event_data = json.dumps({"data": data})
                 kb_docs = data
                 # print(kb_docs)
                 # yield f"{event_data}\n\n"
@@ -103,10 +103,10 @@ async def request_mix_chat(mc: MixChat) -> Any:
         }
 
         ma = ""
-        #符合sse格式
+        # 符合sse格式
         async for data in forward_request_to_kernel(CHAT_ARGS["url"], mix_request_body):
             # event_data = json.dumps(data)
-            event_data = json.dumps({"data":data})
+            event_data = json.dumps({"data": data})
             ma = ma + data["text"]
             # yield f"{event_data}\n\n"
             yield f"event: message\ndata: {event_data}\n\n"
@@ -236,6 +236,7 @@ async def get_user_conversations(user_id: str) -> BaseResponse:
     try:
         with Session(engine) as session:
             conversations = session.query(Conversation).filter(Conversation.user_id == user_id).all()
+            print(conversations)
         return BaseResponse(code=200, msg='获取会话列表成功',
                             data={"conversations": [serialize_conversation(c) for c in conversations]})
     except Exception as e:
