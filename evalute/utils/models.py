@@ -32,6 +32,7 @@ def init_models(configuration: json) -> dict[str, List[chat_interface]]:
         kb_chat("Qwen-14B-ft-1000")  # 千问1000轮微调
     ]
 
+    # 在线大模型
     m["online_chat"] = [
         zhipu_ai(configuration, "zhipu_ai")
     ]

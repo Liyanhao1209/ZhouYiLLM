@@ -1,0 +1,8 @@
+{
+  "request_url": "https://aip.baidubce.com/rest/2.0/ocr/v1/general",
+  "headers": {
+      "content-type": "application/x-www-form-urlencoded"
+  },
+  "src_root":"C:\\Users\\Administrator\\Desktop\\college\\junior2\\项目实训\\准备阶段\\dataset\\任务9_软件园书籍pdf",
+  "target_root": "D:\\workSpace\\Scripts\\python_scripts\\ocr\\target\\baidu_target"
+}
