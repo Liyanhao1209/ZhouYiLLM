@@ -192,18 +192,23 @@ const sseAiChat = (query) => {
       }
     },
     onmessage(msg) {
+
+      function removeHttpLinks(text) {
+        const urlRegex = /\((http[^)]+)\)/g;
+        return text.replace(urlRegex, '');
+      }
+
       //后端的返回值一定要按照对应的格式！不然无法解析
       // console.log(msg);
       const parsedData = JSON.parse(msg.data);
       console.log(parsedData); // 
-      //doc也要改
+
       if ('docs' in parsedData.data) {
-        let aiCurrentChatDocs = JSON.stringify(parsedData.data.docs);
-        //有的\n\n无法被更改
-        aiCurrentChatDocs = aiCurrentChatDocs.replace(/\n/g, '<br>');
-        // aiCurrentChatDocs = aiCurrentChatDocs.replace(/^\[/, '').replace(/\]$/, '');
+        let texts = parsedData.data.docs.map(doc => {
+          return removeHttpLinks(doc);
+        });
         // 将ai回复加入list
-        AIReplay('参考：' + aiCurrentChatDocs);
+        AIReplay('参考：\n' + texts.join(''));
       }
       else if ('text' in parsedData.data) {
 
