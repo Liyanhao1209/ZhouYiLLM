@@ -1,20 +1,20 @@
 import axios from 'axios'
 
 const request = axios.create({
-    baseURL: 'http://127.0.0.1:9090/',
+    baseURL: 'http://zyllmbackend.ihk.fghk.top',
     headers: {
         'content-type': 'application/json'
     },
 })
 
 const requestGet = axios.create({
-    baseURL: 'http://127.0.0.1:9090/',
+    baseURL: 'http://zyllmbackend.ihk.fghk.top',
     headers: {
     },
 })
 
 const requestFile = axios.create({
-    baseURL: 'http://127.0.0.1:9090/',
+    baseURL: 'http://zyllmbackend.ihk.fghk.top',
     headers: {
         'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundarynl6gT1BKdPWIejNq'
     },

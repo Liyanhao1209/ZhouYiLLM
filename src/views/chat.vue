@@ -196,7 +196,7 @@ const sseAiChat = (query) =>{
   }
   console.log('当前对话request',currentMessage);
   //url可替换
-  fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
+  fetchEventSource(`http://zyllmbackend.ihk.fghk.top/conversation/mix-chat`, {
     method: 'POST',
     signal: signal,
     headers: {

@@ -9,5 +9,18 @@ module.exports = defineConfig({
     client: {
       overlay: false //关闭异常遮罩层
     },
+    allowedHosts: "all",
+    proxy: { // 跨域
+      "/api": {
+        target: "http://zyllmbackend.ihk.fghk.top/",
+        changeOrigin: true,
+        // ws: true,//websocket支持
+        secure: true,
+        ws: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      },
+    }
   },
 })
