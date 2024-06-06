@@ -59,7 +59,7 @@ let options = ref(null);
 options.value = [
   {
     value: "faiss_zhouyi",//值 加载出
-    label: '初始知识库',//文本
+    label: '默认知识库',//文本
   }
 ];
 
@@ -194,6 +194,7 @@ let currentAiReply = ref(false);
         "query": query,
         "knowledge_base_id":  currentKB.value
       }
+      console.log('当前对话request',currentMessage);
       //url可替换 
       fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
           method: 'POST',
@@ -291,6 +292,7 @@ const aiChat = (query) => {
 }
 
 //点击发送回答问题
+//应该一发送消息就设为禁止发送
 const onSend = () => {
   if (value.value.trim() === "") {
     ElMessage({
@@ -320,6 +322,7 @@ const onSend = () => {
         conv_name = value.value;
 
         if(currentAiReply.value===false) {
+          currentAiReply.value=true;
           userQuestion(value.value);
           sseAiChat(value.value);
         }
@@ -328,6 +331,7 @@ const onSend = () => {
               message: '请等待当前回答结束！',
               type: 'error'
             })
+            return ;
         }
 
         //自动滚动
@@ -345,6 +349,7 @@ const onSend = () => {
 
 
     if(currentAiReply.value===false) {
+        currentAiReply.value=true;
           // 将用户问题加入list
           userQuestion(value.value);
           sseAiChat(value.value);
@@ -354,6 +359,7 @@ const onSend = () => {
               message: '请等待当前回答结束！',
               type: 'error'
             })
+            return ;
      }
 
     //自动滚动
@@ -362,9 +368,6 @@ const onSend = () => {
     value.value = "";
   }
 };
-
-
-
 
 
 //更改list
@@ -391,7 +394,7 @@ function getKnowledgeBaseList() {
       options.value = [
         {
           value: "faiss_zhouyi",//值 加载出
-          label: '初始知识库',//文本
+          label: '默认知识库',//文本
         }
       ];
       res.data.user_kbs.forEach(knowledge_base => {

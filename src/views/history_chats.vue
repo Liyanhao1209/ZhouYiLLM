@@ -30,6 +30,9 @@
                 <el-button class="text item" type="text" @click="setCurrentChat(chat)" style="text-align: right;" >
                   对话详情
                 </el-button>
+                <el-icon class="text item" style="left: 0%;font-size: 24px;" @click="deleteCurrentChat(chat)">
+                  <Delete />
+                </el-icon>
               </div>
             </div>
           </div>
@@ -43,11 +46,12 @@
 
 <script setup>
 import { ref,reactive,onMounted} from 'vue'
-import {getUserAllConversation}from  '@/service/authService.js'
+import {getUserAllConversation,deleteConversation}from  '@/service/authService.js'
 import { formatDateTime}  from '@/utils/utils.js'
 // import Chats from './chats.vue';
 import { useRoute, useRouter } from 'vue-router';
-import {Comment} from '@element-plus/icons-vue'
+import {Comment,Delete} from '@element-plus/icons-vue';
+import { ElMessage,ElMessageBox } from "element-plus";
   
 let user_id = ref(null);
 const route = useRoute();
@@ -66,7 +70,7 @@ const chatHistory = ref(null); // 使用 ref 创建一个响应式引用
 
 function getChatList() {  
   let data = { "user_id": user_id.value };  
-  getUserAllConversation(data).then(res => {  
+  return  getUserAllConversation(data).then(res => {  
     if (res.code === 200) {  
       chatHistory.value = res.data.conversations; // 使用 .value 来更新 ref 的值  
       chatHistory.value.reverse();
@@ -74,7 +78,7 @@ function getChatList() {
           chat.formattedCreateTime = formatDateTime(chat.create_time); // 添加一个新字段来保存格式化后的时间  
       }); 
       console.log(chatHistory.value);  
-
+      return true;
     } else {  
       console.log(res.msg);  
     }  
@@ -85,8 +89,6 @@ function getChatList() {
 
 
 
-
-//稀里糊涂就传参成功了？？？？
 const router = useRouter();
 
 const setCurrentChat = (chat) => {
@@ -99,7 +101,47 @@ const setCurrentChat = (chat) => {
     } });
 }
 
+const deleteCurrentChat = (chat) => {
+  console.log(chat);
 
+  ElMessageBox.confirm(
+    '确认删除当前对话吗？',
+    '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      // let deleteId=chat.id;
+      let data={
+        'conv_id':chat.id,
+      }
+      deleteConversation(data).then(res=>{
+          if(res.code===200){
+            //重新得到历史记录
+            if(getChatList()){
+                ElMessage({
+                  type: 'success',
+                  message: '成功删除！',
+                })
+            } 
+          }
+      })
+      // ElMessage({
+      //   type: 'success',
+      //   message: '成功删除！',
+      // })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除！',
+      })
+    })
+
+}
 
 </script>
 

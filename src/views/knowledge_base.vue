@@ -231,15 +231,6 @@ function handleRemove(file, fileList) {
 
 let currentKbId=  ref('');
 function uploadAllFile() {
-  if (KnowledgeValue.value === '新建知识库') {
-    ElMessage.error("请选择知识库！");
-    return;
-  }
-  if (fileLists.value.length < 1) {//为什么不报错啊
-    ElMessage.error("请上传文件！");
-    return;
-  }
-
   //得到知识库id
 //options.value.find(item => item.label === KnowledgeValue.value);
   console.log('当前知识库id：    '+currentKbId.value);
@@ -265,6 +256,20 @@ function uploadAllFile() {
 
 const uploadRef = ref(null);
 const submitUpload = () => {
+  let faildata='';
+  console.log('禁止上传：',currentKbId.value,fileLists.value);
+  //如果没有选择知识库，禁止上传
+  if(!currentKbId.value===null|| currentKbId.value===''){
+    faildata+='请选择知识库！';
+  }
+  //如果没有文件，禁止上传
+  if(fileLists.value===null|| fileLists.value===''){
+    faildata+='请选择上传文件！';
+  }
+  if(faildata!==''){
+    ElMessage.error(faildata);
+    return;
+  }
   uploadAllFile();
   uploadRef.value.submit();
   // 清空 el-upload 组件中的文件列表 删太快啦，就这样吧
@@ -279,12 +284,21 @@ function uploadFile(fileData, name) {
   console.log("给后端的data", fileData);
   uploadKnowledgeDoc(fileData).then(res => {
     console.log(res);
+    //文件名：
     if (res.code === 200) {
-      ElMessage.success('上传文件' + name + '成功');
+      res.data.failed_files;
+      console.log(res.data.failed_files);
+      if(Object.keys(res.data.failed_files).length===0){
+        ElMessage.success('上传文件' + name + '成功');
+      }
+      else{
+        ElMessage.error('上传失败！'+res.data.failed_files[name]);
+      }
       // 从 fileLists.value 中删除当前文件
-      fileLists.value = fileLists.value.filter((file) => file.name !== name);
-      console.log(fileLists.value, name);
-      //为什么fileLists已经没有这个东西了，但是前端还会显示？
+        fileLists.value = fileLists.value.filter((file) => file.name !== name);
+        console.log(fileLists.value, name);
+
+        getFileListsMethod();
     }
     else {
       ElMessage.error(res.msg);
@@ -299,14 +313,10 @@ let getFileLists = ref(null);
 const  changeKnowledge =(data)=>{
   console.log('当前： '+data);
   currentKbId.value=data;
-  getFileListsMethod();
+   getFileListsMethod();
 }
-// watch(KnowledgeValue, (newValue, oldValue) => {
-//   if (newValue !== '新建知识库') {
-//     getFileListsMethod();
-//   }
-// });
-function getFileListsMethod() {
+
+const getFileListsMethod =()=>{
   console.log('得到文件的当前知识库id '+currentKbId.value);
 
   if (KnowledgeValue.value !== '新建知识库') {
