@@ -63,12 +63,13 @@ function createConversion(data) {
 //     "answer": response["data"]["text"],
 //     "docs": kb_response["data"]["docs"]
 // }
-function mixChat(data) {
-    return request.post('conversation/mix-chat/', data).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function mixChat(data) {
+    try {
+        const res = await request.post('conversation/mix-chat/', data)
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 //延时，应该用不到了
@@ -77,58 +78,64 @@ function delay(ms) {
 }
 
 //获取一个用户的所有对话列表
-function getUserAllConversation(data) {
-    return requestGet.get('/conversation/get-user-conversation/', { params: data }).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function getUserAllConversation(data) {
+    try {
+        const res = await requestGet.get('/conversation/get-user-conversation/', { params: data })
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 //获取一个用户的一个历史对话记录
-function getConversationRecord(data) {
-    return requestGet.get('/conversation/get-conversation-record/', { params: data }).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function getConversationRecord(data) {
+    try {
+        const res = await requestGet.get('/conversation/get-conversation-record/', { params: data })
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 //用户创建知识库
-function createKnowledgeBase(data) {
-    return request.post('knowledge_base/create-knowledge-base/', data).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function createKnowledgeBase(data) {
+    try {
+        const res = await request.post('knowledge_base/create-knowledge-base/', data)
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 //得到用户知识库列表
-function getUserKnowledgeBaseList(data) {
-    return requestGet.get('/knowledge_base/get-knowledge-base/', { params: data }).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function getUserKnowledgeBaseList(data) {
+    try {
+        const res = await requestGet.get('/knowledge_base/get-knowledge-base/', { params: data })
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 //用户上传知识库文件
-function uploadKnowledgeDoc(data) {
-    return requestFile.post('knowledge_base/upload-knowledge-files/', data).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function uploadKnowledgeDoc(data) {
+    try {
+        const res = await requestFile.post('knowledge_base/upload-knowledge-files/', data)
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 
 //获取知识库文件
-function getKnowledgeBaseDoc(data) {
-    return requestGet.get('/knowledge_base/get-kb-files/', { params: data }).then(res => {
-        return res.data;
-    }).catch(e => {
-        console.log(e);
-    })
+async function getKnowledgeBaseDoc(data) {
+    try {
+        const res = await requestGet.get('/knowledge_base/get-kb-files/', { params: data })
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 function update_info(data) {

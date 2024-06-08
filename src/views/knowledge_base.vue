@@ -38,17 +38,37 @@
         <el-button class="ml-3" type="success" @click="submitUpload">
           上传文件
         </el-button>
-        <div style="width: 400px; ">
-          <!-- 显示当前知识库文件，支持分页？算了 -->
 
-          当前知识库已有文件：
-          <el-card v-if="getFileLists !== null && getFileLists !== ' '" style="width: 400px; align-items: center;">
-            <p v-for="(doc, i) in getFileLists" :key="i" class="text item">{{ doc }}</p>
-          </el-card>
-          <el-card v-if="getFileLists === null || getFileLists === ' '" style="width: 400px; align-items: center;">
-            <p>当前知识库无文件</p>
-          </el-card>
-        </div>
+        <el-row>
+            <el-col :span="5">
+                <el-input v-model="searchVal" placeholder="请输入需要查询内容" @change="Search" />
+            </el-col>
+            <el-col :span="2">
+                <el-button  type="primary" @click="Search">查询</el-button>
+            </el-col>
+        </el-row>
+
+          <!-- 分页表格 -->
+          <el-table
+            ref="singleTableRef"
+            :data="tableData"
+            highlight-current-row
+            style="width: 100%"
+            @current-change="getFileListsMethod"
+          >
+            <el-table-column type="index" width="50" />
+            <el-table-column property="name" label="文件名"/>
+          </el-table>
+          <!-- page-count是最大页数，超过会折叠 -->
+          <el-pagination
+            :page-size="pageSize"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="total"
+            :current-page="pageNo"
+            @current-change="handleCurrentChange"
+          />
+
       </div>
 
     </el-main>
@@ -64,8 +84,23 @@ import { Comment } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus'
 import { ElUpload } from 'element-plus'
 
-
-
+//从接口获取的所有数据
+const currentFile = reactive([
+]);
+// 当前页
+const pageNo = ref(1)
+// 当前大小
+const pageSize = ref(5)
+// 表格数据
+const tableData =ref([
+]);
+// 筛选条数
+const total = ref(0)
+const searchVal=ref('')
+let filteredList=reactive([
+]);
+//是否搜索
+let isSearch=ref(false)
 let user_id = ref(null);
 let KnowledgeBaseName = ref('');
 let description = ref('');
@@ -91,8 +126,8 @@ onMounted(() => {
   }
   //有传参
 
-  user_id.value = route.query.user_id || '';
-  console.log(user_id.value)
+  // user_id.value = route.query.user_id || '';
+  // console.log(user_id.value)
 });
 
 
@@ -281,7 +316,6 @@ const submitUpload = () => {
 //上传文件 在默认的文件上传前被调用，为了禁止文件上传，需要返回false
 function uploadFile(fileData, name) {
 
-  console.log("给后端的data", fileData);
   uploadKnowledgeDoc(fileData).then(res => {
     console.log(res);
     //文件名：
@@ -298,7 +332,7 @@ function uploadFile(fileData, name) {
         fileLists.value = fileLists.value.filter((file) => file.name !== name);
         console.log(fileLists.value, name);
 
-        getFileListsMethod();
+        // getFileListsMethod();
     }
     else {
       ElMessage.error(res.msg);
@@ -310,15 +344,22 @@ function uploadFile(fileData, name) {
 
 let getFileLists = ref(null);
 
-const  changeKnowledge =(data)=>{
-  console.log('当前： '+data);
+const  changeKnowledge = async (data)=>{
+  console.log('change 当前知识库ID： '+data);
   currentKbId.value=data;
-   getFileListsMethod();
+  getFileListsMethod();
 }
 
-const getFileListsMethod =()=>{
-  console.log('得到文件的当前知识库id '+currentKbId.value);
+//得到当前知识库的文件内容
+const getFileListsMethod = async ()=>{
 
+  //清空搜索：
+  isSearch.value=false; searchVal.value='';
+  console.log('得到文件的当前知识库id '+currentKbId.value);
+  pageNo.value =1
+  tableData.value='';
+  total.value=0;
+  currentFile.splice(0, currentFile.length);
   if (KnowledgeValue.value !== '新建知识库') {
     let data = {
       'kb_id': currentKbId.value
@@ -327,13 +368,67 @@ const getFileListsMethod =()=>{
       if (res.code === 200) {
 
         getFileLists.value = res.data;
-        console.log(getFileLists);
+        console.log('当前知识库文件内容：',getFileLists);
+        res.data.forEach(doc => {
+          var file = {
+            name: doc,
+          };
+          currentFile.push(file);
+
+          //总条数
+          total.value = res.data.length;
+          //分页
+          getpaginatedData();
+        });
+        console.log('表格内容',tableData.value);
       }
       else {
         console.log(res.msg);
       }
     })
   }
+}
+
+//分页
+const getpaginatedData = () => {
+    let start = pageNo.value > 1 ? (pageNo.value - 1) * pageSize.value : 0
+    let end = pageNo.value * pageSize.value>total.value ? total.value:pageNo.value * pageSize.value
+    if(isSearch.value===false)
+      tableData.value = currentFile.slice(start, end);
+    else{
+      tableData.value = filteredList.slice(start, end);
+    }
+}
+
+
+// 分页数事件触发此方法
+const handleCurrentChange = val => {
+  pageNo.value = val
+  //搜索的时候分页就不对了啊
+  getpaginatedData();
+}
+
+//查询文件
+const Search = () => {
+  if(searchVal.value.trim()===''){
+    //为空返回全部
+    getFileListsMethod();
+    return;
+  }
+  const keyword1 = searchVal.value.trim()
+  
+  const list = currentFile;
+  // const list = JSON.parse(localStorage.getItem('list') as string)
+  filteredList = [...list]
+
+  if (keyword1) {
+    filteredList = filteredList.filter(item => item.name.includes(keyword1));
+  }
+  total.value = filteredList.length;
+  isSearch.value=true;
+  getpaginatedData();
+
+  //emit('changeList', filteredList)
 }
 
 </script>
