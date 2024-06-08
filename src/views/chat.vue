@@ -75,6 +75,24 @@ const msgList = reactive([
 ]);
 let currentKB = ref('faiss_zhouyi');
 
+//知识库检索为空时，判断并删除span
+function extractTextFromSpan(html) {
+  // 创建一个临时的 div 元素来容纳 HTML
+  var tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+
+  // 查找 span 元素
+  var span = tempDiv.querySelector('span');
+
+  // 如果找到了 span 元素，返回它的文本内容
+  if (span) {
+    return span.textContent || span.innerText;
+  }
+
+  // 如果没有找到 span 元素，返回原来的文本
+  return html;
+}
+
 //接受history的传参：
 // 接收路由参数
 //不能和参数的赋值写在一个函数里，会报错
@@ -117,10 +135,12 @@ onMounted(() => {
 
             if(content.docs.docs!==null&&content.docs.docs!==''){
               let docs =content.docs.docs.map(doc => {
+                doc=extractTextFromSpan(doc);
                 return removeHttpLinks(doc);
               });
               console.log(docs);
-              AIReplay('参考：'+docs.join(''),'history');
+              extractTextFromSpan(docs)
+              AIReplay('参考：\n'+docs.join(''),'history');
               // AIReplay('参考：'+content.docs.docs,'history');
             }
             if(content.answer!==null&&content.answer!=='') AIReplay(content.answer,'history');
@@ -229,9 +249,13 @@ const sseAiChat = (query) =>{
 
       if('docs' in parsedData.data){
         let docs = parsedData.data.docs.map(doc => {
+          doc=extractTextFromSpan(doc);
           return removeHttpLinks(doc);
         });
+        //在doc发送前删掉上一条
+        // AIReplay('大模型正在生成回答，请耐心等待','wait');
         // 将ai回复加入list
+        msgList.pop();
         AIReplay('参考：\n' + docs.join(''),'docs');
       }
       else if('text' in parsedData.data){
@@ -324,6 +348,8 @@ const onSend = () => {
         if(currentAiReply.value===false) {
           currentAiReply.value=true;
           userQuestion(value.value);
+          //让用户等待回答！
+          AIReplay('大模型正在生成回答，请耐心等待','wait');
           sseAiChat(value.value);
         }
         else{
@@ -352,6 +378,8 @@ const onSend = () => {
       currentAiReply.value=true;
       // 将用户问题加入list
       userQuestion(value.value);
+      //让用户等待回答！
+      AIReplay('大模型正在生成回答，请耐心等待','wait');
       sseAiChat(value.value);
     }
     else{
