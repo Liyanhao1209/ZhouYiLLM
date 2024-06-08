@@ -1,59 +1,97 @@
 <template>
-  <el-container class="container">
+  <div class="container">
     <el-main class="main">
-      <!-- 选择知识库 -->
-      <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList"
-      @change="changeKnowledge">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <div > 
+        <h1>知识库</h1>
+      </div>
+
       <!-- 新建知识库 -->
 
       <div v-if="!hasKnowledge">
+        <el-dialog
+          v-model="dialogVisible"
+          title="新建知识库"
+          width="500"
+          :before-close="handleClose" 
+        >
+        <!--  -->
         <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" />
+        <br>
         <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" />
-        <el-button type="primary" @click="newKnowledge">新建知识库</el-button>
-      </div>
-      <!-- 上传文件 -->
-      <div v-if="hasKnowledge">
-        上传知识库文件
-        <el-upload ref="uploadRef" class="upload-demo" drag action="false" multiple :auto-upload="false"
-          :on-change="handleFileChange" :on-remove="handleRemove" v-model="fileLists">
-          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-          <div class="el-upload__text">
-
-            • HTML, HTM, MHTML, MD, JSON, JSONL, CSV, PDF, DOCX, DOC, PPT, PPTX,  <br>
-            EML, MSG, RST, RTF, TXT, XML, EPUB, ODT, TSV, EML, MSG, EPUB, <br>
-            XLSX, XLS, XLSD,IPYNB, PY, SRT, TOML,  ENEX<br>
-            <br>
-            Drop file here or <em>click to upload</em>
-          </div>
-
-          <template #tip>
-            <div class="el-upload__tip">
-              Limit 200MB per file <br>
+        <!-- <el-button type="primary" @click="newKnowledge ">新建知识库</el-button> -->
+          <template #footer>
+            <div class="dialog-footer" >
+              <el-button @click="KnowledgeValue=''">取消</el-button>
+              <el-button type="primary" @click="newKnowledge" >
+                确认
+              </el-button>
             </div>
           </template>
+        </el-dialog>
+      </div>
 
-        </el-upload>
-        <el-button class="ml-3" type="success" @click="submitUpload">
-          上传文件
-        </el-button>
+      <div style="display: flex;  /* 竖直居中对齐 */">
+      <!-- 选择知识库 -->
+      <div style="flex: 1;flex-direction: column; width=60%; justify-content: center; /* 竖直居中对齐 */">
 
-        <el-row>
+        <br><div  style="flex: 1">选择知识库</div><br>
+
+        <div  style="flex: 1"> 
+          <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList"
+          @change="changeKnowledge">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+
+      </div>
+      <!-- 上传文件 -->
+
+        <!-- 并排 -->
+        <div   v-if="hasKnowledge" style="flex: 1;flex-direction: column; width=60%; justify-content: center; /* 竖直居中对齐 */">
+          <br>
+          <div  style="flex: 1">上传知识库文件</div>
+          <br>
+          <div  style="flex: 1"> 
+            <el-upload ref="uploadRef" class="upload-demo" action="false" multiple :auto-upload="false"
+              :on-change="handleFileChange" :on-remove="handleRemove" v-model="fileLists">
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <template #trigger>
+                <el-button type="primary" :span="4">选择文件</el-button>
+              </template>
+              <!-- <div class="el-upload__text">
+
+                • HTML, HTM, MHTML, MD, JSON, JSONL, CSV, PDF, DOCX, DOC, PPT, PPTX,  <br>
+                EML, MSG, RST, RTF, TXT, XML, EPUB, ODT, TSV, EML, MSG, EPUB, <br>
+                XLSX, XLS, XLSD,IPYNB, PY, SRT, TOML,  ENEX<br>
+                <br>
+                Drop file here or <em>click to upload</em>
+              </div> -->
+              <el-button type="primary" @click="submitUpload" :span="4">上传文件</el-button>
+              <template #tip>
+                <div class="el-upload__tip">
+                  Limit 200MB per file <br>
+                </div>
+              </template>
+
+            </el-upload>
+          </div>
+        </div>
+      </div>
+
+          <el-row >
             <el-col :span="5">
                 <el-input v-model="searchVal" placeholder="请输入需要查询内容" @change="Search" />
             </el-col>
             <el-col :span="2">
                 <el-button  type="primary" @click="Search">查询</el-button>
             </el-col>
-        </el-row>
-
+          </el-row>
           <!-- 分页表格 -->
           <el-table
             ref="singleTableRef"
             :data="tableData"
             highlight-current-row
-            style="width: 100%"
+            style="width: 60% flex:1;"
             @current-change="getFileListsMethod"
           >
             <el-table-column type="index" width="50" />
@@ -67,12 +105,13 @@
             :total="total"
             :current-page="pageNo"
             @current-change="handleCurrentChange"
+            style="flex:1;"
           />
 
-      </div>
+
 
     </el-main>
-  </el-container>
+  </div>
 </template>
 
 <script setup>
@@ -81,7 +120,7 @@ import { createKnowledgeBase, getUserKnowledgeBaseList, uploadKnowledgeDoc, getK
 import { formatDateTime } from '@/utils/utils.js'
 import { useRoute, useRouter } from 'vue-router';
 import { Comment } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { ElUpload } from 'element-plus'
 
 //从接口获取的所有数据
@@ -116,6 +155,16 @@ const hasKnowledge = computed(() => {
 
 });
 
+const dialogVisible =computed(() => {
+  //不等返回false，相等返回true
+  return hasKnowledge.value === false;
+
+});
+
+const handleClose = () => {
+    KnowledgeValue.value=''
+}
+
 //初始化时，接受用户id
 onMounted(() => {
   hasKnowledge.value = true;
@@ -125,9 +174,6 @@ onMounted(() => {
     return;
   }
   //有传参
-
-  // user_id.value = route.query.user_id || '';
-  // console.log(user_id.value)
 });
 
 
@@ -436,11 +482,13 @@ const Search = () => {
 <style>
 .container {
   /* position: absolute; */
+  
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
+  flex-direction: column;
 }
 
 

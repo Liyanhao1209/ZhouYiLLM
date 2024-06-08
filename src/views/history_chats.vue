@@ -3,7 +3,7 @@
     <el-main class="main">
       
       <div > 
-        <h1>历史会话</h1>
+        <h1>历史对话</h1>
       </div>
 
       <!-- <el-scrollbar style="margin: 0; padding: 0; border: none;"> -->
