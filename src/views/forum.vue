@@ -1,6 +1,6 @@
 <template>
 
-    <div style="margin-top: 50px; width: 100%; text-align: center">
+    <div style="margin-top: 50px; width: 100%; text-align: center" class="main-div">
         <h1>论坛</h1>
         <template v-for="(item, key) in blog_list">
             <BlogCard :blog_title="item.title" :blog_author="item.user_name" :blog_content="item.content" :blog_id="item.id"
@@ -35,3 +35,11 @@ export default {
     }
 }
 </script>
+
+
+<style>
+.main-div{
+    border-radius: 15px;
+}
+
+</style>

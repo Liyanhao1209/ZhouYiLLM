@@ -1,14 +1,5 @@
 <template>
-  <div class="body" style=" height: 730px">
-    <!-- <header>
-        <div class="cover">
-          <img
-            src="../assets/background.png"
-            alt=""
-            style="width: 100%; height: 100%"
-          />
-        </div>
-      </header> -->
+  <div class="body"  style=" height: 730px">
     <main>
       <div class="container">
         <div class="right">
@@ -19,20 +10,17 @@
           <div class="chat" ref="chatContainer">
             <div v-for="(item, i) in msgList" :key="i" :class="item.type == 'user' ? 'rightMsg' : 'leftMsg'">
               <img v-if="item.type == 'ai'" src="../assets/bagua.png" alt="" />
-              <div class="msg">{{ item.content }}</div>
-              <!-- <img
-                  v-if="item.type == 'user'"
-                  src="../assets/logo.png"
-                  alt=""
-                /> -->
+              <!-- 减小doc大小 -->
+              <div :class="changeClass(item)">{{ item.content }}</div>
+              <!-- <div class="msg">{{ item.content }}</div> -->
+
             </div>
           </div>
           <div class="bottom">
             <input v-model="value" placeholder="请输入您想提问的内容" />
-            <button @click="onSend">
-              <!-- <img src="	https://chatglm.cn/img/send.6d617ab7.svg" alt="发送" /> -->
+            <el-button type="primary"  size="large" @click="onSend">
               发送
-            </button>
+            </el-button>
           </div>
         </div>
         <!-- 选择知识库 一个对话可以对应多个知识库的 用户根据选择切换知识库 -->
@@ -59,7 +47,7 @@ let options = ref(null);
 options.value = [
   {
     value: "faiss_zhouyi",//值 加载出
-    label: '初始知识库',//文本
+    label: '默认知识库',//文本
   }
 ];
 
@@ -74,6 +62,31 @@ const value = ref("");
 const msgList = reactive([
 ]);
 let currentKB = ref('faiss_zhouyi');
+const changeClass = (item)=>{
+    console.log('item',item);
+    if(item.aiType==='docs'){
+        return 'docmsg';
+    }
+    else return 'msg';
+}
+
+//知识库检索为空时，判断并删除span
+function extractTextFromSpan(html) {
+  // 创建一个临时的 div 元素来容纳 HTML
+  var tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+
+  // 查找 span 元素
+  var span = tempDiv.querySelector('span');
+
+  // 如果找到了 span 元素，返回它的文本内容
+  if (span) {
+    return span.textContent || span.innerText;
+  }
+
+  // 如果没有找到 span 元素，返回原来的文本
+  return html;
+}
 
 //接受history的传参：
 // 接收路由参数
@@ -117,13 +130,15 @@ onMounted(() => {
 
             if(content.docs.docs!==null&&content.docs.docs!==''){
               let docs =content.docs.docs.map(doc => {
+                doc=extractTextFromSpan(doc);
                 return removeHttpLinks(doc);
               });
               console.log(docs);
-              AIReplay('参考：'+docs.join(''),'history');
+              extractTextFromSpan(docs)
+              AIReplay('参考：\n'+docs.join(''),'docs');
               // AIReplay('参考：'+content.docs.docs,'history');
             }
-            if(content.answer!==null&&content.answer!=='') AIReplay(content.answer,'history');
+            if(content.answer!==null&&content.answer!=='') AIReplay(content.answer,'text');
             //  AIReplay(chat.content);
           }
           else { userQuestion(chat.content); }
@@ -154,7 +169,7 @@ const scrollToNew = async () => {
   }
 };
 
-const userQuestion = (question) => {
+const userQuestion =  async  (question) => {
   var userMsg = {
     content: question,
     type: "user",
@@ -163,7 +178,7 @@ const userQuestion = (question) => {
 };
 
 //历史记录的aiReply
-const AIReplay = (replay,aitype) => {
+const AIReplay =  async (replay,aitype) => {
   var autoReplyMsg = {
     content: replay,
     type: "ai",
@@ -185,7 +200,7 @@ let currentAiReply = ref(false);
 
 
 
-const sseAiChat = (query) =>{
+const sseAiChat =  async (query) =>{
   // 发送文本
   let resultAnswer = ref('');
 
@@ -194,8 +209,9 @@ const sseAiChat = (query) =>{
     "query": query,
     "knowledge_base_id":  currentKB.value
   }
+  console.log('当前对话request',currentMessage);
   //url可替换
-  fetchEventSource(`http://127.0.0.1:9090/conversation/mix-chat`, {
+  fetchEventSource(`http://zyllmbackend.ihk.fghk.top/conversation/mix-chat`, {
     method: 'POST',
     signal: signal,
     headers: {
@@ -218,7 +234,7 @@ const sseAiChat = (query) =>{
         // throw new RetriableError();
       }
     },
-    onmessage(msg) {
+    async onmessage(msg) {
 
       //后端的返回值一定要按照对应的格式！不然无法解析
       console.log('onmessage:'+currentAiReply.value);
@@ -228,9 +244,13 @@ const sseAiChat = (query) =>{
 
       if('docs' in parsedData.data){
         let docs = parsedData.data.docs.map(doc => {
+          doc=extractTextFromSpan(doc);
           return removeHttpLinks(doc);
         });
+        //在doc发送前删掉上一条
+        // AIReplay('大模型正在生成回答，请耐心等待','wait');
         // 将ai回复加入list
+        msgList.pop();
         AIReplay('参考：\n' + docs.join(''),'docs');
       }
       else if('text' in parsedData.data){
@@ -291,7 +311,8 @@ const aiChat = (query) => {
 }
 
 //点击发送回答问题
-const onSend = () => {
+//应该一发送消息就设为禁止发送
+const onSend =async  () => {
   if (value.value.trim() === "") {
     ElMessage({
       message: '输入内容不能为空！',
@@ -309,6 +330,7 @@ const onSend = () => {
     }
     let jsonString = JSON.stringify(firstMessage);
     console.log("第一条", jsonString)
+
     createConversion(jsonString).then(res => {
       //200是数字
       if (res.code === 200) {
@@ -320,7 +342,10 @@ const onSend = () => {
         conv_name = value.value;
 
         if(currentAiReply.value===false) {
+          currentAiReply.value=true;
           userQuestion(value.value);
+          //让用户等待回答！
+          AIReplay('大模型正在生成回答，请耐心等待','wait');
           sseAiChat(value.value);
         }
         else{
@@ -328,6 +353,7 @@ const onSend = () => {
             message: '请等待当前回答结束！',
             type: 'error'
           })
+          return ;
         }
 
         //自动滚动
@@ -338,6 +364,7 @@ const onSend = () => {
       else {
         console.log(res);
       }
+      
     })
 
   }
@@ -345,8 +372,11 @@ const onSend = () => {
 
 
     if(currentAiReply.value===false) {
+      currentAiReply.value=true;
       // 将用户问题加入list
       userQuestion(value.value);
+      //让用户等待回答！
+      AIReplay('大模型正在生成回答，请耐心等待','wait');
       sseAiChat(value.value);
     }
     else{
@@ -354,6 +384,7 @@ const onSend = () => {
         message: '请等待当前回答结束！',
         type: 'error'
       })
+      return ;
     }
 
     //自动滚动
@@ -364,16 +395,13 @@ const onSend = () => {
 };
 
 
-
-
-
 //更改list
-const addKnowledgeBase = (knowledge_base) => {
+const addKnowledgeBase =async  (knowledge_base) => {
   var currentKB = {
     //   content: replay,
     //   type: "ai",
     value: knowledge_base.id,//值 加载出的
-    label: knowledge_base.name,//文本  
+    label: knowledge_base.name,//文本
   };
   options.value.push(currentKB);
   nextTick(() => { });
@@ -391,7 +419,7 @@ function getKnowledgeBaseList() {
       options.value = [
         {
           value: "faiss_zhouyi",//值 加载出
-          label: '初始知识库',//文本
+          label: '默认知识库',//文本
         }
       ];
       res.data.user_kbs.forEach(knowledge_base => {
@@ -555,6 +583,7 @@ main {
           white-space: pre-wrap;
           text-align: left;
         }
+
       }
 
       .rightMsg {
@@ -565,10 +594,26 @@ main {
           background-color: #dfdfdf;
         }
       }
+      .leftMsg {
+        // justify-content: end;
+
+        .docmsg {
+          font-size: 12px;
+          display: inline-block;
+          padding: 10px;
+          word-wrap: anywhere;
+          max-width: 600px;
+          background-color: #3c69bb;
+          border-radius: 10px;
+          //显示换行符
+          white-space: pre-wrap;
+          text-align: left;
+        }
+      }
     }
 
     .bottom {
-      height: 45px;
+      height: 40px;
       display: flex;
       align-items: center;
       width: 80%;
@@ -578,24 +623,24 @@ main {
         width: 90%;
         border: 1px solid rgb(171, 171, 171);
         border-right: none;
-        height: 40px;
+        height: 35px;
         color: black;
         text-indent: 2px;
         line-height: 40px;
         border-radius: 10px 0 0 10px;
       }
 
-      button {
-        cursor: pointer;
-        width: 10%;
-        border: none;
-        outline: none;
-        height: 45px;
-        border-radius: 0 10px 10px 0;
-        background: linear-gradient(to right,
-            rgb(146, 197, 255),
-            rgb(200, 134, 200));
-      }
+      // button {
+      //   cursor: pointer;
+      //   width: 10%;
+      //   border: none;
+      //   outline: none;
+      //   height: 45px;
+      //   border-radius: 0 10px 10px 0;
+      //   color: white;
+      //   background-color: rgb(106, 191, 245);
+
+      // }
 
       img {
         width: 20px;

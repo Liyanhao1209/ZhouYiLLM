@@ -13,10 +13,12 @@
                 <el-main>
                     <div v-html="html"></div>
                     <el-divider />
-                    <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_"/>
-                    <el-input v-model="comment" type="textarea" style="margin-top: 50px;" placeholder="输入内容"></el-input>
-                    <div style="width: 100%; text-align: end; margin-top: 20px">
-                        <el-button @click="add_comment_" type="success">评论</el-button>
+                    <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_" />
+                    <div class="input">
+                        <el-input v-model="comment" type="textarea" class="comment-input" placeholder="在这输入评论"></el-input>
+                        <div>
+                            <el-button @click="add_comment_" type="success">评论</el-button>
+                        </div>
                     </div>
                 </el-main>
             </el-container>
@@ -90,7 +92,7 @@ export default {
                 blog_id: this.blog_id,
             }
             add_comment(comment_model).then(res => {
-                if(res.data.code == 200){
+                if (res.data.code == 200) {
                     ElMessage({
                         type: 'success',
                         message: '评论成功'
@@ -111,5 +113,17 @@ export default {
     width: 48%;
     display: flex;
     height: 800px
+}
+
+.comment-input {
+    width: 90%;
+}
+
+.input {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
 }
 </style>

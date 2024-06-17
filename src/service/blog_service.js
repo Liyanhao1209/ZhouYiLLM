@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+// const url = 'http://zyllmbackend.ihk.fghk.top'
+const url = 'http://localhost:9090/'
+
 export const request = axios.create({
-    baseURL: 'http://127.0.0.1:9090/',
+    baseURL: url,
     timeout: 200000,
     headers: {
         'content-type': 'application/json'
