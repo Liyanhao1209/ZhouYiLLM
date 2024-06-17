@@ -1,8 +1,8 @@
 <template>
-    <el-card shadow="hover" body-class="card-body" class="blog-card">
+    <el-card shadow="hover" body-class="card-body" class="blog-card" style="">
         <div>
             <h3>
-                <el-link :href=url>
+                <el-link :href=url style="font-size: 25px; font-weight: bold;">
                     {{ blog_title }}
                 </el-link>
             </h3>
@@ -41,5 +41,8 @@ export default {
 
 .blog-card {
     margin-top: 40px;
+    width: 70%;
+    margin-left: 15%;
+    opacity: 0.9;
 }
 </style>

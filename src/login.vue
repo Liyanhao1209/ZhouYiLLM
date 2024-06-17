@@ -242,10 +242,10 @@ export default {
 
 <style scoped>
 .center {
-	width: 1920px;
-	height: 1080px;
-	background-image: url('https://pic.vjshi.com/2022-06-07/c5bf5fd3afe94abcbaa8b034b886350e/00001.jpg?x-oss-process=style/watermark');
-	background-size: 100% 100%;
+	width: 100%;
+	height: 900px;
+	background-image: url('./assets/watermark.jpeg');
+	background-size: cover;
 	background-repeat: no-repeat;
 	display: flex;
 	align-items: center;

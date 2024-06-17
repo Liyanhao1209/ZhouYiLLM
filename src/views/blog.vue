@@ -3,30 +3,43 @@
         <el-container>
             <el-header>
                 <el-row :gutter="4">
-                    <el-col :span="2" :offset="1">
+                    <el-col :span="2" :offset="21" style="margin-top: 10px;">
                         <el-button type="success" @click="new_blog">写博客</el-button>
                     </el-col>
-                    <el-col :span="2" :offset="1">
+                    <!-- <el-col :span="2" :offset="1">
                         <el-button type="primary" @click="edit_blog()">编辑博客</el-button>
                     </el-col>
                     <el-col :span="2" :offset="1">
                         <el-button type="danger" @click="delete_blog()">删除博客</el-button>
-                    </el-col>
+                    </el-col> -->
                 </el-row>
             </el-header>
             <el-container>
-                <el-aside width="200px">
+                <el-aside width="300px">
                     <el-menu mode="vertical" default-active="active_item_index">
                         <el-menu-item v-for="(val, key, index) in bloglist" @click="click_blog" :index="val.id">
-                            {{ val.title }}
+                            <div style="width: 100%;" class="menu-div">
+                                <span>{{ val.title }}</span>
+                                <span>
+                                    <el-button class="menu-button" type="primary" icon="Edit" circle
+                                        @click="edit_blog()" style="">
+                                    </el-button>
+                                    <el-button class="menu-button" type="danger" icon="Delete" circle
+                                        @click="delete_blog()" style="">
+                                    </el-button>
+                                </span>
+
+                            </div>
                         </el-menu-item>
+
                     </el-menu>
+
                 </el-aside>
                 <el-main>
                     <h1>{{ edit_blog.title }}</h1>
                     <div v-html="html"></div>
                     <el-divider />
-                    <Comment v-if="this.blog_id" :comment_list="comment_list" @refresh_comment_list="get_comment_"/>
+                    <Comment v-if="this.blog_id" :comment_list="comment_list" @refresh_comment_list="get_comment_" />
                 </el-main>
             </el-container>
 
@@ -43,6 +56,14 @@ import MarkdownIt from 'markdown-it';
 import { get_blog_list, delete_blog, get_comment_list } from '@/service/blog_service';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import Comment from '@/components/comment.vue';
+import {
+    Check,
+    Delete,
+    Edit,
+    Message,
+    Search,
+    Star,
+} from '@element-plus/icons-vue'
 export default {
     name: 'blog',
     data() {
@@ -61,11 +82,17 @@ export default {
         }
     },
     components: {
-        Comment
+        Comment,
+        Check,
+        Delete,
+        Edit,
+        Message,
+        Search,
+        Star,
     },
     mounted() {
         this.init_bloglist();
-        
+
     },
 
     created() {
@@ -158,5 +185,21 @@ export default {
     width: 48%;
     display: flex;
     height: 800px
+}
+
+.menu-div {
+    display: flex;
+    /* 启用Flexbox布局 */
+    justify-content: space-around;
+    /* 按钮将右对齐 */
+    align-items: center;
+    /* 垂直居中对齐 */
+}
+
+.menu-button {
+    position: relative;
+    top: -10px;
+
+
 }
 </style>

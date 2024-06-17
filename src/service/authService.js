@@ -1,20 +1,22 @@
 import axios from 'axios'
 
+// const url = 'http://zyllmbackend.ihk.fghk.top'
+const url = 'http://localhost:9090/'
 const request = axios.create({
-    baseURL: 'http://zyllmbackend.ihk.fghk.top',
+    baseURL: url,
     headers: {
         'content-type': 'application/json'
     },
 })
 
 const requestGet = axios.create({
-    baseURL: 'http://zyllmbackend.ihk.fghk.top',
+    baseURL: url,
     headers: {
     },
 })
 
 const requestFile = axios.create({
-    baseURL: 'http://zyllmbackend.ihk.fghk.top',
+    baseURL: url,
     headers: {
         'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundarynl6gT1BKdPWIejNq'
     },

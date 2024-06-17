@@ -1,23 +1,27 @@
 <template>
-    <el-card shadow="hover">
+    <el-card shadow="never">
         <template #header>
-            <h2 style="text-align: left">评论区</h2>
+            <h3 style="text-align: left">评论区</h3>
         </template>
         <template v-for="(item, index) in comment_list">
-            <el-card shadow="never" class="comment-card">
-                <template #header>
-                    <div style="text-align: start; display: flex">
-                        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-                        <h3 class="header_item" style="width: 100px">{{ item.user_name }}</h3>
-                        <div style="text-align: end; width: 100%;" class="header_item">
-                            {{ item.create_time }}
+            <div class="container">
+                <el-card shadow="never" class="comment-card">
+                    <template #header>
+                        <div class="card-header">
+                            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+                            <h4 class="author">{{ item.user_name }}</h4>
+                            <div style="text-align: end; width: 100%;" class="header_item">
+                                评论时间：{{ item.create_time }}
+                            </div>
                         </div>
+                    </template>
+                    <div class="card-body">
+                        {{ item.content }}
                     </div>
-                </template>
-                {{ item.content }}
-            </el-card>
-            <div style="width: 100%; text-align: end; margin-top: 5px">
-                <el-button @click="delete_comment_(item.id)">删除评论</el-button>
+                </el-card>
+                <div>
+                    <el-button type="danger" @click="delete_comment_(item.id)">删除</el-button>
+                </div>
             </div>
         </template>
         <el-empty v-if="this.comment_list.length == 0" description="还没有评论……"></el-empty>
@@ -71,11 +75,38 @@ export default {
 </script>
 
 <style>
+.author {
+    margin-left: 20px;
+    width: fit-content;
+    white-space: nowrap;
+}
+
+.card-header {
+    text-align: start;
+    display: flex;
+    height: 30px;
+}
+
 .header_item {
-    margin-left: 20px
+    margin-left: 20px;
+    font-style: italic;
+    font-size: small
 }
 
 .comment-card {
-    margin-top: 30px;
+    width: 80%;
+    margin: auto;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px
+}
+
+.card-body {
+    text-align: left;
+    font-size: 12px;
 }
 </style>

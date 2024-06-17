@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@microsoft/fetch-event-source": "^2.0.1",
     "axios": "^1.7.2",
     "core-js": "^3.8.3",
