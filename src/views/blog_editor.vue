@@ -13,7 +13,7 @@
                 <el-input v-model="title"></el-input>
             </el-form-item>
         </el-row>
-        <div id="vidtor" style="margin-top: 20px;"></div>
+        <div id="vditor" style="margin-top: 20px;" class="vditor"></div>
     </div>
 </template>
 
@@ -33,11 +33,29 @@ export default {
         }
     },
     mounted() {
-        this.vidtor = new Vditor('vidtor', {
-            height: 500,
-            after: () => {
-                this.vidtor.setValue(this.content)
-            }
+        this.vidtor = new Vditor('vditor', {
+            "height": 500,
+            "width": 1500,
+            "mode": "wysiwyg",
+            "cache": {
+                "enable": false
+            },
+            "preview": {
+                "markdown": {
+                    "autoSpace": true
+                }
+            },
+            "outline": {
+                "enable": true
+            },
+            "counter": {
+                "enable": true
+            },
+            "mode": "ir",
+            "preview": {
+                "mode": "both"
+            },
+            "value": this.content
         })
 
     },
@@ -86,3 +104,10 @@ export default {
     }
 }
 </script>
+
+<style>
+.vditor {
+    text-align: start;
+    margin: auto
+}
+</style>
