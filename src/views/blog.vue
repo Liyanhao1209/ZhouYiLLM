@@ -38,7 +38,7 @@
                 <el-main>
                     <h1>{{ edit_blog.title }}</h1>
                     <div v-html="html"></div>
-                    <el-divider />
+                    <el-divider v-if="this.blog_id" />
                     <Comment v-if="this.blog_id" :comment_list="comment_list" @refresh_comment_list="get_comment_" />
                 </el-main>
             </el-container>

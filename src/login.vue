@@ -167,8 +167,8 @@ export default {
 			this.$refs["loginForm"].validate(valid => {
 				if (valid) {
 					login(this.loginForm).then(res => {
-						
-						if(res.data.code===200){
+
+						if (res.data.code === 200) {
 							this.$router.push('/chat')
 							ElMessage({
 								message: '登录成功',
@@ -180,7 +180,7 @@ export default {
 							localStorage.setItem('user_id', res.data.data.user_id)
 							localStorage.setItem('islogin', true)
 						}
-						
+
 					}).cache(e => {
 						console.log(e)
 					})
@@ -222,7 +222,7 @@ export default {
 					setInterval(() => {
 						this.time--;
 						if (this.time > 0) this.buttonText = '已发送' + this.time + '秒后再试'
-						else{
+						else {
 							this.buttonText = '发送验证码'
 						}
 
@@ -242,9 +242,9 @@ export default {
 
 <style scoped>
 .center {
-	width: 100%;
-	height: 900px;
 	background-image: url('./assets/watermark.jpeg');
+	width: 100%;
+	aspect-ratio: 16 / 9;
 	background-size: cover;
 	background-repeat: no-repeat;
 	display: flex;
