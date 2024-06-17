@@ -181,7 +181,7 @@ export default {
 							localStorage.setItem('islogin', true)
 						}
 
-					}).cache(e => {
+					}).catch(e => {
 						console.log(e)
 					})
 				} else {

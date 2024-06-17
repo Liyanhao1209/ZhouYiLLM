@@ -16,7 +16,7 @@ module.exports = defineConfig({
         changeOrigin: true,
         // ws: true,//websocket支持
         secure: true,
-        ws: true,
+        ws: false,
         pathRewrite: {
           "^/api": ""
         }
