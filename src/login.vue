@@ -1,6 +1,6 @@
 <template>
 	<div class="center">
-		<h1>登录/注册</h1>
+		<h1 class="login-title">登录/注册</h1>
 		<div class="logon">
 			<div :class="overlaylong">
 				<div class="overlaylong-Signin" v-if="disfiex == 0">
@@ -241,10 +241,14 @@ export default {
 </script>
 
 <style scoped>
+.login-title{
+	color: white;
+}
+
 .center {
 	background-image: url('./assets/watermark.jpeg');
 	width: 100%;
-	aspect-ratio: 16 / 9;
+	aspect-ratio: 16 / 8;
 	background-size: cover;
 	background-repeat: no-repeat;
 	display: flex;
