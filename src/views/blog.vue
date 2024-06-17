@@ -6,12 +6,6 @@
                     <el-col :span="2" :offset="21" style="margin-top: 10px;">
                         <el-button type="success" @click="new_blog">写博客</el-button>
                     </el-col>
-                    <!-- <el-col :span="2" :offset="1">
-                        <el-button type="primary" @click="edit_blog()">编辑博客</el-button>
-                    </el-col>
-                    <el-col :span="2" :offset="1">
-                        <el-button type="danger" @click="delete_blog()">删除博客</el-button>
-                    </el-col> -->
                 </el-row>
             </el-header>
             <el-container>
@@ -21,10 +15,10 @@
                             <div style="width: 100%;" class="menu-div">
                                 <span>{{ val.title }}</span>
                                 <span>
-                                    <el-button class="menu-button" type="primary" icon="Edit" circle
+                                    <el-button class="menu-button" type="primary" icon="Edit" circle text
                                         @click="edit_blog()" style="">
                                     </el-button>
-                                    <el-button class="menu-button" type="danger" icon="Delete" circle
+                                    <el-button class="menu-button" type="danger" icon="Delete" circle text
                                         @click="delete_blog()" style="">
                                     </el-button>
                                 </span>
