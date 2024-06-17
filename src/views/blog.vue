@@ -31,7 +31,7 @@
                 </el-aside>
                 <el-main>
                     <h1>{{ edit_blog.title }}</h1>
-                    <div v-html="html"></div>
+                    <div v-html="html" class="md-div"></div>
                     <el-divider v-if="this.blog_id" />
                     <Comment v-if="this.blog_id" :comment_list="comment_list" @refresh_comment_list="get_comment_" />
                 </el-main>
@@ -193,7 +193,11 @@ export default {
 .menu-button {
     position: relative;
     top: -10px;
+}
 
-
+.md-div{
+    margin: auto;
+    width: 80%;
+    text-align: start;
 }
 </style>
