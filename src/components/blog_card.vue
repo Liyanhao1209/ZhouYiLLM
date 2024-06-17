@@ -1,13 +1,13 @@
 <template>
     <el-card shadow="hover" body-class="card-body" class="blog-card" style="">
-        <div>
+        <div class="header">
             <h3>
                 <el-link :href=url style="font-size: 25px; font-weight: bold;">
                     {{ blog_title }}
                 </el-link>
             </h3>
         </div>
-        <div>
+        <div class="body">
             <el-text line-clamp="2" truncated>
                 {{ blog_content }}
             </el-text>
@@ -44,5 +44,13 @@ export default {
     width: 70%;
     margin-left: 15%;
     opacity: 0.9;
+}
+
+.header{
+    text-align: center
+}
+
+.body{
+    text-align: start
 }
 </style>

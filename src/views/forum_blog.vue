@@ -11,7 +11,7 @@
             </el-header>
             <el-container>
                 <el-main>
-                    <div v-html="html"></div>
+                    <div v-html="html" class="md-div"></div>
                     <el-divider />
                     <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_" />
                     <div class="input">
@@ -124,6 +124,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
 
+.md-div{
+    margin: auto;
+    width: 80%;
+    text-align: start;
 }
 </style>
