@@ -8,10 +8,13 @@ import 'element-plus/dist/index.css'
 import 'vditor/dist/index.css'
 
 const app = createApp(App)
-
+const except_path = ['/admin']
 router.beforeEach((to, from, next) => {
     // 没有登录状态下只允许访问register 和 login页面
     let logged_in = store.state.logged_in || localStorage.getItem('islogin') == 'true'
+    if (except_path.includes(to.path)) { 
+        next() }
+    else
     if (!logged_in && to.meta.requireLogin) {
         console.log('main.js:router:', to.name, '没有登录');
         ElMessage({
@@ -26,7 +29,7 @@ router.beforeEach((to, from, next) => {
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
+    app.component(key, component)
 }
 
 

@@ -14,7 +14,10 @@
 						</el-form-item>
 					</el-form>
 					<h3>忘记密码</h3>
-					<el-button class="inupbutton" @click="login()">登录</el-button>
+					<el-button class="inupbutton" @click="login()" v-if="loginfiex == 0">登录</el-button>
+					<el-button class="inupbutton" @click="admin_login()" v-if="loginfiex == 1">管理员登录</el-button>
+
+					<h3 style="font-style:normal;text-decoration: underline" @click="change()">切换登陆方式</h3>
 				</div>
 				<div class="overlaylong-Signup" v-if="disfiex == 1">
 					<h2 class="overlaylongH2">注册</h2>
@@ -62,15 +65,16 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </template>
 
 <script>
 import { login, sendVerifyCode, register } from '@/service/authService.js'
+import { login2 } from '@/service/administor.js'
 import { checkPass } from '@/utils/register_utils.js'
 import { ElMessage } from 'element-plus'
 import store from './store';
+
 
 export default {
 	name: "login",
@@ -114,6 +118,7 @@ export default {
 			overlaylong: 'overlaylong',
 			overlaytitle: 'overlaytitle',
 			disfiex: 0,
+			loginfiex:0,
 			time: 0,
 			buttonText: '发送验证码',
 			loginForm: {
@@ -180,6 +185,12 @@ export default {
 							localStorage.setItem('user_id', res.data.data.user_id)
 							localStorage.setItem('islogin', true)
 						}
+						else if(res.data.code == 402){
+							ElMessage({
+								message: '账号被封禁',
+								type: 'warning'
+							})
+						}
 
 					}).catch(e => {
 						console.log(e)
@@ -188,6 +199,23 @@ export default {
 					return false;
 				}
 			})
+		},
+		admin_login(){
+			let form = {name:this.loginForm.email,password:this.loginForm.password}
+			if(form.name){
+				login2(form).then(res =>{
+					if (res.data.code === 200) {
+							this.$router.push('/admin')
+							ElMessage({
+								message: '登录成功',
+								type: 'success'
+							})
+						}
+				})
+			}
+		},
+		change(){
+			this.loginfiex=!(this.loginfiex);
 		},
 		register() {
 			this.$refs["registerForm"].validate(valid => {

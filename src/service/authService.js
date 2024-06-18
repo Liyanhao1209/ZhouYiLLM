@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const url = 'http://zyllmbackend.ihk.fghk.top'
 // const url = 'http://localhost:9090/'
-const request = axios.create({
+export const request = axios.create({
     baseURL: url,
     headers: {
         'content-type': 'application/json'
