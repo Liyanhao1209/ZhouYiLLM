@@ -124,3 +124,27 @@ def serialize_comment_user(row) -> dict:
         'blog_id': comment.blog_id,
         'user_name': row[1]
     }
+
+
+def serialize_stars_blog(row) -> dict:
+    sb = row[0]
+    blog = row[1]
+    s_blog = serialize_blog(blog)
+    s_sb = {
+        'sb_id': sb.id,
+    }
+    s_sb.update(dict(s_blog))
+    return s_sb
+
+
+def serialize_user(user: db.create_db.User) -> dict:
+    return {
+        'id': user.id,
+        'email': user.email,
+        'password': user.password,
+        'name': user.name,
+        'is_active': user.is_active,
+        'age': user.age,
+        'sex': user.sex,
+        'description': user.description
+    }

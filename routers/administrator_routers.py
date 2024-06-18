@@ -11,6 +11,12 @@ class AdministratorRouter(routers_mount_interface):
         super().__init__(prefix, tag)
 
     def mount(self, app: FastAPI):
+        app.post(self.generate_route_path(['login']), tags=self.tag,
+                 summary="管理员登录")(
+            admin_service.admin_login)
+        app.get(self.generate_route_path(['get_user']), tags=self.tag,
+                summary="查看用户注册信息")(
+            admin_service.get_user)
         app.get(self.generate_route_path(['see-users-knowledge-base']), tags=self.tag,
                 summary="查看用户的知识库")(
             admin_service.see_users_knowledge_base)
@@ -34,4 +40,3 @@ class AdministratorRouter(routers_mount_interface):
         app.post(self.generate_route_path(['relive-user']), tags=self.tag,
                  summary="解禁某用户及其邮箱")(
             admin_service.relive_user)
-

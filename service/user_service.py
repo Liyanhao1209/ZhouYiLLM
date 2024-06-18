@@ -14,6 +14,7 @@ from component.redis_server import get_redis_instance
 from component.token_server import create_access_token, get_current_active_user
 from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
+from message_model.response_model.response import BaseResponse
 
 
 async def register_user(register_form: RegisterForm):
@@ -68,8 +69,9 @@ async def login_user(login_form: LoginForm):
 
         # 验证密码是否正确
         if user.password != input_password_hash:
-            raise HTTPException(status_code=401, detail="密码错误")
-
+            return BaseResponse(code=401, msg='密码错误')
+        if not user.is_active:
+            return BaseResponse(code=402, msg='账号被封禁')
         # 登录成功，在此处生成token
         # token = generate_token(user.email)
         access_token_expires = timedelta(minutes=JWT_ARGS["expire_time"])
@@ -80,7 +82,7 @@ async def login_user(login_form: LoginForm):
                 "data": {"token": access_token, "token_type": "bearer", "user_id": user.id}}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail="登录失败，请重试")
+        return BaseResponse(code=500, msg='登陆失败请重试')
     finally:
         session.close()
 

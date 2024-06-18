@@ -23,3 +23,9 @@ class ForumRouter(routers_mount_interface):
         app.post(self.generate_route_path(['delete_comment', '{comment_id}', '{blog_id}', '{user_id}']), tags=self.tag,
                  summary="删除评论")(
             forum_service.delete_comment)
+        app.post(self.generate_route_path(['star_unstar_blog', '{user_id}', '{blog_id}']), tags=self.tag,
+                 summary="收藏/取消收藏")(
+            forum_service.star_unstar_blog)
+        app.get(self.generate_route_path(['get_star_blog', '{user_id}']), tags=self.tag,
+                summary="获取收藏博客")(
+            forum_service.get_star_blog)

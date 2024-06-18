@@ -4,10 +4,11 @@ import uuid
 from sqlalchemy.orm import Session
 
 from component.DB_engine import engine
-from db.create_db import Blog, User, Comment
+from db.create_db import Blog, User, Comment, BlogStars
 from message_model.request_model.forum_model import CommentModel
 from message_model.response_model.response import BaseResponse
-from util.utils import serialize_blog, blog_user_to_dict, serialize_comment, serialize_comment_user
+from util.utils import serialize_blog, blog_user_to_dict, serialize_comment, serialize_comment_user, \
+    serialize_stars_blog
 
 
 def get_all_blogs() -> BaseResponse:
@@ -82,3 +83,36 @@ def delete_comment(comment_id: str, blog_id: str, user_id: str) -> BaseResponse:
     except Exception as e:
         print(e)
         return BaseResponse(code=500, msg=str(e))
+
+
+def star_unstar_blog(user_id: str, blog_id: str) -> BaseResponse:
+    """收藏一个博客，或者取消收藏一个博客"""
+    try:
+        with Session(engine) as session:
+            res = session.query(BlogStars).filter(BlogStars.user_id == user_id).filter(
+                BlogStars.blog_id == blog_id).first()
+            if res is None:
+                session.add(BlogStars(user_id=user_id, blog_id=blog_id))
+                session.commit()
+                return BaseResponse(code=200, msg='收藏成功', data=True)
+            else:
+                session.delete(res)
+                session.commit()
+                return BaseResponse(code=200, msg='取消收藏', data=False)
+    except Exception as e:
+        print(e)
+        return BaseResponse(code=500, msg=str(e))
+
+
+def get_star_blog(user_id: str) -> BaseResponse:
+    try:
+        with Session(engine) as session:
+            res = session.query(BlogStars, Blog).join(Blog, Blog.id == BlogStars.blog_id).filter(
+                BlogStars.user_id == user_id).all()
+            s_res = [serialize_stars_blog(i) for i in res]
+            return BaseResponse(code=200, msg='ok', data={'star_blog_list': s_res})
+    except Exception as e:
+        print(e)
+        return BaseResponse(code=500, msg=str(e))
+
+

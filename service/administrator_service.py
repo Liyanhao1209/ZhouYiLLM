@@ -6,6 +6,7 @@
 import datetime
 import logging
 import uuid
+from http.client import HTTPException
 
 from sqlalchemy.orm import Session
 from component.DB_engine import engine
@@ -14,6 +15,26 @@ from db.create_db import Administrator, Blog, User, Conversation, Record
 from message_model.response_model.response import BaseResponse
 from message_model.request_model.administrator_model import AdminModel, AdminQueryData
 from component.email_server import send_email
+from util.utils import serialize_user
+
+
+def get_user():
+    session = Session(bind=engine)
+    users = session.query(User).all()
+
+    return BaseResponse(code=200, msg='用户查询成功', data={'user_list': [serialize_user(u) for u in users]})
+
+
+def admin_login(admin_model: AdminModel):
+    session = Session(bind=engine)
+    admin = session.query(Administrator).filter(Administrator.name == admin_model.name).first()
+    if not admin:
+        return BaseResponse(code=400, msg='管理员不存在')
+
+    if admin.password != admin_model.password:
+        return BaseResponse(code=400, msg='密码错误')
+
+    return BaseResponse(code=200, msg='管理员登录成功', data={'admin_id': admin.id})
 
 
 # 获取用户知识库

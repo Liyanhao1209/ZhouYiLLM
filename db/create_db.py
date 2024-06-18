@@ -5,6 +5,7 @@ from typing import List
 from sqlalchemy import ForeignKey, create_engine, Column, Text, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 Base = declarative_base()
 
 
@@ -121,6 +122,17 @@ class Record(Base):
 
     def __repr__(self):
         return f'<Record(id={self.id}, content={self.content})>'
+
+
+class BlogStars(Base):
+    __tablename__ = "BlogStars"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey('User.id'))
+    blog_id: Mapped[str] = mapped_column(ForeignKey('Blog.id'))
+
+    def __repr__(self):
+        return f'<Record(id={self.id}, user_id={self.user_id}, blog_id={self.blog_id})>'
 
 
 if __name__ == '__main__':
