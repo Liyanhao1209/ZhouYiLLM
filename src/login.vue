@@ -118,7 +118,7 @@ export default {
 			overlaylong: 'overlaylong',
 			overlaytitle: 'overlaytitle',
 			disfiex: 0,
-			loginfiex:0,
+			loginfiex: 0,
 			time: 0,
 			buttonText: '发送验证码',
 			loginForm: {
@@ -181,11 +181,15 @@ export default {
 							})
 							//保存登录信息
 							store.commit('login', res.data.data)
+							store.commit('setToken', res.data.data.token)
+							localStorage.setItem('token', res.data.data.token)
+							console.log(res.data.data.token);
+							console.log(store.state.token);
 							// console.log(store.state.user_id, store.state.token);
 							localStorage.setItem('user_id', res.data.data.user_id)
 							localStorage.setItem('islogin', true)
 						}
-						else if(res.data.code == 402){
+						else if (res.data.code == 402) {
 							ElMessage({
 								message: '账号被封禁',
 								type: 'warning'
@@ -200,22 +204,27 @@ export default {
 				}
 			})
 		},
-		admin_login(){
-			let form = {name:this.loginForm.email,password:this.loginForm.password}
-			if(form.name){
-				login2(form).then(res =>{
+		admin_login() {
+			let form = { name: this.loginForm.email, password: this.loginForm.password }
+			if (form.name) {
+				login2(form).then(res => {
 					if (res.data.code === 200) {
-							this.$router.push('/admin')
-							ElMessage({
-								message: '登录成功',
-								type: 'success'
-							})
-						}
+						this.$router.push('/admin')
+						store.commit('setToken', res.data.data.token)
+						console.log(res.data.data.token);
+						console.log(store.state.token);
+						localStorage.setItem('token', res.data.data.token)
+						ElMessage({
+							message: '登录成功',
+							type: 'success'
+						})
+
+					}
 				})
 			}
 		},
-		change(){
-			this.loginfiex=!(this.loginfiex);
+		change() {
+			this.loginfiex = !(this.loginfiex);
 		},
 		register() {
 			this.$refs["registerForm"].validate(valid => {
@@ -269,7 +278,7 @@ export default {
 </script>
 
 <style scoped>
-.login-title{
+.login-title {
 	color: white;
 }
 

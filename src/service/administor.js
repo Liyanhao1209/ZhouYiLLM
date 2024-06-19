@@ -1,7 +1,7 @@
-import { request } from './authService'
+import { request, authRequest } from './authService'
 
 function login2(data) {
-    return request.post('/admin/login', data)
+    return authRequest.post('/admin/login', data)
 }
 function getuser(){
     return request.get('/admin/get_user')

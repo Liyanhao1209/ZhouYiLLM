@@ -37,6 +37,7 @@ export default {
   methods: {
     logout(){
       this.$router.back();
+      localStorage.removeItem('token')
     },
     getUsers() {
       getuser().then(res => {

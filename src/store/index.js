@@ -19,6 +19,10 @@ export default createStore({
       state.logged_in = false
       state.user_id = ''
       state.token = ''
+    },
+
+    setToken(state, token){
+      state.token = token
     }
   },
   actions: {

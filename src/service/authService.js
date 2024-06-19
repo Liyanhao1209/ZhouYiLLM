@@ -1,12 +1,20 @@
 import axios from 'axios'
+import store from '@/store/index';
 
-const url = 'http://zyllmbackend.ihk.fghk.top'
-// const url = 'http://localhost:9090/'
+// const url = 'http://zyllmbackend.ihk.fghk.top'
+const url = 'http://localhost:9090/'
 export const request = axios.create({
     baseURL: url,
     headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
     },
+})
+
+export const authRequest = axios.create({
+    baseURL: url,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 })
 
 const requestGet = axios.create({
@@ -24,10 +32,10 @@ const requestFile = axios.create({
 
 
 function login(data) {
-    return request.post('/user/login', data)
+    return authRequest.post('/user/login', data)
 }
 function register(data) {
-    return request.post('/user/register', data)
+    return authRequest.post('/user/register', data)
 }
 function sendVerifyCode(data) {
     return request.post('user/send_verification_code/' + data)
