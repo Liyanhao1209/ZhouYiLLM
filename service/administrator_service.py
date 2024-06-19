@@ -7,18 +7,21 @@ import datetime
 import logging
 import uuid
 from http.client import HTTPException
-
+from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 from component.DB_engine import engine
+from datetime import timedelta
 
+from config.server_config import JWT_ARGS
 from db.create_db import Administrator, Blog, User, Conversation, Record
 from message_model.response_model.response import BaseResponse
 from message_model.request_model.administrator_model import AdminModel, AdminQueryData
 from component.email_server import send_email
 from util.utils import serialize_user
+from component.token_server import create_access_token, get_admin
 
 
-def get_user():
+def get_user(current_admin: Administrator = Depends(get_admin)):
     session = Session(bind=engine)
     users = session.query(User).all()
 
@@ -34,11 +37,16 @@ def admin_login(admin_model: AdminModel):
     if admin.password != admin_model.password:
         return BaseResponse(code=400, msg='密码错误')
 
-    return BaseResponse(code=200, msg='管理员登录成功', data={'admin_id': admin.id})
+    access_token_expires = timedelta(minutes=JWT_ARGS["expire_time"])
+    access_token = create_access_token(
+        data={"sub": admin.id, "index": 1}, expires_delta=access_token_expires  # index索引是0代表用户，1代表管理员
+    )
+
+    return BaseResponse(code=200, msg='管理员登录成功', data={"token": access_token, 'admin_id': admin.id})
 
 
 # 获取用户知识库
-def see_users_knowledge_base(username: object):
+def see_users_knowledge_base(username: object, current_admin: Administrator = Depends(get_admin)):
     data = {"username": username}
     return BaseResponse(code=200, msg='请求成功', data=data)
 
@@ -60,7 +68,7 @@ async def add_administrator(admin: AdminModel) -> BaseResponse:
 
 
 # 获取用户博客
-def see_users_blog(user_id: str) -> BaseResponse:
+def see_users_blog(user_id: str, current_admin: Administrator = Depends(get_admin)) -> BaseResponse:
     try:
         with Session(engine) as session:
             result = session.query(Blog).join(User, Blog.user_id == User.id, isouter=True).filter(
@@ -71,7 +79,7 @@ def see_users_blog(user_id: str) -> BaseResponse:
 
 
 # 获取用户与模型的对话
-def see_users_record(user_id: str) -> BaseResponse:
+def see_users_record(user_id: str, current_admin: Administrator = Depends(get_admin)) -> BaseResponse:
     try:
         with Session(engine) as session:
             conversations = session.query(Conversation).join(User, Conversation.user_id == User.id,
@@ -87,7 +95,7 @@ def see_users_record(user_id: str) -> BaseResponse:
     return BaseResponse(code=200, msg='查询成功！', data={'result': result})
 
 
-def block_user(aq: AdminQueryData) -> BaseResponse:
+def block_user(aq: AdminQueryData, current_admin: Administrator = Depends(get_admin)) -> BaseResponse:
     """
     封禁某用户及其邮箱，并以邮件的方式通知该用户x
     """
@@ -105,7 +113,7 @@ def block_user(aq: AdminQueryData) -> BaseResponse:
         return BaseResponse(code=200, msg='操作失败！', data={'error': str(e)})
 
 
-def relive_user(aq: AdminQueryData) -> BaseResponse:
+def relive_user(aq: AdminQueryData, current_admin: Administrator = Depends(get_admin)) -> BaseResponse:
     """
     解禁某用户及其邮箱，并以邮件的方式通知该用户x
     """

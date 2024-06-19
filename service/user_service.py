@@ -76,7 +76,7 @@ async def login_user(login_form: LoginForm):
         # token = generate_token(user.email)
         access_token_expires = timedelta(minutes=JWT_ARGS["expire_time"])
         access_token = create_access_token(
-            data={"sub": user.email}, expires_delta=access_token_expires
+            data={"sub": user.email, "index": 0}, expires_delta=access_token_expires  # index索引是0代表用户，1代表管理员
         )
         return {"code": 200, "message": "登录成功",
                 "data": {"token": access_token, "token_type": "bearer", "user_id": user.id}}
@@ -87,11 +87,11 @@ async def login_user(login_form: LoginForm):
         session.close()
 
 
-async def update_info(info_form: InfoForm):
+async def update_info(info_form: InfoForm, current_user: User = Depends(get_current_active_user)):
     """
        用户更新个人信息接口
        info_form 包含 name ,age,sex,description 字段
-       """
+    """
     session = Session(bind=engine)
     try:
         # 根据用户ID查询用户
