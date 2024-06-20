@@ -78,7 +78,7 @@ Content-Type: application/json
 Accept: text/event-stream
 
 {
-  "conv_id": "c891180ce5fd4d4e9931a9d4a09f6e36",
+  "conv_id": "dc100f3c622141bab5a9a035996d30de",
   "query": "什么是生生哲学？",
   "knowledge_base_id": "faiss_zhouyi"
 }

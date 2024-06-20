@@ -5,18 +5,18 @@ WEB_SERVER = {
     "port": 9090
 }
 
-LANGCHAIN_SERVER = {
-    # "host": 'zy.tessky.top',
-    "host": "127.0.0.1",
-    "release": 'release.tessky.top',
-    "port": 7861,
-    "address": f'127.0.0.1:7861'
-}
-
 # LANGCHAIN_SERVER = {
-#     "address": "lcbackend.ihk.fghk.top",
+#     # "host": 'zy.tessky.top',
+#     "host": "127.0.0.1",
 #     "release": 'release.tessky.top',
+#     "port": 7861,
+#     "address": f'127.0.0.1:7861'
 # }
+
+LANGCHAIN_SERVER = {
+    "address": "lcbackend.ihk.fghk.top",
+    "release": 'release.tessky.top',
+}
 
 LLM_MODELS = ["yizhou-ft-100", "Qwen-14B-ft-1000", "chatglm3-6b", "yizhou-ft-50", "yizhou-ft-30"]
 
