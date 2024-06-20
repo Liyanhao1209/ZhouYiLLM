@@ -15,11 +15,11 @@ DOC_ARGS = {
     "zh_title_enhance": True,
     "not_refresh_vs_cache": False,
     "docs": None,
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/knowledge_base/upload_docs'
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/knowledge_base/upload_docs'
     # 'url': f'http://{LANGCHAIN_SERVER["host"]}/knowledge_base/upload_docs'
 }
 
 FILE_ARGS = {
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/knowledge_base/list_files'
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/knowledge_base/list_files'
     # 'url': f'http://{LANGCHAIN_SERVER["host"]}/knowledge_base/list_files'
 }

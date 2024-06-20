@@ -9,8 +9,14 @@ LANGCHAIN_SERVER = {
     # "host": 'zy.tessky.top',
     "host": "127.0.0.1",
     "release": 'release.tessky.top',
-    "port": 7861
+    "port": 7861,
+    "address": f'127.0.0.1:7861'
 }
+
+# LANGCHAIN_SERVER = {
+#     "address": "lcbackend.ihk.fghk.top",
+#     "release": 'release.tessky.top',
+# }
 
 LLM_MODELS = ["yizhou-ft-100", "Qwen-14B-ft-1000", "chatglm3-6b", "yizhou-ft-50", "yizhou-ft-30"]
 
@@ -19,7 +25,7 @@ CHAT_ARGS = {
     "history_len": 256,
     "temperature": 0.7,
     "prompt_name": ['default', 'with_history', 'py'],
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/chat'
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/chat/chat'
     # "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/chat'
 }
 
@@ -27,12 +33,12 @@ KB_CHAT_ARGS = {
     "top_k": 5,
     "score_threshold": 1.01,
     "stream": True,
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/knowledge_base_chat'
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/chat/knowledge_base_chat'
     # "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/knowledge_base_chat'
 }
 
 SE_CHAT_ARGS = {
-    "url": f'http://{LANGCHAIN_SERVER["host"]}:{LANGCHAIN_SERVER["port"]}/chat/search_engine_chat',
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/chat/search_engine_chat',
     "stream": True,
     # "url": f'http://{LANGCHAIN_SERVER["host"]}/chat/search_engine_chat'
 }
