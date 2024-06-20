@@ -12,8 +12,8 @@ module.exports = defineConfig({
     allowedHosts: "all",
     proxy: { // 跨域
       "/api": {
-        // target: "http://zyllmbackend.ihk.fghk.top/",
-        target: "http://127.0.0.1:9090",
+        target: "http://zyllmbackend.ihk.fghk.top/",
+        // target: "http://127.0.0.1:9090",
         changeOrigin: true,
         // ws: true,//websocket支持
         secure: true,
