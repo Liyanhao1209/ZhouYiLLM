@@ -242,15 +242,15 @@ export default {
 
 <style scoped>
 .center {
-	width: 100%;
-	height: 900px;
 	background-image: url('./assets/watermark.jpeg');
-	background-size: cover;
-	background-repeat: no-repeat;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
+    width: 100%;
+    aspect-ratio: 16 / 8;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 h1 {
