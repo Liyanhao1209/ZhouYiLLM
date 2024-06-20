@@ -32,6 +32,7 @@ router.beforeEach((to, from, next) => {
         }
 })
 
+
 request.interceptors.request.use(function (config) {
     if (localStorage.getItem('token') && localStorage.getItem('token') != "")
         config.headers["Authorization"] = "Bearer " + localStorage.getItem('token')

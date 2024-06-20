@@ -1,6 +1,5 @@
 <template>
-  <el-container class="container">
-    <el-main class="main">
+    <div style="margin-top: 50px; width: 100%; text-align: center" class="main-div">
       
       <div > 
         <h1>历史对话</h1>
@@ -40,8 +39,7 @@
         </div>
       <!-- </el-scrollbar> -->
 
-    </el-main>
-  </el-container>
+      </div>
 </template>
 
 <script setup>

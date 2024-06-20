@@ -1,6 +1,6 @@
 <template>
-  <div class="body" style="height: 730px">
-    <main>
+  <main>
+    <div class="body" style="height: 730px">
       <div class="container">
         <div class="right">
           <div class="top">
@@ -8,7 +8,7 @@
           </div>
           <div class="chat" ref="chatContainer">
             <div v-for="(item, i) in msgList" :key="i" :class="item.type == 'user' ? 'rightMsg' : 'leftMsg'">
-              <img v-if="item.type == 'ai'" src="../assets/bagua.png" alt="" />
+              <img v-if="item.type === 'ai'" src="../assets/bagua.png" alt="" />
               <div :class="changeClass(item)">{{ item.content }}</div>
             </div>
           </div>
@@ -34,8 +34,10 @@
           />
         </el-select>
       </div>
-    </main>
-  </div>
+    </div>
+  </main>
+
+
 </template>
 
 
@@ -219,7 +221,9 @@ const sseAiChat =  async (query) =>{
   }
   console.log('当前对话request',currentMessage);
   //url可替换
-  fetchEventSource(`http://zyllmbackend.ihk.fghk.top/conversation/mix-chat`, {
+  // const url = "http://zyllmbackend.ihk.fghk.top/conversation/mix-chat"
+  const url = "http://127.0.0.1:9090/conversation/mix-chat"
+  fetchEventSource(url, {
     method: 'POST',
     signal: signal,
     headers: {
@@ -458,7 +462,7 @@ const changeKnowledge = (data) => {
   letter-spacing: 2px;
   width: 100%;
   height: 100%;
-  background-size: center;
+  background-size: contain;
   display: flex;
   align-items: center;
   position: relative;
@@ -468,7 +472,7 @@ main {
   width: 90%;
   max-width: 1400px;
   height: 600px;
-  margin: 100px auto;
+  //margin: 100px auto;
   display: flex;
 }
 
@@ -485,6 +489,7 @@ main {
     background-color: rgba(147, 213, 255, 0);
     display: flex;
     flex-direction: column;
+    width: 100%;
     height: 100%;
 
     .top {

@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <el-main class="main">
+  <div style="margin-top: 50px; width: 100%; text-align: center" class="main-div">
+    <div class="main">
       <div > 
         <h1>知识库</h1>
       </div>
@@ -32,7 +32,7 @@
 
       <div style="display: flex;  /* 竖直居中对齐 */">
       <!-- 选择知识库 -->
-      <div style="flex: 1;flex-direction: column; width=60%; justify-content: center; /* 竖直居中对齐 */">
+      <div style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
 
         <br><div  style="flex: 1">选择知识库</div><br>
 
@@ -47,7 +47,7 @@
       <!-- 上传文件 -->
 
         <!-- 并排 -->
-        <div   v-if="hasKnowledge" style="flex: 1;flex-direction: column; width=60%; justify-content: center; /* 竖直居中对齐 */">
+        <div   v-if="hasKnowledge" style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
           <br>
           <div  style="flex: 1">上传知识库文件</div>
           <br>
@@ -91,7 +91,7 @@
             ref="singleTableRef"
             :data="tableData"
             highlight-current-row
-            style="width: 60% flex:1;"
+            style="width: 60%; flex:1;"
             @current-change="getFileListsMethod"
           >
             <el-table-column type="index" width="50" />
@@ -100,7 +100,7 @@
           <!-- page-count是最大页数，超过会折叠 -->
           <el-pagination
             :page-size="pageSize"
-            :pager-count="5"
+            :pager-count="10"
             layout="prev, pager, next"
             :total="total"
             :current-page="pageNo"
@@ -110,7 +110,7 @@
 
 
 
-    </el-main>
+    </div>
   </div>
 </template>
 
@@ -480,6 +480,11 @@ const Search = () => {
 </script>
 
 <style>
+
+.main-div{
+  border-radius: 15px;
+}
+
 .container {
   /* position: absolute; */
   
