@@ -52,7 +52,7 @@
           <div  style="flex: 1">上传知识库文件</div>
           <br>
           <div  style="flex: 1"> 
-            <el-upload ref="uploadRef" class="upload-demo" action="false" multiple :auto-upload="false"
+            <el-upload ref="uploadRef" class="upload-demo" action="#" multiple :auto-upload="false"
               :on-change="handleFileChange" :on-remove="handleRemove" v-model="fileLists">
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <template #trigger>
@@ -129,7 +129,7 @@ const currentFile = reactive([
 // 当前页
 const pageNo = ref(1)
 // 当前大小
-const pageSize = ref(5)
+const pageSize = ref(10)
 // 表格数据
 const tableData =ref([
 ]);
@@ -331,8 +331,6 @@ function uploadAllFile() {
       //上传完之后一个个删除上传的文件
     }
   }
-
-
 }
 
 const uploadRef = ref(null);
