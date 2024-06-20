@@ -49,6 +49,7 @@ import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from 'vue-router';
 import store from '../store';
 import { fetchEventSource, EventStreamContentType } from '@microsoft/fetch-event-source';
+import { url } from '../../config/config'
 
 
 const KnowledgeValue = ref('');
@@ -221,8 +222,6 @@ const sseAiChat =  async (query) =>{
   }
   console.log('当前对话request',currentMessage);
   //url可替换
-  const url = "http://zyllmbackend.ihk.fghk.top/conversation/mix-chat"
-  // const url = "http://127.0.0.1:9090/conversation/mix-chat"
   fetchEventSource(url, {
     method: 'POST',
     signal: signal,
