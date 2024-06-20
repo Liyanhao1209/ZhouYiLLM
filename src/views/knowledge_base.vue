@@ -320,7 +320,9 @@ async function uploadAllFile() {
       fileData.append('files', file.raw);
       fileData.append('kb_id', currentKbId.value);
 
+      console.log("正在处理"+file.name)
       await uploadFile(fileData, file.name); // 等待uploadFile完成
+      console.log(file.name+"处理完毕")
     }
   }
 
