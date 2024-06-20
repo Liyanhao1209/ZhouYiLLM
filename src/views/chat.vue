@@ -222,7 +222,7 @@ const sseAiChat =  async (query) =>{
   }
   console.log('当前对话request',currentMessage);
   //url可替换
-  fetchEventSource(url, {
+  fetchEventSource(url+'conversation/mix-chat', {
     method: 'POST',
     signal: signal,
     headers: {
