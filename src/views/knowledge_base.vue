@@ -129,7 +129,7 @@ const currentFile = reactive([
 // 当前页
 const pageNo = ref(1)
 // 当前大小
-const pageSize = ref(5)
+const pageSize = ref(10)
 // 表格数据
 const tableData =ref([
 ]);
