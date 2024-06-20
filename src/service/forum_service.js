@@ -1,4 +1,4 @@
-import { request } from './blog_service'
+import { request } from './authService'
 
 //获取所有博客
 function get_blogs() {

@@ -66,7 +66,12 @@ const routes = [
         component: () => import('@/views/forum_blog.vue')
       },
     ]
-  }
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('@/views/administor.vue')
+  },
 
 ]
 

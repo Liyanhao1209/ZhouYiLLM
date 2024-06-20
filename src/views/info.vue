@@ -31,6 +31,7 @@
 
 <script>
 import { update_info } from '@/service/authService.js'
+
 export default {
     data() {
         return {
@@ -43,8 +44,8 @@ export default {
             }
         }
     },
-    created(){
-      this.user.user_id = localStorage.getItem('user_id')
+    created() {
+        this.user.user_id = localStorage.getItem('user_id')
     },
     methods: {
         updateUser() {

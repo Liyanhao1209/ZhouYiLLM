@@ -1,15 +1,4 @@
-import axios from 'axios'
-
-// const url = 'http://zyllmbackend.ihk.fghk.top'
-const url = 'http://localhost:9090/'
-
-export const request = axios.create({
-    baseURL: url,
-    timeout: 200000,
-    headers: {
-        'content-type': 'application/json'
-    },
-})
+import { request } from "./authService"
 
 
 function add_blog(data) {

@@ -1,36 +1,44 @@
 <template>
-  <div class="body"  style=" height: 730px">
+  <div class="body" style="height: 730px">
     <main>
       <div class="container">
         <div class="right">
           <div class="top">
             {{ conv_name || '周易问答' }}
           </div>
-          <!-- 聊天框  大小待修改-->
           <div class="chat" ref="chatContainer">
             <div v-for="(item, i) in msgList" :key="i" :class="item.type == 'user' ? 'rightMsg' : 'leftMsg'">
               <img v-if="item.type == 'ai'" src="../assets/bagua.png" alt="" />
-              <!-- 减小doc大小 -->
               <div :class="changeClass(item)">{{ item.content }}</div>
-              <!-- <div class="msg">{{ item.content }}</div> -->
-
             </div>
           </div>
           <div class="bottom">
             <input v-model="value" placeholder="请输入您想提问的内容" />
-            <el-button type="primary"  size="large" @click="onSend">
+            <el-button type="primary" size="large" @click="onSend">
               发送
             </el-button>
           </div>
         </div>
-        <!-- 选择知识库 一个对话可以对应多个知识库的 用户根据选择切换知识库 -->
-        <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList" @change="changeKnowledge">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="{ id: item.value, name: item.label }" />
+        <el-select
+            v-model="KnowledgeValue"
+            placeholder="请选择知识库"
+            class="fixed-select"
+            @focus="getKnowledgeBaseList"
+            @change="changeKnowledge"
+        >
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="{ id: item.value, name: item.label }"
+          />
         </el-select>
       </div>
     </main>
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, reactive, nextTick, onMounted } from "vue";
@@ -63,11 +71,11 @@ const msgList = reactive([
 ]);
 let currentKB = ref('faiss_zhouyi');
 const changeClass = (item)=>{
-    console.log('item',item);
-    if(item.aiType==='docs'){
-        return 'docmsg';
-    }
-    else return 'msg';
+  console.log('item',item);
+  if(item.aiType==='docs'){
+    return 'docmsg';
+  }
+  else return 'msg';
 }
 
 //知识库检索为空时，判断并删除span
@@ -364,7 +372,7 @@ const onSend =async  () => {
       else {
         console.log(res);
       }
-      
+
     })
 
   }
@@ -443,10 +451,8 @@ const changeKnowledge = (data) => {
 }
 </script>
 
-
 <style scoped lang="scss">
 .body {
-
   color: #fff;
   font-weight: 900;
   letter-spacing: 2px;
@@ -459,99 +465,41 @@ const changeKnowledge = (data) => {
 }
 
 main {
-  /* border: 1px solid red; */
-  width: 1400px;
+  width: 90%;
+  max-width: 1400px;
   height: 600px;
   margin: 100px auto;
   display: flex;
 }
 
-.cover {
-  position: absolute;
-  top: 0px;
-  z-index: 0;
-  height: 180px;
-  width: 1483px;
-  left: 50%;
-  margin-left: -754px;
-  overflow: hidden;
-}
-
-.body {
-  :deep(.slick-slide) {
-    text-align: center;
-    height: 100%;
-    line-height: 100%;
-    //  background: #364d79;
-    overflow: hidden;
-  }
-
-  :deep(.slick-arrow.custom-slick-arrow) {
-    width: 25px;
-    height: 25px;
-    font-size: 25px;
-    color: #fff;
-    //  background-color: rgba(31, 45, 61, 0.11);
-    transition: ease all 0.3s;
-    opacity: 0.3;
-    z-index: 1;
-  }
-
-  :deep(.slick-arrow.custom-slick-arrow:before) {
-    display: none;
-  }
-
-  :deep(.slick-arrow.custom-slick-arrow:hover) {
-    color: #fff;
-    opacity: 0.5;
-  }
-
-  :deep(.slick-slide h3) {
-    color: #fff;
-  }
-}
-
 .container {
   z-index: 1;
-  // border: solid 1px #bebebe;
-  width: 85%;
+  width: 100%;
   height: 100%;
-  margin: -6px auto;
   display: flex;
   justify-content: center;
-  left: 30px;
+  position: relative;
 
   .right {
     flex: 1;
-    // border-radius: 10px;
     background-color: rgba(147, 213, 255, 0);
     display: flex;
     flex-direction: column;
-    height: 600px;
+    height: 100%;
 
-    // .top {
-    //   height: 70px;
-    //   background-color: rgba(147, 213, 255, 0.764);
-    //   width: 100%;
-    //   font-size: 22px;
-    //   text-align: center;
-    //   line-height: 70px;
-    // }
     .top {
       height: 70px;
       background-color: rgba(147, 213, 255, 0);
-      /* 最后一个值设置为 0，表示完全透明 */
       color: #000;
       width: 100%;
       font-size: 22px;
-      //文本居中
       text-align: center;
-      line-height: 40px;
+      line-height: 70px;
     }
 
     .chat {
       flex: 1;
-      max-height: 580px;
+      max-height: 100%;
       overflow-y: auto;
       padding: 10px;
 
@@ -575,15 +523,13 @@ main {
         .msg {
           display: inline-block;
           padding: 10px;
-          word-wrap: anywhere;
+          word-wrap: break-word;
           max-width: 600px;
           background-color: #364d79;
           border-radius: 10px;
-          //显示换行符
           white-space: pre-wrap;
           text-align: left;
         }
-
       }
 
       .rightMsg {
@@ -594,21 +540,17 @@ main {
           background-color: #dfdfdf;
         }
       }
-      .leftMsg {
-        // justify-content: end;
 
-        .docmsg {
-          font-size: 12px;
-          display: inline-block;
-          padding: 10px;
-          word-wrap: anywhere;
-          max-width: 600px;
-          background-color: #3c69bb;
-          border-radius: 10px;
-          //显示换行符
-          white-space: pre-wrap;
-          text-align: left;
-        }
+      .leftMsg .docmsg {
+        font-size: 12px;
+        display: inline-block;
+        padding: 10px;
+        word-wrap: break-word;
+        max-width: 600px;
+        background-color: #3c69bb;
+        border-radius: 10px;
+        white-space: pre-wrap;
+        text-align: left;
       }
     }
 
@@ -616,31 +558,24 @@ main {
       height: 40px;
       display: flex;
       align-items: center;
-      width: 80%;
+      width: 100%;
       margin: 10px auto;
 
       input {
-        width: 90%;
+        flex: 1;
         border: 1px solid rgb(171, 171, 171);
         border-right: none;
         height: 35px;
         color: black;
         text-indent: 2px;
-        line-height: 40px;
+        line-height: 35px;
         border-radius: 10px 0 0 10px;
       }
 
-      // button {
-      //   cursor: pointer;
-      //   width: 10%;
-      //   border: none;
-      //   outline: none;
-      //   height: 45px;
-      //   border-radius: 0 10px 10px 0;
-      //   color: white;
-      //   background-color: rgb(106, 191, 245);
-
-      // }
+      .el-button {
+        width: auto;
+        border-radius: 0 10px 10px 0;
+      }
 
       img {
         width: 20px;
@@ -650,10 +585,11 @@ main {
   }
 }
 
-.separator {
-  color: rgb(133, 132, 132);
-  text-align: center;
-  font-size: 15px;
-  font-weight: normal;
+.fixed-select {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 240px;
+  z-index: 1000;
 }
 </style>

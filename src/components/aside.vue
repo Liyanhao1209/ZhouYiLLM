@@ -105,6 +105,7 @@ const logout = () => {
   store.commit('logout')
   localStorage.setItem('islogin', false)
   localStorage.removeItem('user_id')
+  localStorage.removeItem('token')
 }
 
 
