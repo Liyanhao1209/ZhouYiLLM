@@ -11,7 +11,7 @@
         周易在线大模型
       </template> -->
       <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
-        @open="handleOpen" @close="handleClose">
+               @open="handleOpen" @close="handleClose">
 
         <el-menu-item index="/chat"  @click="toChat">
           <el-icon>
@@ -91,14 +91,14 @@ const handleClose = (key, keyPath) => {
 
 //传参给知识库
 const toKnowledge = () =>{
-  // router.push({ 
-  //   name: 'knowledge_base', 
+  // router.push({
+  //   name: 'knowledge_base',
   //   query: {user_id: 'fb18845ed0604498812f8a0135255253' }
   // });
 }
 const router = useRouter()
 const toChat = ()=>{
-    // router.push('/chat');
+  // router.push('/chat');
 }
 const logout = () => {
   router.push('/login')

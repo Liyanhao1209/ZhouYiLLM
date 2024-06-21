@@ -1,6 +1,6 @@
 <template>
-  <div class="body" style="height: 730px">
-    <main>
+  <main>
+    <div class="body" style="height: 730px">
       <div class="container">
         <div class="right">
           <div class="top">
@@ -8,7 +8,7 @@
           </div>
           <div class="chat" ref="chatContainer">
             <div v-for="(item, i) in msgList" :key="i" :class="item.type == 'user' ? 'rightMsg' : 'leftMsg'">
-              <img v-if="item.type == 'ai'" src="../assets/bagua.png" alt="" />
+              <img v-if="item.type === 'ai'" src="../assets/bagua.png" alt="" />
               <div :class="changeClass(item)">{{ item.content }}</div>
             </div>
           </div>
@@ -20,22 +20,24 @@
           </div>
         </div>
         <el-select
-          v-model="KnowledgeValue"
-          placeholder="请选择知识库"
-          class="fixed-select"
-          @focus="getKnowledgeBaseList"
-          @change="changeKnowledge"
+            v-model="KnowledgeValue"
+            placeholder="请选择知识库"
+            class="fixed-select"
+            @focus="getKnowledgeBaseList"
+            @change="changeKnowledge"
         >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="{ id: item.value, name: item.label }"
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="{ id: item.value, name: item.label }"
           />
         </el-select>
       </div>
-    </main>
-  </div>
+    </div>
+  </main>
+
+
 </template>
 
 
@@ -47,6 +49,7 @@ import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from 'vue-router';
 import store from '../store';
 import { fetchEventSource, EventStreamContentType } from '@microsoft/fetch-event-source';
+import { url } from '../../config/config'
 
 
 const KnowledgeValue = ref('');
@@ -71,11 +74,11 @@ const msgList = reactive([
 ]);
 let currentKB = ref('faiss_zhouyi');
 const changeClass = (item)=>{
-    console.log('item',item);
-    if(item.aiType==='docs'){
-        return 'docmsg';
-    }
-    else return 'msg';
+  console.log('item',item);
+  if(item.aiType==='docs'){
+    return 'docmsg';
+  }
+  else return 'msg';
 }
 
 //知识库检索为空时，判断并删除span
@@ -219,7 +222,7 @@ const sseAiChat =  async (query) =>{
   }
   console.log('当前对话request',currentMessage);
   //url可替换
-  fetchEventSource(`http://zyllmbackend.ihk.fghk.top/conversation/mix-chat`, {
+  fetchEventSource(url+'conversation/mix-chat', {
     method: 'POST',
     signal: signal,
     headers: {
@@ -372,7 +375,7 @@ const onSend =async  () => {
       else {
         console.log(res);
       }
-      
+
     })
 
   }
@@ -458,7 +461,7 @@ const changeKnowledge = (data) => {
   letter-spacing: 2px;
   width: 100%;
   height: 100%;
-  background-size: center;
+  background-size: contain;
   display: flex;
   align-items: center;
   position: relative;
@@ -468,7 +471,7 @@ main {
   width: 90%;
   max-width: 1400px;
   height: 600px;
-  margin: 100px auto;
+  //margin: 100px auto;
   display: flex;
 }
 
@@ -485,6 +488,7 @@ main {
     background-color: rgba(147, 213, 255, 0);
     display: flex;
     flex-direction: column;
+    width: 100%;
     height: 100%;
 
     .top {
