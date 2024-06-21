@@ -13,9 +13,12 @@
             </div>
           </div>
           <div class="bottom">
-            <input v-model="value" placeholder="请输入您想提问的内容" />
+            <input v-model="value" placeholder="请输入您想提问的内容" :disabled="currentAiReply"/>
             <el-button type="primary" size="large" @click="onSend">
               发送
+            </el-button>
+            <el-button type="danger" size="large" @click="onPause">
+              暂停
             </el-button>
           </div>
         </div>
@@ -59,7 +62,7 @@ options.value = [
   }
 ];
 
-
+let valid = ref(true);  // 定义 valid 值
 let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
 let conv_id =  ref(null);
@@ -77,6 +80,15 @@ const changeClass = (item)=>{
     }
     else return 'msg';
 }
+
+const onPause=()=>{
+  valid.value=false;
+  ElMessage({
+    message: '输出已暂停',
+    type: 'warning'
+  })
+};
+
 
 //知识库检索为空时，判断并删除span
 function extractTextFromSpan(html) {
@@ -171,7 +183,7 @@ onMounted(() => {
 //有新的对话默认继续滚动，但是这里的滚动条很丑，并且滚动幅度很小，建议修改
 const scrollToNew = async () => {
   await nextTick();
-  const chatContainer = document.querySelector(".chat");
+  const  chatContainer = document.querySelector(".chat");
   if (chatContainer) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
   }
@@ -209,6 +221,10 @@ let currentAiReply = ref(false);
 
 
 const sseAiChat =  async (query) =>{
+  // if (!valid.value) {
+  //   currentAiReply.value=false;
+  //   return;
+  // }
   // 发送文本
   let resultAnswer = ref('');
 
@@ -243,7 +259,11 @@ const sseAiChat =  async (query) =>{
       }
     },
     async onmessage(msg) {
-
+      if (!valid.value) {
+        currentAiReply.value=false;
+        controller.abort();
+        return;
+      }
       //后端的返回值一定要按照对应的格式！不然无法解析
       console.log('onmessage:'+currentAiReply.value);
       currentAiReply.value=true;
@@ -321,6 +341,7 @@ const aiChat = (query) => {
 //点击发送回答问题
 //应该一发送消息就设为禁止发送
 const onSend =async  () => {
+  valid.value=true;
   if (value.value.trim() === "") {
     ElMessage({
       message: '输入内容不能为空！',
@@ -377,7 +398,6 @@ const onSend =async  () => {
 
   }
   else if (conv_id.value !== null && value.value.trim() !== "") {
-
 
     if(currentAiReply.value===false) {
       currentAiReply.value=true;
