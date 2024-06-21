@@ -360,7 +360,7 @@ const submitUpload = () => {
 async function uploadFile(fileData, name) {
   try {
     const res = await uploadKnowledgeDoc(fileData);
-    console.log(res);
+    // console.log(res);
     if (res.code === 200) {
       if (Object.keys(res.data.failed_files).length === 0) {
         ElMessage.success(`上传文件 ${name} 成功`);
