@@ -1,5 +1,4 @@
 <template>
-  <main>
     <div class="body" style="height: 730px">
       <div class="container">
         <div class="right">
@@ -35,7 +34,7 @@
         </el-select>
       </div>
     </div>
-  </main>
+
 
 
 </template>
@@ -559,7 +558,7 @@ main {
     }
 
     .bottom {
-      height: 40px;
+      height: 60px;
       display: flex;
       align-items: center;
       width: 100%;
