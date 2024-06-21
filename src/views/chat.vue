@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <!-- <main> -->
     <div class="body" style="height: 730px">
       <div class="container">
         <div class="right">
@@ -35,7 +35,7 @@
         </el-select>
       </div>
     </div>
-  </main>
+  <!-- </main> -->
 
 
 </template>
