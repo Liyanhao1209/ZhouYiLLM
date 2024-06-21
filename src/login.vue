@@ -189,6 +189,18 @@ export default {
 							localStorage.setItem('user_id', res.data.data.user_id)
 							localStorage.setItem('islogin', true)
 						}
+						else if (res.data.code == 400) {
+							ElMessage({
+								message: '账号不存在',
+								type: 'warning'
+							})
+						}
+						else if (res.data.code == 401) {
+							ElMessage({
+								message: '密码错误',
+								type: 'warning'
+							})
+						}
 						else if (res.data.code == 402) {
 							ElMessage({
 								message: '账号被封禁',
@@ -219,6 +231,18 @@ export default {
 							type: 'success'
 						})
 
+					}
+					else if(res.data.code === 400){
+						ElMessage({
+							message: '管理员不存在',
+							type: 'warning'
+						})
+					}
+					else if(res.data.code === 401){
+						ElMessage({
+							message: '密码错误',
+							type: 'warning'
+						})
 					}
 				})
 			}
