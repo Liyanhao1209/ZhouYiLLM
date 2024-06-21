@@ -70,8 +70,14 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: () => import('@/views/administor.vue')
+    component: () => import('@/views/admin/administor.vue')
   },
+  {
+    path: '/admin/history',
+    name: 'admin-user-history',
+    component: () => import('@/views/history_chats.vue')
+  },
+  
 
 ]
 

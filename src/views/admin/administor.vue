@@ -15,10 +15,13 @@
             <span><strong>年龄：</strong>{{ user.age }}</span>
             <span><strong>帐号状态：</strong>{{ user.is_active ? '正常' : '异常' }}</span>
           </div>
-          <button @click="user.is_active ? methodOne(user) : methodTwo(user)"
-            :class="user.is_active ? 'normal-button' : 'error-button'">
-            {{ user.is_active ? '封禁' : '解封' }}
-          </button>
+          <div class="user-button">
+            <el-button type="success" @click="to_user_conv_history(user)">查看对话历史记录</el-button>
+            <button @click="user.is_active ? methodOne(user) : methodTwo(user)"
+              :class="user.is_active ? 'normal-button' : 'error-button'">
+              {{ user.is_active ? '封禁' : '解封' }}
+            </button>
+          </div>
         </li>
       </ul>
     </div>
@@ -35,7 +38,7 @@ export default {
     }
   },
   methods: {
-    logout(){
+    logout() {
       this.$router.back();
       localStorage.removeItem('token')
     },
@@ -82,8 +85,19 @@ export default {
           })
         }
       })
+    },
+    to_user_conv_history(user){
+      let user_id = user.id
+      this.$router.push({
+        path: '/history_chats',
+        query: {
+          user_id: user_id
+        }
+      })
     }
   },
+
+
   created() {
     this.getUsers();
   }
@@ -157,10 +171,17 @@ ul {
   background-color: darkgreen;
 }
 
-.top-div{
+.top-div {
   text-align: start;
   width: 100%;
   margin-left: 30px;
   margin-top: 30px;
+}
+
+.user-button{
+  display: flex;
+  align-items: center;
+  justify-content:space-around;
+  width: 250px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <el-main class="main">
+  <div style="margin-top: 50px; width: 100%; text-align: center" class="main-div">
+    <div class="main">
       <div > 
         <h1>知识库</h1>
       </div>
@@ -32,7 +32,7 @@
 
       <div style="display: flex;  /* 竖直居中对齐 */">
       <!-- 选择知识库 -->
-      <div style="flex: 1;flex-direction: column; width=60%; justify-content: center; /* 竖直居中对齐 */">
+      <div style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
 
         <br><div  style="flex: 1">选择知识库</div><br>
 
@@ -47,12 +47,12 @@
       <!-- 上传文件 -->
 
         <!-- 并排 -->
-        <div   v-if="hasKnowledge" style="flex: 1;flex-direction: column; width=60%; justify-content: center; /* 竖直居中对齐 */">
+        <div   v-if="hasKnowledge" style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
           <br>
           <div  style="flex: 1">上传知识库文件</div>
           <br>
           <div  style="flex: 1"> 
-            <el-upload ref="uploadRef" class="upload-demo" action="false" multiple :auto-upload="false"
+            <el-upload ref="uploadRef" class="upload-demo"  multiple :auto-upload="false"
               :on-change="handleFileChange" :on-remove="handleRemove" v-model="fileLists">
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <template #trigger>
@@ -91,7 +91,7 @@
             ref="singleTableRef"
             :data="tableData"
             highlight-current-row
-            style="width: 60% flex:1;"
+            style="width: 60%; flex:1;"
             @current-change="getFileListsMethod"
           >
             <el-table-column type="index" width="50" />
@@ -100,7 +100,7 @@
           <!-- page-count是最大页数，超过会折叠 -->
           <el-pagination
             :page-size="pageSize"
-            :pager-count="5"
+            :pager-count="10"
             layout="prev, pager, next"
             :total="total"
             :current-page="pageNo"
@@ -110,7 +110,7 @@
 
 
 
-    </el-main>
+    </div>
   </div>
 </template>
 
@@ -129,7 +129,7 @@ const currentFile = reactive([
 // 当前页
 const pageNo = ref(1)
 // 当前大小
-const pageSize = ref(5)
+const pageSize = ref(10)
 // 表格数据
 const tableData =ref([
 ]);
@@ -311,28 +311,25 @@ function handleRemove(file, fileList) {
 // }
 
 let currentKbId=  ref('');
-function uploadAllFile() {
-  //得到知识库id
-//options.value.find(item => item.label === KnowledgeValue.value);
-  console.log('当前知识库id：    '+currentKbId.value);
-  //多文件上传
-  for (let i = 0; i < fileLists.value.length; i++) {
-    // 若是新添加文件即存在fileLists.value.raw,则调用上传接口，否则不需调用
-    //一个个上传
-    if (fileLists.value[i].raw) {
-      let fileData = new FormData();
-      console.log("当前文件", fileLists.value[i].raw)
-
-      fileData.append('files', fileLists.value[i].raw);
-
-      //得到当前知识库id：
+async function uploadAllFile() {
+  console.log('当前知识库id：' + currentKbId.value);
+  const files = fileLists.value;
+  for (const file of files) {
+    if (file.raw) {
+      const fileData = new FormData();
+      fileData.append('files', file.raw);
       fileData.append('kb_id', currentKbId.value);
-      uploadFile(fileData, fileLists.value[i].name);//上传文件
-      //上传完之后一个个删除上传的文件
+
+      console.log("正在处理"+file.name)
+      await uploadFile(fileData, file.name); // 等待uploadFile完成
+      console.log(file.name+"处理完毕")
     }
   }
 
-
+  // 所有文件上传完成后的代码
+  // 例如，清空文件列表
+  // uploadRef.value.clearFiles();
+  // getFileListsMethod();
 }
 
 const uploadRef = ref(null);
@@ -360,30 +357,25 @@ const submitUpload = () => {
 
 
 //上传文件 在默认的文件上传前被调用，为了禁止文件上传，需要返回false
-function uploadFile(fileData, name) {
-
-  uploadKnowledgeDoc(fileData).then(res => {
+async function uploadFile(fileData, name) {
+  try {
+    const res = await uploadKnowledgeDoc(fileData);
     console.log(res);
-    //文件名：
     if (res.code === 200) {
-      res.data.failed_files;
-      console.log(res.data.failed_files);
-      if(Object.keys(res.data.failed_files).length===0){
-        ElMessage.success('上传文件' + name + '成功');
-      }
-      else{
-        ElMessage.error('上传失败！'+res.data.failed_files[name]);
+      if (Object.keys(res.data.failed_files).length === 0) {
+        ElMessage.success(`上传文件 ${name} 成功`);
+      } else {
+        ElMessage.error(`上传失败！${res.data.failed_files[name]}`);
       }
       // 从 fileLists.value 中删除当前文件
-        fileLists.value = fileLists.value.filter((file) => file.name !== name);
-        console.log(fileLists.value, name);
-
-        // getFileListsMethod();
-    }
-    else {
+      fileLists.value = fileLists.value.filter((file) => file.name !== name);
+    } else {
       ElMessage.error(res.msg);
     }
-  })
+  } catch (error) {
+    console.error('上传文件时发生错误：', error);
+    ElMessage.error('上传文件时发生错误');
+  }
 }
 
 //得到当前文件：
@@ -480,6 +472,11 @@ const Search = () => {
 </script>
 
 <style>
+
+.main-div{
+  border-radius: 15px;
+}
+
 .container {
   /* position: absolute; */
   
