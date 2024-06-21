@@ -114,5 +114,3 @@ def get_star_blog(user_id: str) -> BaseResponse:
     except Exception as e:
         print(e)
         return BaseResponse(code=500, msg=str(e))
-
-

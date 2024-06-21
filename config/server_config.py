@@ -73,3 +73,4 @@ CORS_ARGS = {
     "methods": ["*"],
     "headers": ["*"]
 }
+
