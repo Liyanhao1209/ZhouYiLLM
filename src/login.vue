@@ -173,28 +173,40 @@ export default {
         if (valid) {
           login(this.loginForm).then(res => {
 
-            if (res.data.code === 200) {
-              this.$router.push('/chat')
-              ElMessage({
-                message: '登录成功',
-                type: 'success'
-              })
-              //保存登录信息
-              store.commit('login', res.data.data)
-              store.commit('setToken', res.data.data.token)
-              localStorage.setItem('token', res.data.data.token)
-              console.log(res.data.data.token);
-              console.log(store.state.token);
-              // console.log(store.state.user_id, store.state.token);
-              localStorage.setItem('user_id', res.data.data.user_id)
-              localStorage.setItem('islogin', true)
-            }
-            else if (res.data.code == 402) {
-              ElMessage({
-                message: '账号被封禁',
-                type: 'warning'
-              })
-            }
+						if (res.data.code === 200) {
+							this.$router.push('/chat')
+							ElMessage({
+								message: '登录成功',
+								type: 'success'
+							})
+							//保存登录信息
+							store.commit('login', res.data.data)
+							store.commit('setToken', res.data.data.token)
+							localStorage.setItem('token', res.data.data.token)
+							console.log(res.data.data.token);
+							console.log(store.state.token);
+							// console.log(store.state.user_id, store.state.token);
+							localStorage.setItem('user_id', res.data.data.user_id)
+							localStorage.setItem('islogin', true)
+						}
+						else if (res.data.code == 400) {
+							ElMessage({
+								message: '账号不存在',
+								type: 'warning'
+							})
+						}
+						else if (res.data.code == 401) {
+							ElMessage({
+								message: '密码错误',
+								type: 'warning'
+							})
+						}
+						else if (res.data.code == 402) {
+							ElMessage({
+								message: '账号被封禁',
+								type: 'warning'
+							})
+						}
 
           }).catch(e => {
             console.log(e)
@@ -214,37 +226,50 @@ export default {
             console.log(res.data.data.token);
             console.log(store.state.token);
             localStorage.setItem('token', res.data.data.token)
+            localStorage.setItem('islogin', true)
             ElMessage({
               message: '登录成功',
               type: 'success'
             })
 
-          }
-        })
-      }
-    },
-    change() {
-      this.loginfiex = !(this.loginfiex);
-    },
-    register() {
-      this.$refs["registerForm"].validate(valid => {
-        if (valid) {
-          register(this.registerForm).then(res => {
-            // if(res.code === 200)
-            ElMessage({
-              message: '注册成功',
-              type: 'success'
-            })
-            this.disfiex = 0;
-          })
-        } else {
-          ElMessage({
-            message: '请检查输入的信息',
-            type: 'error'
-          })
-          return false;
-        }
-      })
+					}
+					else if(res.data.code === 400){
+						ElMessage({
+							message: '管理员不存在',
+							type: 'warning'
+						})
+					}
+					else if(res.data.code === 401){
+						ElMessage({
+							message: '密码错误',
+							type: 'warning'
+						})
+					}
+				})
+			}
+		},
+		change() {
+			this.loginfiex = !(this.loginfiex);
+		},
+		register() {
+			this.$refs["registerForm"].validate(valid => {
+				if (valid) {
+					register(this.registerForm).then(res => {
+						// if(res.code === 200)
+						ElMessage({
+							message: '注册成功',
+							type: 'success'
+						})
+						this.disfiex = 0;
+					})
+				} else {
+					ElMessage({
+						message: '请检查输入的信息',
+						type: 'error'
+					})
+					return false;
+				}
+			})
 
     },
     getVerifyCode() {

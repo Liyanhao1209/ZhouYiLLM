@@ -20,7 +20,7 @@
                     </div>
                 </el-card>
                 <div>
-                    <el-button type="danger" @click="delete_comment_(item.id)">删除</el-button>
+                    <el-button type="danger" @click="delete_comment_(item.id)" v-if="item.user_id == user_id">删除</el-button>
                 </div>
             </div>
         </template>
@@ -39,7 +39,9 @@ export default {
         blog_id: ''
     },
     computed: {
-
+        user_id(){
+            return localStorage.getItem('user_id')
+        }
     },
     methods: {
         delete_comment_(id) {
