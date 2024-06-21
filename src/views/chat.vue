@@ -71,6 +71,8 @@ let aiCurrentChat = null;
 const value = ref("");
 const msgList = reactive([
 ]);
+
+
 let currentKB = ref('faiss_zhouyi');
 const changeClass = (item)=>{
   console.log('item',item);
@@ -107,7 +109,6 @@ onMounted(() => {
   user_id = localStorage.getItem('user_id');
   //判断一下是否有传参，无传参就退出
   if (!route.query.conv_id || !route.query.conv_name ) {
-
     msgList.value=([]);
     conv_name.value='周易问答';
     return ;
@@ -330,6 +331,7 @@ const onSend =async  () => {
     })
     return;
   }
+
   //如果空对话，创建新对话
   //加入了onMounted后，如果不是在新建对话界面而是直接跳转就会不对
   if (conv_id.value === null || conv_id.value === '') {

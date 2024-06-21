@@ -1,8 +1,7 @@
 import axios from 'axios'
 import store from '@/store/index';
+import { url } from 'config/config';
 
-const url = 'http://zyllmbackend.ihk.fghk.top'
-// const url = 'http://localhost:9090/'
 export const request = axios.create({
     baseURL: url,
     headers: {
