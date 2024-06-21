@@ -3,7 +3,8 @@ from config.server_config import LANGCHAIN_SERVER
 KB_ARGS = {
     "embed_model": "bge-large-zh-v1.5",
     "vector_store_type": "faiss",
-    "url": f'http://{LANGCHAIN_SERVER["address"]}/knowledge_base/create_knowledge_base'
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/knowledge_base/create_knowledge_base',
+    "default_kb": "faiss_zhouyi"
     # "url": f'http://{LANGCHAIN_SERVER["host"]}/knowledge_base/create_knowledge_base'
 }
 
@@ -20,6 +21,7 @@ DOC_ARGS = {
 }
 
 FILE_ARGS = {
-    "url": f'http://{LANGCHAIN_SERVER["address"]}/knowledge_base/list_files'
+    "url": f'http://{LANGCHAIN_SERVER["address"]}/knowledge_base/list_files',
     # 'url': f'http://{LANGCHAIN_SERVER["host"]}/knowledge_base/list_files'
+    "relative_path": "/static/md/"
 }

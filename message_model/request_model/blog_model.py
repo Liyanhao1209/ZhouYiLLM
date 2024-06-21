@@ -7,3 +7,4 @@ class BlogModel(BaseModel):
     title: str
     content: str
     user_id: str
+    save_to_kb: bool

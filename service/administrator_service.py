@@ -35,7 +35,7 @@ def admin_login(admin_model: AdminModel):
         return BaseResponse(code=400, msg='管理员不存在')
 
     if admin.password != admin_model.password:
-        return BaseResponse(code=400, msg='密码错误')
+        return BaseResponse(code=401, msg='密码错误')
 
     access_token_expires = timedelta(minutes=JWT_ARGS["expire_time"])
     access_token = create_access_token(

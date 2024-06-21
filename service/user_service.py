@@ -62,8 +62,7 @@ async def login_user(login_form: LoginForm):
         # 根据邮箱查询用户
         user = session.query(User).filter(User.email == login_form.email).first()
         if not user:
-            raise HTTPException(status_code=404, detail="用户不存在")
-
+            return BaseResponse(code=400, msg='账号不存在')
         # 对用户输入的密码进行MD5加密
         input_password_hash = md5(login_form.password.encode('utf-8')).hexdigest()
 
