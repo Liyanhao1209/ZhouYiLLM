@@ -226,6 +226,7 @@ export default {
             console.log(res.data.data.token);
             console.log(store.state.token);
             localStorage.setItem('token', res.data.data.token)
+            localStorage.setItem('islogin', true)
             ElMessage({
               message: '登录成功',
               type: 'success'
