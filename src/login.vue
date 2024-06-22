@@ -13,7 +13,7 @@
               <input type="password" placeholder="password" v-model="loginForm.password">
             </el-form-item>
           </el-form>
-          <h3>忘记密码</h3>
+          <h3 style="text-decoration: underline" @click="password_change()">忘记密码</h3>
           <el-button class="inupbutton" @click="login()" v-if="loginfiex == 0">登录</el-button>
           <el-button class="inupbutton" @click="admin_login()" v-if="loginfiex == 1">管理员登录</el-button>
 
@@ -66,10 +66,46 @@
       </div>
     </div>
   </div>
+
+  <el-dialog
+    title="找回密码"
+    v-model="showForgetPasswordDialog"
+    width="30%"
+    :before-close="handleClose">
+    <div>
+      <el-form :model="registerForm" :rules="registerRules" ref="registerForm" label-width="80px"
+                   size="large" style="width: 350px;">
+            <el-form-item prop="email" required label="邮箱">
+              <el-input type="text" placeholder="email" v-model="registerForm.email" />
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="getVerifyCode()" ref="code_button" :disabled="code_button_disable">{{
+                  buttonText
+                }}</el-button>
+            </el-form-item>
+            <el-form-item prop="captcha" required label="验证码">
+              <el-input type="text" placeholder="验证码" v-model="registerForm.captcha" />
+            </el-form-item>
+            <el-form-item prop="password" required label="密码">
+              <el-tooltip placement="top-start">
+                <template #content>密码必须包含数字、小写字母、大写字母、<br />下划线'_'中的至少两种<br />密码长度不少于8位不多于16位</template>
+                <el-input type="password" placeholder="密码" v-model="registerForm.password" />
+              </el-tooltip>
+            </el-form-item>
+            <el-form-item prop="pass2" required label="确认密码">
+              <el-input type="password" placeholder="确认密码" v-model="registerForm.pass2" />
+            </el-form-item>
+          </el-form>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="this.showForgetPasswordDialog = false">取 消</el-button>
+      <el-button type="primary" @click="submitForgetPassword()">提交</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
-import { login, sendVerifyCode, register } from '@/service/authService.js'
+import { login, sendVerifyCode, register, update_password } from '@/service/authService.js'
 import { login2 } from '@/service/administor.js'
 import { checkPass } from '@/utils/register_utils.js'
 import { ElMessage } from 'element-plus'
@@ -115,6 +151,7 @@ export default {
       }
     }
     return {
+      showForgetPasswordDialog: false,
       overlaylong: 'overlaylong',
       overlaytitle: 'overlaytitle',
       disfiex: 0,
@@ -194,6 +231,7 @@ export default {
 								message: '账号不存在',
 								type: 'warning'
 							})
+              //this.disfiex=1;
 						}
 						else if (res.data.code == 401) {
 							ElMessage({
@@ -248,19 +286,66 @@ export default {
 				})
 			}
 		},
+    password_change(){
+      // console.log("1213");
+      this.showForgetPasswordDialog=true;
+    },
 		change() {
 			this.loginfiex = !(this.loginfiex);
 		},
+    submitForgetPassword(){
+      this.$refs["registerForm"].validate(valid => {
+				if (valid) {
+					update_password(this.registerForm).then(res => {
+            if(res.data.code === 400){
+              ElMessage({
+							message: '用户不存在，请注册',
+							type: 'warning'
+						})
+            this.showForgetPasswordDialog=false;
+            this.disfiex = 1;
+            }
+            else if(res.data.code===402){
+              ElMessage({
+							message: '验证码错误',
+							type: 'warning'
+						})
+            }
+						else{
+              ElMessage({
+							message: '密码修改成功',
+							type: 'success'
+						})
+              this.showForgetPasswordDialog=false;
+						  this.disfiex = 0;
+            }
+					})
+				} else {
+					ElMessage({
+						message: '请检查输入的信息',
+						type: 'error'
+					})
+					return false;
+				}
+			})
+    },
 		register() {
 			this.$refs["registerForm"].validate(valid => {
 				if (valid) {
 					register(this.registerForm).then(res => {
-						// if(res.code === 200)
-						ElMessage({
+            if(res.data.code === 400){
+              ElMessage({
+							message: '用户已存在',
+							type: 'warning'
+						})
+            }
+						else{
+              ElMessage({
 							message: '注册成功',
 							type: 'success'
 						})
-						this.disfiex = 0;
+						  this.disfiex = 0;
+            }
 					})
 				} else {
 					ElMessage({

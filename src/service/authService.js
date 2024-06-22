@@ -36,6 +36,9 @@ function login(data) {
 function register(data) {
     return authRequest.post('/user/register', data)
 }
+function update_password(data) {
+    return authRequest.post('/user/update_password', data)
+}
 function sendVerifyCode(data) {
     return authRequest.post('user/send_verification_code/' + data)
 }
@@ -164,6 +167,7 @@ async function deleteConversation(data) {
 
 export {
     login,
+    update_password,
     sendVerifyCode,
     register,
     createConversion,
