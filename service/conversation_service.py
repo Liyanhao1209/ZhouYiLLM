@@ -239,11 +239,16 @@ async def request_online_llm(olc: OnlineLLMChat) -> BaseResponse:
 async def stop_llm_chat(sc: StopChat) -> BaseResponse:
     try:
         conv_controller[sc.conv_id] = False
-        suffix = "\n(用户已终止对话)\n"
+        suffix = "(用户已终止对话)\n"
+        if sc.current_docs:
+            docs = {"docs": [str(x) for x in sc.current_docs]}
+        else:
+            docs = {"docs": []}
         with record_lock:
             add_record_to_conversation(sc.conv_id, sc.query, False)
             add_record_to_conversation(sc.conv_id, json.dumps(
-                {"answer": sc.current_ans + suffix, "docs": {"docs": [str(x) for x in sc.current_docs]}},
+                {"answer": sc.current_ans + suffix if sc.current_docs == '' else (sc.current_ans + "\n" + suffix),
+                 "docs": docs},
                 ensure_ascii=False), True)
     except Exception as e:
         return BaseResponse(code=500, msg="终止对话失败", data={"error": f'{e}'})
