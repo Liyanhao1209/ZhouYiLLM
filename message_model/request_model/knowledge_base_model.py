@@ -15,6 +15,10 @@ class KBFile(BaseModel):
     knowledge_base_id: str
 
 
+class DeleteKB(BaseModel):
+    kb_id: str
+
+
 class DeleteKBFile(BaseModel):
     kb_id: str
-    file_name: str
+    file_names: str

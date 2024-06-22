@@ -21,7 +21,7 @@ class KnowledgeBaseRouters(routers_mount_interface):
                 summary="用户获取知识库列表")(get_user_kbs)
         app.get(self.generate_route_path(["get-kb-files"]), tags=self.tag, response_model=BaseResponse,
                 summary="用户获取知识库文件列表")(get_kb_files)
-        app.get(self.generate_route_path(["delete-knowledge-base"]), tags=self.tag, response_model=BaseResponse,
-                summary="用户删除知识库")(delete_knowledge_base)
-        app.get(self.generate_route_path(["delete-knowledge-files"]), tags=self.tag, response_model=BaseResponse,
-                summary="用户删除知识库文件")(delete_knowledge_base_file)
+        app.post(self.generate_route_path(["delete-knowledge-base"]), tags=self.tag, response_model=BaseResponse,
+                 summary="用户删除知识库")(delete_knowledge_base)
+        app.post(self.generate_route_path(["delete-knowledge-files"]), tags=self.tag, response_model=BaseResponse,
+                 summary="用户删除知识库文件")(delete_knowledge_base_file)

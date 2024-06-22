@@ -1,10 +1,11 @@
 import requests
 
-kb_id = "5d03ee4424704be0be845688d06cad3c"
+kb_id = "6c49735bac7a4c66847b878c56d6e4e4"
 
-upload_doc_paths = [
-    "C:\\Users\\Administrator\\Desktop\\upload.txt", "C:\\Users\\Administrator\\Desktop\\《周易》大模型.pptx",
-    "C:\\Users\\Administrator\\Desktop\\college\\junior2\\项目实训\\开题阶段\\《周易》大模型开题答辩.pptx"]  # ["C:\\Users\\Administrator\\Desktop\\《周易》大模型.pptx"]  # ,"C:\\Users\\Administrator\\Desktop\\college\\junior2\\项目实训\\开题阶段\\《周易》大模型开题答辩.pptx"]
+upload_doc_paths = ["C:\\Users\\Administrator\\Desktop\\upload.txt"]
+# upload_doc_paths = [
+#     "C:\\Users\\Administrator\\Desktop\\upload.txt", "C:\\Users\\Administrator\\Desktop\\《周易》大模型.pptx",
+#     "C:\\Users\\Administrator\\Desktop\\college\\junior2\\项目实训\\开题阶段\\《周易》大模型开题答辩.pptx"]  # ["C:\\Users\\Administrator\\Desktop\\《周易》大模型.pptx"]  # ,"C:\\Users\\Administrator\\Desktop\\college\\junior2\\项目实训\\开题阶段\\《周易》大模型开题答辩.pptx"]
 
 api_url = "http://127.0.0.1:9090/knowledge_base/upload-knowledge-files"
 
