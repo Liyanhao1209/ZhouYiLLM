@@ -89,7 +89,7 @@ export default {
     to_user_conv_history(user){
       let user_id = user.id
       this.$router.push({
-        path: '/history_chats',
+        path: '/admin_history_chat',
         query: {
           user_id: user_id
         }
