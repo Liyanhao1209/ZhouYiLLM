@@ -23,13 +23,9 @@ Accept: application/json
 
 ###
 # 删除知识库
-POST http://127.0.0.1:9090/knowledge_base/delete-knowledge-base
+GET http://127.0.0.1:9090/knowledge_base/delete-knowledge-base?kb_id=6c49735bac7a4c66847b878c56d6e4e4
 Content-Type: application/json
 Accept: application/json
-
-{
-  "kb_id": "6c49735bac7a4c66847b878c56d6e4e4"
-}
 
 ###
 # 删除指定文件
@@ -40,6 +36,17 @@ Accept: application/json
 {
   "kb_id": "6c49735bac7a4c66847b878c56d6e4e4",
   "file_names": "upload.txt"
+}
+
+###
+# 下载指定文件
+POST http://127.0.0.1:9090/knowledge_base/download-knowledge-files
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kb_id": "6c49735bac7a4c66847b878c56d6e4e4",
+  "file_name": "“象形”“会意”思维与《周易》_岳山岳.pdf"
 }
 
 
