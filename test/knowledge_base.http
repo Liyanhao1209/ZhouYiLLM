@@ -4,19 +4,49 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "kb_name": "lyh1",
+  "kb_name": "lyh3",
   "desc": "lyh的第一个知识库",
-  "user_id": "d078b124cf27413bbb99f6484782e98c"
+  "user_id": "7d25f6c1c64c4f9ebcdf52f1ffc5d512"
 }
 
 ###
 # 获取用户知识库列表
-GET http://127.0.0.1:9090/knowledge_base/get-knowledge-base?user_id=d078b124cf27413bbb99f6484782e98c
+GET http://127.0.0.1:9090/knowledge_base/get-knowledge-base?user_id=7d25f6c1c64c4f9ebcdf52f1ffc5d512
 Content-Type: application/json
 Accept: application/json
 
 ###
 # 获取知识库文件
-GET http://127.0.0.1:9090/knowledge_base/get-kb-files?kb_id=5d03ee4424704be0be845688d06cad3c
+GET http://127.0.0.1:9090/knowledge_base/get-kb-files?kb_id=6c49735bac7a4c66847b878c56d6e4e4
 Content-Type: application/json
 Accept: application/json
+
+###
+# 删除知识库
+GET http://127.0.0.1:9090/knowledge_base/delete-knowledge-base?kb_id=6c49735bac7a4c66847b878c56d6e4e4
+Content-Type: application/json
+Accept: application/json
+
+###
+# 删除指定文件
+POST http://127.0.0.1:9090/knowledge_base/delete-knowledge-files
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kb_id": "6c49735bac7a4c66847b878c56d6e4e4",
+  "file_names": "upload.txt"
+}
+
+###
+# 下载指定文件
+POST http://127.0.0.1:9090/knowledge_base/download-knowledge-files
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kb_id": "6c49735bac7a4c66847b878c56d6e4e4",
+  "file_name": "“象形”“会意”思维与《周易》_岳山岳.pdf"
+}
+
+

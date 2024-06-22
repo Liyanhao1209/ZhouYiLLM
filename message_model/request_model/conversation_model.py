@@ -79,3 +79,10 @@ class MixChat(BaseModel):
     query: str
     knowledge_base_id: str | None = "-1"
     prompt_name: str | None = "default"
+
+
+class StopChat(BaseModel):
+    conv_id: str
+    query: str
+    current_docs: List[str] | None = []
+    current_ans: str | None = ''
