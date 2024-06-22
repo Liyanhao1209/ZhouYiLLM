@@ -6,7 +6,7 @@ from message_model.response_model.response import BaseResponse
 from routers.mount_routers import routers_mount_interface
 from service.conversation_service import new_conversation, request_llm_chat, request_knowledge_base_chat, \
     request_mix_chat, request_search_engine_chat, get_user_conversations, get_conversation_record, request_online_llm, \
-    delete_user_conversation
+    delete_user_conversation, stop_llm_chat
 
 
 class ConversationRouter(routers_mount_interface):
@@ -24,6 +24,7 @@ class ConversationRouter(routers_mount_interface):
         app.post(self.generate_route_path(["online-llm-chat"]), tags=self.tag, summary="请求在线LLM聊天接口")(
             request_online_llm)
         app.post(self.generate_route_path(["mix-chat"]), tags=self.tag, summary="请求混合聊天接口")(request_mix_chat)
+        app.post(self.generate_route_path(["stop-llm-chat"]), tags=self.tag, summary="停止LLM聊天接口")(stop_llm_chat)
         app.get(self.generate_route_path(["get-user-conversation"]), tags=self.tag, summary="获取会话列表")(
             get_user_conversations)
         app.get(self.generate_route_path(["get-conversation-record"]), tags=self.tag, summary="获取会话详情")(
