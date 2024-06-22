@@ -161,6 +161,16 @@ async function deleteConversation(data) {
     }
 }
 
+//用户删除对话 conv_id
+async function stopChat(data) {
+    try {
+        const res = await request.post('/conversation/stop-llm-chat/', data)
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export {
     login,
     sendVerifyCode,
@@ -175,6 +185,7 @@ export {
     uploadKnowledgeDoc,
     getKnowledgeBaseDoc,
     update_info,
-    deleteConversation
+    deleteConversation,
+    stopChat
 }
 

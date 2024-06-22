@@ -15,9 +15,9 @@
           :before-close="handleClose" 
         >
         <!--  -->
-        <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" />
+        <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" clearable/>
         <br>
-        <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" />
+        <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" clearable/>
         <!-- <el-button type="primary" @click="newKnowledge ">新建知识库</el-button> -->
           <template #footer>
             <div class="dialog-footer" >
@@ -80,7 +80,7 @@
 
           <el-row >
             <el-col :span="5">
-                <el-input v-model="searchVal" placeholder="请输入需要查询内容" @change="Search" />
+                <el-input v-model="searchVal" placeholder="请输入需要查询内容" @change="Search" clearable/>
             </el-col>
             <el-col :span="2">
                 <el-button  type="primary" @click="Search">查询</el-button>
