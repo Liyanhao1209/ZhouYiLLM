@@ -242,7 +242,9 @@ async def stop_llm_chat(sc: StopChat) -> BaseResponse:
         suffix = "\n(用户已终止对话)\n"
         with record_lock:
             add_record_to_conversation(sc.conv_id, sc.query, False)
-            add_record_to_conversation(sc.conv_id, json.dumps({"answer": sc.current_ans+suffix, "docs": sc.current_docs},ensure_ascii=False),True)
+            add_record_to_conversation(sc.conv_id, json.dumps(
+                {"answer": sc.current_ans + suffix, "docs": {"docs": [str(x) for x in sc.current_docs]}},
+                ensure_ascii=False), True)
     except Exception as e:
         return BaseResponse(code=500, msg="终止对话失败", data={"error": f'{e}'})
 
