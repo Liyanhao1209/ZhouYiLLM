@@ -12,7 +12,7 @@ from component.DB_engine import engine
 from component.email_server import send_email
 from component.redis_server import get_redis_instance
 from component.token_server import create_access_token, get_current_active_user
-from db.create_db import User  # 假设User模型已经定义在db.models模块中，包含username和password字段
+from db.create_db import User  # User模型已经定义在db.models模块中，包含username和password字段
 from message_model.request_model.user_model import RegisterForm, LoginForm, InfoForm
 from message_model.response_model.response import BaseResponse
 
@@ -25,16 +25,16 @@ async def register_user(register_form: RegisterForm):
         # 检查用户名是否已存在
         existing_user = session.query(User).filter(User.email == register_form.email).first()
         if existing_user:
-            raise HTTPException(status_code=400, detail="用户名已存在")
+            return BaseResponse(code=400, msg='账号已存在')
 
         redis = get_redis_instance()
         judge = redis.get(register_form.email)
         if not judge:
-            raise HTTPException(status_code=400, detail="验证码错误")
+            return BaseResponse(code=401, msg='验证码未发送')
         captcha_code_str = judge.decode('utf-8')
 
         if register_form.captcha != captcha_code_str:
-            raise HTTPException(status_code=400, detail="验证码错误")
+            return BaseResponse(code=402, msg='验证码错误')
         # 对密码进行MD5加密
         password_hash = md5(register_form.password.encode('utf-8')).hexdigest()
         new_user = User(id=conv_id, email=register_form.email, password=password_hash, name="", is_active=True,
@@ -51,6 +51,33 @@ async def register_user(register_form: RegisterForm):
     finally:
         session.close()
 
+async def update_password(register_form: RegisterForm):
+    session = Session(bind=engine)
+    try:
+        # 根据用户邮箱查询用户
+        user = session.query(User).filter(User.email == register_form.email).first()
+        if not user:
+            return BaseResponse(code=400, msg='账号不存在')
+
+        redis = get_redis_instance()
+        judge = redis.get(register_form.email)
+        if not judge:
+            return BaseResponse(code=401, msg='验证码未发送')
+        captcha_code_str = judge.decode('utf-8')
+
+        if register_form.captcha != captcha_code_str:
+            return BaseResponse(code=402, msg='验证码错误')
+        # 更新用户密码
+        password_hash = md5(register_form.password.encode('utf-8')).hexdigest()
+        user.password=password_hash
+        session.commit()
+        return {"code": 200, "message": "密码更新成功"}
+
+    except Exception as e:
+        session.rollback()  # 发生异常时回滚事务
+        raise HTTPException(status_code=500, detail="密码更新失败，请重试")
+    finally:
+        session.close()
 
 async def login_user(login_form: LoginForm):
     """

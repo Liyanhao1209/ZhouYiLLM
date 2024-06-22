@@ -50,7 +50,7 @@ async def request_mix_chat(mc: MixChat) -> Any:
     4. 最终将解答融合在一起返回
     """
     # 先请求大模型以自身能力给出解答
-    llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id, prompt_name="default"))
+    llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id, prompt_name="with_history"))
     if not llm_response["success"]:
         return BaseResponse(code=500, msg="大模型请求失败", data={"error": f'{llm_response["error"]}'})
 
@@ -282,6 +282,8 @@ def max_id_in_record() -> int:
 # 将聊天记录插入数据库
 def add_record_to_conversation(conv_id: str, text: str, is_ai: bool) -> None:
     with Session(engine) as session:
+        new_id = max_id_in_record()
+        print(type(new_id))
         session.add(Record(id=max_id_in_record() + 1, content=text, is_ai=is_ai, conv_id=conv_id))
         session.commit()
 
