@@ -17,9 +17,6 @@
                {{ button.text }}
                <!-- primary -->
             </el-button>
-            <el-button type="danger" size="large" @click="onPause">
-              暂停
-            </el-button>
           </div>
         </div>
         <el-select
@@ -102,13 +99,7 @@ const changeClass = (item)=>{
   else return 'msg';
 }
 
-const onPause=()=>{
-  valid.value=false;
-  ElMessage({
-    message: '输出已暂停',
-    type: 'warning'
-  })
-};
+
 
 
 //知识库检索为空时，判断并删除span
@@ -296,7 +287,7 @@ const sseAiChat =  async (query) =>{
         
         const parsedData = JSON.parse(msg.data);
         console.log(parsedData); 
-        console.log('啊啊啊啊啊啊啊',msg.data);
+        console.log(msg.data);
         //如果是文档
         if('docs' in parsedData.data){
           currentDocs.value=parsedData.data.docs;
