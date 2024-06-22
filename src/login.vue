@@ -287,7 +287,7 @@ export default {
 			}
 		},
     password_change(){
-      console.log("1213");
+      // console.log("1213");
       this.showForgetPasswordDialog=true;
     },
 		change() {

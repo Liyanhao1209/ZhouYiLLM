@@ -22,7 +22,6 @@ function get_blog(blog_id) {
     return request.get('blog/' + blog_id)
 }
 
-
 export {
     add_blog,
     get_blog_list,
