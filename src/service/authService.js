@@ -1,8 +1,6 @@
 import axios from 'axios'
 import store from '@/store/index';
-import { url } from '../../config/c'
-
-
+import { url } from '../../config/config';
 
 export const request = axios.create({
     baseURL: url,
