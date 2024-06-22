@@ -13,7 +13,7 @@ from config.server_config import CHAT_ARGS, KB_CHAT_ARGS, SE_CHAT_ARGS, ONLINE_L
 from config.template_config import get_mix_chat_prompt, get_online_llm_chat_prompt
 from db.create_db import Conversation, Record
 from message_model.request_model.conversation_model import NewConv, LLMChat, KBChat, MixChat, SEChat, History, \
-    OnlineLLMChat
+    OnlineLLMChat, StopChat
 from message_model.response_model.response import BaseResponse
 from util.utils import request, serialize_conversation, serialize_record, stream_response, forward_request_to_kernel
 
@@ -41,6 +41,9 @@ async def new_conversation(nc: NewConv) -> BaseResponse:
     return BaseResponse(code=200, msg="会话创建成功", data={"conv_id": conv_id})
 
 
+conv_controller = {}
+
+
 async def request_mix_chat(mc: MixChat) -> Any:
     """
     混合对话
@@ -49,6 +52,9 @@ async def request_mix_chat(mc: MixChat) -> Any:
     3. 最后请求大模型通过询问搜索引擎给出解答
     4. 最终将解答融合在一起返回
     """
+
+    conv_controller[mc.conv_id] = True
+
     # 先请求大模型以自身能力给出解答
     llm_response = await request_llm_chat(LLMChat(query=mc.query, conv_id=mc.conv_id, prompt_name="with_history"))
     if not llm_response["success"]:
@@ -109,10 +115,11 @@ async def request_mix_chat(mc: MixChat) -> Any:
             yield f"event: message\ndata: {event_data}\n\n"
 
         # 确保问题和回答原子性地入库
-        with record_lock:
-            add_record_to_conversation(mc.conv_id, mc.query, False)
-            add_record_to_conversation(mc.conv_id, json.dumps({"answer": ma, "docs": kb_docs}, ensure_ascii=False),
-                                       True)
+        if conv_controller[mc.conv_id]:
+            with record_lock:
+                add_record_to_conversation(mc.conv_id, mc.query, False)
+                add_record_to_conversation(mc.conv_id, json.dumps({"answer": ma, "docs": kb_docs}, ensure_ascii=False),
+                                           True)
 
     sse = StreamingResponse(generate_multi_turn_sse(), media_type="text/event-stream")
     sse.headers["Cache-Control"] = "no-cache"
@@ -227,6 +234,28 @@ async def request_online_llm(olc: OnlineLLMChat) -> BaseResponse:
         return BaseResponse(code=500, msg="在线大模型请求失败", data={"error": f'{e}'})
 
     return BaseResponse(code=200, msg="在线大模型请求成功", data={"answer": response.choices[0].message.content})
+
+
+async def stop_llm_chat(sc: StopChat) -> BaseResponse:
+    try:
+        conv_controller[sc.conv_id] = False
+        suffix = "(用户已终止对话)\n"
+        if sc.current_docs:
+            docs = {"docs": [str(x) for x in sc.current_docs]}
+        else:
+            docs = {"docs": []}
+        with record_lock:
+            ans = sc.current_ans + suffix if sc.current_ans == '' else (sc.current_ans + "\n" + suffix)
+            print(ans)
+            add_record_to_conversation(sc.conv_id, sc.query, False)
+            add_record_to_conversation(sc.conv_id, json.dumps(
+                {"answer": ans,
+                 "docs": docs},
+                ensure_ascii=False), True)
+    except Exception as e:
+        return BaseResponse(code=500, msg="终止对话失败", data={"error": f'{e}'})
+
+    return BaseResponse(code=200, msg="终止对话成功")
 
 
 async def get_user_conversations(user_id: str) -> BaseResponse:
