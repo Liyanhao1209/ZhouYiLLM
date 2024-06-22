@@ -245,9 +245,11 @@ async def stop_llm_chat(sc: StopChat) -> BaseResponse:
         else:
             docs = {"docs": []}
         with record_lock:
+            ans = sc.current_ans + suffix if sc.current_ans == '' else (sc.current_ans + "\n" + suffix)
+            print(ans)
             add_record_to_conversation(sc.conv_id, sc.query, False)
             add_record_to_conversation(sc.conv_id, json.dumps(
-                {"answer": sc.current_ans + suffix if sc.current_ans == '' else (sc.current_ans + "\n" + suffix),
+                {"answer": ans,
                  "docs": docs},
                 ensure_ascii=False), True)
     except Exception as e:
