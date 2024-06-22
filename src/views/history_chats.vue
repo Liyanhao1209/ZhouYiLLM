@@ -6,6 +6,10 @@
     </div>
     <!-- <el-scrollbar style="margin: 0; padding: 0; border: none;"> -->
     <div class="card-container"> <!-- 添加一个类来包裹所有的el-card -->
+    <div style="display: flex; align-items: center; margin: 20px 0;">
+        <el-input v-model="input" style="width: 60%;height: 40px;" placeholder="请输入历史记录名称进行查询" clearable></el-input>
+        <el-button type="primary"  size="large" @click="searchChatList()" style="margin-left: 10px;">查询</el-button>
+    </div>
       <el-card v-for="(chat, index) in chatHistory" :key="index" class="box-card" style="margin-bottom: 10px;">
         <div class="card-content">
           <div class="card-header">
@@ -45,6 +49,14 @@ import { Comment, Delete } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Back } from '@element-plus/icons-vue';
 
+
+//查询框内容
+let input = ref(null);
+//查询得到的记录
+const currentHistory = ref(null); // 使用 ref 创建一个响应式引用  
+//所有对话
+const allHistory = ref(null); // 使用 ref 创建一个响应式引用  
+
 let user_id = ref(null);
 const route = useRoute();
 const router = useRouter();
@@ -67,12 +79,13 @@ function getChatList() {
   let data = { "user_id": user_id.value };
   return getUserAllConversation(data).then(res => {
     if (res.code === 200) {
-      chatHistory.value = res.data.conversations; // 使用 .value 来更新 ref 的值  
-      chatHistory.value.reverse();
-      chatHistory.value.forEach(chat => {
+      allHistory.value = res.data.conversations; // 使用 .value 来更新 ref 的值  
+      allHistory.value.reverse();
+      allHistory.value.forEach(chat => {
         chat.formattedCreateTime = formatDateTime(chat.create_time); // 添加一个新字段来保存格式化后的时间  
       });
-      console.log(chatHistory.value);
+      console.log(allHistory.value);
+      chatHistory.value=allHistory.value;
       return true;
     } else {
       console.log(res.msg);
@@ -82,6 +95,27 @@ function getChatList() {
   });
 }
 
+//进行搜索，替换当前的结果
+const searchChatList = () =>{
+  if(input.value.trim()===''){
+    //为空返回全部
+    getChatList();
+    return;
+  }
+  const keyword1 =input.value.trim()
+  
+  // const list = JSON.parse(localStorage.getItem('list') as string)
+  currentHistory.value = allHistory.value
+
+  if (keyword1) {
+    currentHistory.value = currentHistory.value.filter(item => item.conv_name.includes(keyword1));
+  }
+  chatHistory.value = currentHistory.value;
+
+}
+
+
+//跳转到当前的记录
 const setCurrentChat = (chat) => {
   let currentChat = chat;
   // router.push('/chat');
@@ -94,6 +128,7 @@ const setCurrentChat = (chat) => {
   });
 }
 
+//删除记录
 const deleteCurrentChat = (chat) => {
   console.log(chat);
 
