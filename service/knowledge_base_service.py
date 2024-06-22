@@ -128,8 +128,7 @@ async def download_knowledge_base_file(dkf: DownloadKBFile) -> Union[FileRespons
             "file_name": dkf.file_name
         }
 
-        response = requests.post(DOC_ARGS['file_path_url'], headers={"Content-Type": "application/json"},
-                                 json=request_body)
+        response = requests.get(DOC_ARGS['file_path_url'], params=request_body)
         # content_res = requests.get(DOC_ARGS['download_url'], params=request_body)
         # print(response)
 
