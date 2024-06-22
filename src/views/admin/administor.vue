@@ -13,7 +13,7 @@
             <span><strong>邮箱：</strong>{{ user.email }}</span>
             <span><strong>性别：</strong>{{ user.sex }}</span>
             <span><strong>年龄：</strong>{{ user.age }}</span>
-            <span><strong>帐号状态：</strong>{{ user.is_active ? '正常' : '异常' }}</span>
+            <span><strong>帐号状态：</strong>{{ user.is_active ? '正常' : '封禁' }}</span>
           </div>
           <div class="user-button">
             <el-button type="success" @click="to_user_conv_history(user)">查看对话历史记录</el-button>
