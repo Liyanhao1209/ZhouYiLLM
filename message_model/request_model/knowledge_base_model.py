@@ -13,3 +13,8 @@ class KnowledgeBase(BaseModel):
 class KBFile(BaseModel):
     files: List[UploadFile]
     knowledge_base_id: str
+
+
+class DeleteKBFile(BaseModel):
+    kb_id: str
+    file_name: str

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 import db.create_db
 from component.DB_engine import engine
 from config.knowledge_base_config import KB_ARGS, DOC_ARGS, FILE_ARGS
-from message_model.request_model.knowledge_base_model import KnowledgeBase
+from message_model.request_model.knowledge_base_model import KnowledgeBase, DeleteKBFile
 from message_model.response_model.response import BaseResponse, ListResponse
 from util.utils import request, serialize_knowledge_base
 
@@ -82,11 +82,42 @@ async def upload_knowledge_files(
             json_res = response.json()
             print(json_res)
             if json_res["code"] == 200:
-                return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": json_res["data"]["failed_files"]})
+                return BaseResponse(code=200, msg="上传文件成功",
+                                    data={"failed_files": json_res["data"]["failed_files"]})
             elif json_res["code"] == 404:
-                return BaseResponse(code=json_res["code"],msg=json_res["msg"],data=json_res["data"])
+                return BaseResponse(code=json_res["code"], msg=json_res["msg"], data=json_res["data"])
     except (fastapi.exceptions.ResponseValidationError, RequestException) as e:
         return BaseResponse(code=200, msg="上传文件成功", data={"failed_files": None, "error": f'{e}'})
+
+
+async def delete_knowledge_base(kb_id: str) -> BaseResponse:
+    try:
+        request_body = {
+            "knowledge_base_name": kb_id
+        }
+        response = requests.post(KB_ARGS['delete_url'], headers={"Content-Type": "application/json"}, json=request_body)
+
+        if response.ok:
+            json_res = response.json()
+            return BaseResponse(code=json_res["code"], msg=json_res["msg"])
+    except Exception as e:
+        return BaseResponse(code=500, msg="删除知识库失败", data={"error": f'{e}'})
+
+
+async def delete_knowledge_base_file(dkf: DeleteKBFile):
+    try:
+        request_body = {
+            "knowledge_base_name": dkf.kb_id,
+            "file_names": [dkf.file_name]
+        }
+        response = requests.post(DOC_ARGS['delete_url'], headers={"Content-Type": "application/json"},
+                                 json=request_body)
+
+        if response.ok:
+            json_res = response.json()
+            return BaseResponse(code=json_res["code"], msg=json_res["msg"])
+    except Exception as e:
+        return BaseResponse(code=500, msg="删除知识库文件失败", data={"error": f'{e}'})
 
 
 async def get_user_kbs(user_id: str) -> BaseResponse:
