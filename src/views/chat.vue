@@ -17,6 +17,9 @@
                {{ button.text }}
                <!-- primary -->
             </el-button>
+            <el-button type="danger" size="large" @click="onPause">
+              暂停
+            </el-button>
           </div>
         </div>
         <el-select
@@ -78,7 +81,7 @@ options.value = [
   }
 ];
 
-
+let valid = ref(true);  // 定义 valid 值
 let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
 let conv_id =  ref(null);
@@ -92,12 +95,21 @@ const msgList = reactive([
 
 let currentKB = ref('faiss_zhouyi');
 const changeClass = (item)=>{
-  console.log('item',item);
+  //console.log('item',item);
   if(item.aiType==='docs'){
     return 'docmsg';
   }
   else return 'msg';
 }
+
+const onPause=()=>{
+  valid.value=false;
+  ElMessage({
+    message: '输出已暂停',
+    type: 'warning'
+  })
+};
+
 
 //知识库检索为空时，判断并删除span
 function extractTextFromSpan(html) {
@@ -134,20 +146,20 @@ onMounted(() => {
   conv_id.value = route.query.conv_id || '';
   conv_name.value = route.query.conv_name || '';
 
-  console.log(conv_name, conv_id.value, user_id)
+  //console.log(conv_name, conv_id.value, user_id)
 
   if (conv_id.value !== '' && conv_name.value !== '') {
-    console.log(conv_name.value, conv_id.value);
+    //console.log(conv_name.value, conv_id.value);
     //加载历史聊天进入msgList
     let data = { "conv_id": conv_id.value };
-    console.log(data);
+    //console.log(data);
     //当前历史记录
     const records = ref("");
 
     getConversationRecord(data).then(res => {
       if (res.code === 200) {
         records.value = res.data.records; // 使用 .value 来更新 ref 的值
-        console.log(res);
+        //console.log(res);
         records.value.forEach(chat => {
           if (chat.is_ai) {
             // chat.content.answer
@@ -176,7 +188,7 @@ onMounted(() => {
         scrollToNew();
 
       } else {
-        console.log(res.msg);
+        //console.log(res.msg);
       }
     }).catch(e => {
       console.error('获取历史对话记录失败:', e);
@@ -193,7 +205,7 @@ onMounted(() => {
 //有新的对话默认继续滚动，但是这里的滚动条很丑，并且滚动幅度很小，建议修改
 const scrollToNew = async () => {
   await nextTick();
-  const chatContainer = document.querySelector(".chat");
+  const  chatContainer = document.querySelector(".chat");
   if (chatContainer) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
   }
@@ -204,7 +216,8 @@ const userQuestion =  async  (question) => {
     content: question,
     type: "user",
   };
-  msgList.push(userMsg);
+  console.log(msgList)
+    msgList.push(userMsg);
 };
 
 //历史记录的aiReply
@@ -235,6 +248,10 @@ const MAX_RETRIES = 3;
 
 
 const sseAiChat =  async (query) =>{
+  // if (!valid.value) {
+  //   currentAiReply.value=false;
+  //   return;
+  // }
   // 发送文本
   let resultAnswer = ref('');
 
@@ -243,7 +260,7 @@ const sseAiChat =  async (query) =>{
     "query": query,
     "knowledge_base_id":  currentKB.value
   }
-  console.log('当前对话request',currentMessage);
+  //console.log('当前对话request',currentMessage);
   //url可替换
   fetchEventSource(url+'conversation/mix-chat', {
     method: 'POST',
@@ -256,14 +273,14 @@ const sseAiChat =  async (query) =>{
 
     async onopen(response) {
       currentAiReply.value=true;
-      console.log('onopen: ' + currentAiReply.value);
+      //console.log('onopen: ' + currentAiReply.value);
       //有log，但是一开始为空
       if (response.ok && response.headers.get('content-type') === 'text/event-stream') {
-        console.log(response);
+        //console.log(response);
         return; // everything's good
       } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
         // client-side errors are usually non-retriable:
-        console.log("回应错误")
+        //console.log("回应错误")
       } else {
         // throw new RetriableError();
       }
@@ -373,8 +390,8 @@ const aiChat = (query) => {
   mixChat(jsonString).then(res => {
     // delay(10000).then(()=>{
     if (res.code === 200) {
-      console.log(res.data);
-      console.log(res.data.answer);
+      //console.log(res.data);
+      //console.log(res.data.answer);
       // aiCurrentChat= res.data.answer;//????
       aiCurrentChat = res.data.answer.replace(/\n/g, '<br>');
       //将ai回复加入list
@@ -495,8 +512,8 @@ const onSend = async  () => {
     createConversion(jsonString).then(res => {
       //200是数字
       if (res.code === 200) {
-        console.log("成功建立！")
-        console.log(res);
+        //console.log("成功建立！")
+        //console.log(res);
         conv_id.value = res.data.conv_id;
 
         //将对话名命名为第一个问句
@@ -528,14 +545,13 @@ const onSend = async  () => {
         value.value = "";
       }
       else {
-        console.log(res);
+        //console.log(res);
       }
 
     })
 
   }
   else if (conv_id.value !== null && value.value.trim() !== "") {
-
 
     if(currentAiReply.value===false) {
       currentAiReply.value=true;
@@ -581,11 +597,11 @@ const addKnowledgeBase =async  (knowledge_base) => {
 function getKnowledgeBaseList() {
 
   let data = { 'user_id': user_id };
-  console.log('用户id', user_id);
+  //console.log('用户id', user_id);
   getUserKnowledgeBaseList(data).then(res => {
     if (res.code === 200) {
-      console.log('获取用户知识库成功');
-      console.log(res);
+      //console.log('获取用户知识库成功');
+      //console.log(res);
       //每次获取时强制将其options还原为新建知识库
       options.value = [
         {
@@ -596,10 +612,10 @@ function getKnowledgeBaseList() {
       res.data.user_kbs.forEach(knowledge_base => {
         addKnowledgeBase(knowledge_base);
       });
-      console.log(options.value);
+      //console.log(options.value);
     }
     else {
-      console.log(res);
+      //console.log(res);
       ElMessage.error(res.code, res.msg);
     }
   })
@@ -608,7 +624,7 @@ function getKnowledgeBaseList() {
 
 //data 为option的value绑定的对象
 const changeKnowledge = (data) => {
-  console.log('当前知识库', data);
+  //console.log('当前知识库', data);
   currentKB.value = data.id;
   KnowledgeValue.value = data.name;
 }

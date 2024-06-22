@@ -36,9 +36,13 @@ function login(data) {
 function register(data) {
     return authRequest.post('/user/register', data)
 }
-function sendVerifyCode(data) {
-    return request.post('user/send_verification_code/' + data)
+function update_password(data) {
+    return authRequest.post('/user/update_password', data)
 }
+function sendVerifyCode(data) {
+    return authRequest.post('user/send_verification_code/' + data)
+}
+
 
 
 // 创建新会话：/conversation/new-conversation
@@ -173,6 +177,7 @@ async function stopChat(data) {
 
 export {
     login,
+    update_password,
     sendVerifyCode,
     register,
     createConversion,
