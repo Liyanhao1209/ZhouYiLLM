@@ -37,8 +37,9 @@ function register(data) {
     return authRequest.post('/user/register', data)
 }
 function sendVerifyCode(data) {
-    return request.post('user/send_verification_code/' + data)
+    return authRequest.post('user/send_verification_code/' + data)
 }
+
 
 
 // 创建新会话：/conversation/new-conversation
