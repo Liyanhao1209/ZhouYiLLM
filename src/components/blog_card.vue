@@ -27,7 +27,7 @@ export default {
     },
     computed: {
         url() {
-            return '/forum_blog?blog_id=' + this.blog_id
+            return '/forum_blog?blog_id=' + this.blog_id + '&author=' + this.blog_author
         }
     }
 }

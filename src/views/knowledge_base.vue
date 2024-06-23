@@ -9,16 +9,16 @@
 
       <div v-if="!hasKnowledge">
         <el-dialog
-          v-model="dialogVisible"
-          title="新建知识库"
-          width="500"
-          :before-close="handleClose" 
+            v-model="dialogVisible"
+            title="新建知识库"
+            width="500"
+            :before-close="handleClose"
         >
-        <!--  -->
-        <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" clearable/>
-        <br>
-        <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" clearable/>
-        <!-- <el-button type="primary" @click="newKnowledge ">新建知识库</el-button> -->
+          <!--  -->
+          <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" clearable/>
+          <br>
+          <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" clearable/>
+          <!-- <el-button type="primary" @click="newKnowledge ">新建知识库</el-button> -->
           <template #footer>
             <div class="dialog-footer">
               <el-button @click="KnowledgeValue = ''">取消</el-button>
@@ -39,7 +39,7 @@
 
           <div style="flex: 1">
             <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList"
-              @change="changeKnowledge">
+                       @change="changeKnowledge">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
@@ -49,13 +49,13 @@
 
         <!-- 并排 -->
         <div v-if="hasKnowledge"
-          style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
+             style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
           <br>
           <div style="flex: 1">上传知识库文件</div>
           <br>
           <div style="flex: 1">
             <el-upload ref="uploadRef" class="upload-demo" multiple :auto-upload="false" :on-change="handleFileChange"
-              :on-remove="handleRemove" v-model="fileLists">
+                       :on-remove="handleRemove" v-model="fileLists">
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <template #trigger>
                 <el-button type="primary" :span="4">选择文件</el-button>
@@ -82,7 +82,7 @@
       </el-row>
       <!-- 分页表格 -->
       <el-table ref="singleTableRef" :data="tableData" highlight-current-row style="width: 60%; flex:1;"
-        @current-change="getFileListsMethod">
+                @current-change="getFileListsMethod">
         <el-table-column type="index" width="50" />
         <el-table-column property="name" label="文件名" />
         <el-table-column label="操作">
@@ -94,7 +94,7 @@
       </el-table>
       <!-- page-count是最大页数，超过会折叠 -->
       <el-pagination :page-size="pageSize" :pager-count="10" layout="prev, pager, next" :total="total"
-        :current-page="pageNo" @current-change="handleCurrentChange" style="flex:1;" />
+                     :current-page="pageNo" @current-change="handleCurrentChange" style="flex:1;" />
 
 
 

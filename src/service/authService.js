@@ -134,6 +134,7 @@ async function getUserKnowledgeBaseList(data) {
 async function uploadKnowledgeDoc(data) {
     try {
         const res = await requestFile.post('knowledge_base/upload-knowledge-files/', data)
+        console.log(res)
         return res.data
     } catch (e) {
         console.log(e)

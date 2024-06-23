@@ -1,31 +1,36 @@
 <template>
+
     <div style="width: 100%;">
-        <el-container>
-            <el-header>
-                <div style="text-align: start; display: flex">
-                    <el-button type="info" @click="this.$router.back()">
-                        返回
-                    </el-button>
-                    <h1 style="margin-left: 100px;">{{ blog.title }}</h1>
+        <el-header>
+            <div class="top-button">
+                <el-button type="info" @click="this.$router.back()">
+                    返回
+                </el-button>
+            </div>
+            <div style="width: 100%;">
+                <h1 style="margin: auto">{{ blog.title }}</h1>
+            </div>
+            <div style="width: 100%;">
+                <h3>作者：{{ author }}</h3>
+            </div>
+        </el-header>
+
+        <el-main>
+            <div v-html="html" class="md-div"></div>
+            <el-divider />
+            <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_" />
+            <div class="input">
+                <el-input v-model="comment" type="textarea" class="comment-input" placeholder="在这输入评论"></el-input>
+                <div>
+                    <el-button @click="add_comment_" type="success">评论</el-button>
                 </div>
-            </el-header>
-            <el-container>
-                <el-main>
-                    <div v-html="html" class="md-div"></div>
-                    <el-divider />
-                    <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_" />
-                    <div class="input">
-                        <el-input v-model="comment" type="textarea" class="comment-input" placeholder="在这输入评论"></el-input>
-                        <div>
-                            <el-button @click="add_comment_" type="success">评论</el-button>
-                        </div>
-                    </div>
-                </el-main>
-            </el-container>
-
-        </el-container>
-
+            </div>
+        </el-main>
+        <el-affix position="bottom" :offset="100" class="affix">
+            <el-button type="primary" size="large" circle icon="Top" @click="back_to_top"></el-button>
+        </el-affix>
     </div>
+
 
 </template>
 
@@ -36,6 +41,7 @@ import { get_blog, get_comment_list } from '@/service/blog_service';
 import { add_comment } from '@/service/forum_service';
 import Comment from '@/components/comment.vue';
 import { ElMessage } from 'element-plus';
+import { Top } from '@element-plus/icons-vue';
 export default {
     name: 'blog',
     data() {
@@ -46,12 +52,14 @@ export default {
             html: '',
             // 保存当前blogid
             blog_id: '',
+            author: '',
             comment_list: [],
             blog: {}
         }
     },
     components: {
-        Comment
+        Comment,
+        Top
     },
     mounted() {
 
@@ -59,6 +67,7 @@ export default {
 
     created() {
         this.blog_id = this.$route.query.blog_id
+        this.author = this.$route.query.author
         this.get_blog_()
         this.get_comment_()
     },
@@ -100,6 +109,10 @@ export default {
                     this.get_comment_()
                 }
             })
+        },
+
+        back_to_top(){
+            document.documentElement.scrollTop = 0
         }
     }
 }
@@ -107,6 +120,17 @@ export default {
 
 
 <style>
+.affix{
+    position: absolute;
+    right: 20px
+}
+
+.top-button {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+}
+
 .blog-input {
     margin: 10px;
     width: 48%;
@@ -125,8 +149,9 @@ export default {
     justify-content: space-around;
 }
 
-.md-div{
+.md-div {
     margin: auto;
+    margin-top: 50px;
     width: 80%;
     text-align: start;
 }
