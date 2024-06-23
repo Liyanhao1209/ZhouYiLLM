@@ -140,6 +140,17 @@ async def update_info(info_form: InfoForm, current_user: User = Depends(get_curr
     finally:
         session.close()
 
+async def get_user_info(info_form: InfoForm, current_user: User = Depends(get_current_active_user)):
+    """
+       获取用户个人信息接口
+    """
+    session = Session(bind=engine)
+    # 根据用户ID查询用户
+    user = session.query(User).filter(User.id == info_form.user_id).first()
+
+    print(user.sex)
+    return BaseResponse(code=200, msg='用户信息获取成功', data={"name": user.name, 'age': user.age, 'sex': user.sex, 'description': user.description})
+
 
 async def send_verification_code(email: str):
     """发送验证码到邮箱并存储到Redis"""
@@ -149,7 +160,7 @@ async def send_verification_code(email: str):
         ch = chr(random.randrange(ord('0'), ord('9') + 1))
         code += ch
 
-    send_email(email, '注册验证码', code)  # 发送邮件
+    send_email(email, '验证码', code)  # 发送邮件
 
     redis = get_redis_instance()
     redis.set(email, code, ex=4000)

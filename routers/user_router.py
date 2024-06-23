@@ -16,5 +16,7 @@ class UserRouter(routers_mount_interface):
         app.post(self.generate_route_path(["update_password"]), tags=self.tag, summary="更新密码")(user_service.update_password)
         app.post(self.generate_route_path(["update_info"]), tags=self.tag, summary="更新用户信息")(
             user_service.update_info)
+        app.post(self.generate_route_path(["getuser_info"]), tags=self.tag, summary="获取用户信息")(
+            user_service.get_user_info)
         app.post(self.generate_route_path(["send_verification_code", "{email}"]), tags=self.tag, summary="获取验证码")(
             user_service.send_verification_code)
