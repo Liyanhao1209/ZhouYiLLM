@@ -19,7 +19,7 @@
                         {{ item.content }}
                     </div>
                 </el-card>
-                <div>
+                <div style="width: 15%;">
                     <el-button type="danger" @click="delete_comment_(item.id)" v-if="item.user_id == user_id">删除</el-button>
                 </div>
             </div>
@@ -96,7 +96,7 @@ export default {
 }
 
 .comment-card {
-    width: 80%;
+    width: 85%;
     margin: auto;
 }
 
