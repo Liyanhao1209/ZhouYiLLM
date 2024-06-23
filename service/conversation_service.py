@@ -312,7 +312,7 @@ def max_id_in_record() -> int:
 def add_record_to_conversation(conv_id: str, text: str, is_ai: bool) -> None:
     with Session(engine) as session:
         new_id = max_id_in_record()
-        print(type(new_id))
+        # print(type(new_id))
         session.add(Record(id=max_id_in_record() + 1, content=text, is_ai=is_ai, conv_id=conv_id))
         session.commit()
 
