@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Layout from "@/Layout/Layout";
+import { KeepAlive } from 'vue';
 
 const routes = [
   {
@@ -58,12 +59,20 @@ const routes = [
       {
         path: '/forum',
         name: 'forum',
+        meta: {
+          KeepAlive: false
+        },
         component: () => import('@/views/forum.vue')
       },
       {
         path: '/forum_blog',
         name: 'forum_blog',
         component: () => import('@/views/forum_blog.vue')
+      },
+      {
+        path: '/star_blog',
+        name: 'star_blog',
+        component: () => import('@/views/star_blog.vue')
       },
     ]
   },
@@ -73,12 +82,21 @@ const routes = [
     component: () => import('@/views/admin/administor.vue')
   },
   {
-    path: '/admin/history',
-    name: 'admin-user-history',
-    component: () => import('@/views/history_chats.vue')
+    path: '/admin_chat_detail',
+    name: 'admin_chat_detail',
+    component: () => import('@/views/admin/chat_detail.vue')
   },
-  
-
+  // {
+  //   path: '/admin/history',
+  //   name: 'admin-user-history',
+  //   component: () => import('@/views/history_chats.vue')
+  // },
+  {
+    path: '/admin_history_chat',
+    name: 'admin_history_chat',
+    component: () => import('@/views/admin/admin_history_chats.vue')
+  },
+ 
 ]
 
 const router = createRouter({

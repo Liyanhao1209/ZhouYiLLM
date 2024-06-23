@@ -578,7 +578,7 @@ const onSend = async()  => {
     }
     else{
       ElMessage({
-        message: '请等待当前回答结束！',
+        message: '目前流量高峰期,过会儿再来试试吧！',
         type: 'error'
       })
       return ;

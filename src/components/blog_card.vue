@@ -24,10 +24,11 @@ export default {
         blog_title: String,
         blog_author: String,
         blog_content: String,
+        is_starred: Boolean
     },
     computed: {
         url() {
-            return '/forum_blog?blog_id=' + this.blog_id
+            return '/forum_blog?blog_id=' + this.blog_id + '&author=' + this.blog_author + '&is_starred=' + this.is_starred
         }
     }
 }

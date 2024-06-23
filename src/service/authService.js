@@ -6,6 +6,7 @@ export const request = axios.create({
     baseURL: url,
     headers: {
         'content-type': 'application/json',
+        'Cache-Control': 'no-cache'
     },
 })
 
@@ -137,6 +138,7 @@ async function getUserKnowledgeBaseList(data) {
 async function uploadKnowledgeDoc(data) {
     try {
         const res = await requestFile.post('knowledge_base/upload-knowledge-files/', data)
+        console.log(res)
         return res.data
     } catch (e) {
         console.log(e)
@@ -156,6 +158,9 @@ async function getKnowledgeBaseDoc(data) {
 
 function update_info(data) {
     return request.post('user/update_info/', data)
+}
+function getuser_info(data) {
+    return request.post('user/getuser_info/', data)
 }
 
 //用户删除对话 conv_id
@@ -182,6 +187,7 @@ async function stopChat(data) {
 }
 
 export {
+    getuser_info,
     login,
     update_password,
     sendVerifyCode,
