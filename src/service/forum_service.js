@@ -1,8 +1,8 @@
 import { request } from './authService'
 
 //获取所有博客
-function get_blogs() {
-    return request.get('forum/get_all_blogs')
+function get_blogs(user_id) {
+    return request.get('forum/get_all_blogs/' + user_id)
 }
 
 function add_comment(data) {

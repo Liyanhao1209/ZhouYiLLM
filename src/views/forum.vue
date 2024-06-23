@@ -33,7 +33,8 @@ export default {
     },
     methods: {
         _get_blogs() {
-            get_blogs().then(res => {
+            let user_id = localStorage.getItem('user_id')
+            get_blogs(user_id).then(res => {
                 this.blog_list = res.data.data
             })
         }
