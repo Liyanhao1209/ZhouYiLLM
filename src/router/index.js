@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Layout from "@/Layout/Layout";
+import { KeepAlive } from 'vue';
 
 const routes = [
   {
@@ -58,12 +59,20 @@ const routes = [
       {
         path: '/forum',
         name: 'forum',
+        meta: {
+          KeepAlive: false
+        },
         component: () => import('@/views/forum.vue')
       },
       {
         path: '/forum_blog',
         name: 'forum_blog',
         component: () => import('@/views/forum_blog.vue')
+      },
+      {
+        path: '/star_blog',
+        name: 'star_blog',
+        component: () => import('@/views/star_blog.vue')
       },
     ]
   },

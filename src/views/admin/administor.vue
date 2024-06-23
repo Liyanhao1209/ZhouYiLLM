@@ -99,6 +99,7 @@ export default {
 
 
   created() {
+    console.log('admin create');
     this.getUsers();
   }
 }

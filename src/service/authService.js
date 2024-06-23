@@ -6,6 +6,7 @@ export const request = axios.create({
     baseURL: url,
     headers: {
         'content-type': 'application/json',
+        'Cache-Control': 'no-cache'
     },
 })
 

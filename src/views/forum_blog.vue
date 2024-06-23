@@ -1,9 +1,8 @@
 <template>
-
     <div style="width: 100%;">
         <el-header>
             <div class="top-button">
-                <el-button type="info" @click="this.$router.back()">
+                <el-button type="info" @click="this.$router.go(-1)">
                     返回
                 </el-button>
             </div>
@@ -18,15 +17,32 @@
         <el-main>
             <div v-html="html" class="md-div"></div>
             <el-divider />
+
             <Comment :comment_list="comment_list" :blog_id="blog.id" @refresh_comment_list="get_comment_" />
+
             <div class="input">
                 <el-input v-model="comment" type="textarea" class="comment-input" placeholder="在这输入评论"></el-input>
-                <div>
-                    <el-button @click="add_comment_" type="success">评论</el-button>
+                <div class="operation-bar">
+                    <el-button @click="add_comment_" type="success">
+                        <el-icon size="20">
+                            <ChatLineSquare />
+                        </el-icon>
+                        评论</el-button>
+                    <el-button type="warning" v-if="this.is_starred" @click="_star_unstar_blog()">
+                        <el-icon size="20">
+                            <StarFilled />
+                        </el-icon>
+                        已收藏</el-button>
+                    <el-button type="warning" v-if="!this.is_starred" @click="_star_unstar_blog()">
+                        <el-icon size="20">
+                            <Star />
+                        </el-icon>
+                        收藏</el-button>
                 </div>
             </div>
+
         </el-main>
-        <el-affix position="bottom" :offset="100" class="affix">
+        <el-affix position="bottom" :offset="180" class="affix">
             <el-button type="primary" size="large" circle icon="Top" @click="back_to_top"></el-button>
         </el-affix>
     </div>
@@ -38,10 +54,10 @@
 <script>
 import MarkdownIt from 'markdown-it';
 import { get_blog, get_comment_list } from '@/service/blog_service';
-import { add_comment } from '@/service/forum_service';
+import { add_comment, star_unstar_blog } from '@/service/forum_service';
 import Comment from '@/components/comment.vue';
 import { ElMessage } from 'element-plus';
-import { Top } from '@element-plus/icons-vue';
+import { Top, Star, StarFilled, ChatLineSquare } from '@element-plus/icons-vue';
 export default {
     name: 'blog',
     data() {
@@ -54,22 +70,30 @@ export default {
             blog_id: '',
             author: '',
             comment_list: [],
-            blog: {}
+            blog: {},
+            is_starred: false
         }
     },
     components: {
         Comment,
-        Top
+        Top,
+        Star,
+        StarFilled,
+        ChatLineSquare
     },
     mounted() {
 
     },
+    computed() {
 
+    },
     created() {
         this.blog_id = this.$route.query.blog_id
         this.author = this.$route.query.author
+        this.is_starred = this.$route.query.is_starred == 'true' ? true : false
         this.get_blog_()
         this.get_comment_()
+        console.log(this.is_starred);
     },
     methods: {
         //获取博客评论
@@ -111,18 +135,38 @@ export default {
             })
         },
 
-        back_to_top(){
+        back_to_top() {
             document.documentElement.scrollTop = 0
+        },
+
+        async _star_unstar_blog() {
+            let user_id = localStorage.getItem('user_id')
+            await star_unstar_blog(user_id, this.blog_id).then(res => {
+                if (res.data.code == 200) {
+                    ElMessage({
+                        'type': 'success',
+                        'message': res.data.msg
+                    })
+                    this.is_starred = !this.is_starred
+                }
+            })
         }
+
     }
 }
 </script>
 
 
 <style>
-.affix{
+.operation-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 50px
+}
+
+.affix {
     position: absolute;
-    right: 20px
+    right: 40px
 }
 
 .top-button {
@@ -139,7 +183,7 @@ export default {
 }
 
 .comment-input {
-    width: 90%;
+    width: 80%;
 }
 
 .input {

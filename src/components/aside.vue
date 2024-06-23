@@ -47,6 +47,12 @@
           </el-icon>
           <template #title>论坛</template>
         </el-menu-item>
+        <el-menu-item index="star_blog">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>我的收藏</template>
+        </el-menu-item>
         <el-menu-item index="info">
           <el-icon>
             <setting />
