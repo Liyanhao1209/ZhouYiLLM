@@ -7,11 +7,12 @@ from component.DB_engine import engine
 from db.create_db import Blog, User, Comment, BlogStars
 from message_model.request_model.forum_model import CommentModel
 from message_model.response_model.response import BaseResponse
+from sqlalchemy import exists
 from util.utils import serialize_blog, blog_user_to_dict, serialize_comment, serialize_comment_user, \
     serialize_stars_blog
 
 
-def get_all_blogs() -> BaseResponse:
+async def get_all_blogs() -> BaseResponse:
     """
     获取论坛上所有的博客列表
     """
@@ -23,10 +24,17 @@ def get_all_blogs() -> BaseResponse:
             res = session.query(Blog.id, Blog.title, Blog.content, Blog.create_time, User.id, User.name).join(User,
                                                                                                               User.id == Blog.user_id).order_by(
                 Blog.create_time.desc()).all()
+            res_data = [blog_user_to_dict(b) for b in res]
+            for blog in res_data:
+                stmt = exists().where(BlogStars.blog_id == blog['id'],
+                                      BlogStars.user_id == blog['user_id'])
+                is_starred = session.query(stmt).scalar()
+                blog.update({"is_starred": is_starred})
+
     except Exception as e:
         print(e)
-        return BaseResponse(code=500, message=str(e))
-    return BaseResponse(code=200, msg='success', data=[blog_user_to_dict(b) for b in res])
+        return BaseResponse(code=500, msg=str(e))
+    return BaseResponse(code=200, msg='success', data=res_data)
 
 
 def add_comment(comment: CommentModel) -> BaseResponse:
@@ -110,6 +118,11 @@ def get_star_blog(user_id: str) -> BaseResponse:
             res = session.query(BlogStars, Blog).join(Blog, Blog.id == BlogStars.blog_id).filter(
                 BlogStars.user_id == user_id).all()
             s_res = [serialize_stars_blog(i) for i in res]
+            for blog in s_res:
+                stmt = exists().where(BlogStars.blog_id == blog['id'],
+                                      BlogStars.user_id == blog['user_id'])
+                is_starred = session.query(stmt).scalar()
+                blog.update({"is_starred": is_starred})
             return BaseResponse(code=200, msg='ok', data={'star_blog_list': s_res})
     except Exception as e:
         print(e)
