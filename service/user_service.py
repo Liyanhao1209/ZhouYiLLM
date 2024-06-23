@@ -149,7 +149,7 @@ async def send_verification_code(email: str):
         ch = chr(random.randrange(ord('0'), ord('9') + 1))
         code += ch
 
-    send_email(email, '注册验证码', code)  # 发送邮件
+    send_email(email, '周易大模型验证码', code)  # 发送邮件
 
     redis = get_redis_instance()
     redis.set(email, code, ex=4000)
