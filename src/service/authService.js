@@ -83,6 +83,9 @@ async function mixChat(data) {
     } catch (e) {
         console.log(e)
     }
+
+
+    // return request.post('/conversation/mix-chat/', data).then(res => res.data);
 }
 
 //延时，应该用不到了
@@ -173,6 +176,9 @@ async function stopChat(data) {
     } catch (e) {
         console.log(e)
     }
+
+    // return request.post('/conversation/stop-llm-chat/', data).data
+    
 }
 
 export {

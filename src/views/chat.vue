@@ -13,7 +13,7 @@
           </div>
           <div class="bottom">
             <input v-model="value" placeholder="请输入您想提问的内容" />
-            <el-button :type="button.type" size="large" @click="onSend">
+            <el-button :type="button.type" size="large" @click="onSend" :disabled="button.status">
                {{ button.text }}
                <!-- primary -->
             </el-button>
@@ -60,6 +60,7 @@ button.value =
   {
     text: '发送',//值 加载出
     type: 'primary',//文本
+    status:false
   }
 //用户是否终止当前回答： 默认为未终止
 let isUserAbort = ref(false);
@@ -78,7 +79,6 @@ options.value = [
   }
 ];
 
-let valid = ref(true);  // 定义 valid 值
 let user_id = localStorage.getItem('user_id');
 // 最开始对话id为空
 let conv_id =  ref(null);
@@ -228,21 +228,16 @@ function removeHttpLinks(text) {
 }
 
 //sse
-const controller = new AbortController();
-const signal = controller.signal;
+let controller = ref(null);
+controller.value = new AbortController();
+const signal = ref(controller.value.signal);
 
 //当前状态为ai正在回答
 let currentAiReply = ref(false);
 
-let retryAttempts = 0;
-const MAX_RETRIES = 3;
-
 
 const sseAiChat =  async (query) =>{
-  // if (!valid.value) {
-  //   currentAiReply.value=false;
-  //   return;
-  // }
+
   // 发送文本
   let resultAnswer = ref('');
 
@@ -255,16 +250,16 @@ const sseAiChat =  async (query) =>{
   //url可替换
   fetchEventSource(url+'conversation/mix-chat', {
     method: 'POST',
-    signal: signal,
+    signal: signal.value,
     headers: {
       'Content-Type': 'application/json',
       // token: window.sessionStorage.getItem('token'),
     },
     body:JSON.stringify(currentMessage),
 
-    async onopen(response) {
+    onopen(response) {
       currentAiReply.value=true;
-      //console.log('onopen: ' + currentAiReply.value);
+      console.log('开始sse:  onopen: ' + currentAiReply.value);
       //有log，但是一开始为空
       if (response.ok && response.headers.get('content-type') === 'text/event-stream') {
         //console.log(response);
@@ -276,8 +271,8 @@ const sseAiChat =  async (query) =>{
         // throw new RetriableError();
       }
     },
-    async onmessage(msg) {
-
+     onmessage(msg) {
+      console.log('onmessage: ' ,'isUserAbort.value:'+isUserAbort.value,msg)
       //如果用户未中断：就继续拼接
       if(isUserAbort.value===false) {
 
@@ -321,47 +316,47 @@ const sseAiChat =  async (query) =>{
         scrollToNew();
       }
     },
+
     onerror(err) {
-      // currentAiReply.value=false;//暂停回答
-      // isUserAbort.value=false;
-      // changeButton();
       
       console.error('Fetch error:', err); 
-
-      //解决不了一点
-      if (retryAttempts < MAX_RETRIES) {
-        retryAttempts++;
-        console.log(`Retrying SSE connection (attempt ${retryAttempts})`);
-        setTimeout(() => {
-          sseAiChat(query);
-        }, 2000); // 5 seconds delay before retry
-      } else {
-        console.error('Maximum retries reached. Unable to establish SSE connection.');
-        // 在这里进行其他错误处理,比如显示错误消息给用户
-      }
-
-
-
       throw err;    //必须throw才能停止
     },
     onclose(err){
       currentAiReply.value=false;//暂停回答
-      isUserAbort.value=false;
-      changeButton();
-      console.log('Connection closed',err); 
-      // throw err; //
+      changeButton(false);
+      console.log(currentQuery)
+      console.log('Connection closed',currentDocs); 
+      throw err; //
     }
     
-  });
+  }).then(
+    (response) => {
+      console.log('回答终止 fetchEventSource.then',response);
+      //回答终止或者结束
+      currentAiReply.value=false;//暂停回答
+
+      changeButton(false);
+    }
+  ).catch((error) => {
+    //应该显示aborterror为什么不显示呢
+    console.error('回答出错 fetchEventSource.catch',error);
+    currentAiReply.value=false;//暂停回答
+ 
+      changeButton(false);
+  }
+  );
 
 }
 
 //根据 ai回答  改变button状态
-const changeButton= () =>{
-  if(currentAiReply.value===true){
+const changeButton= (status) =>{
+  //true表示正在发送，就停止
+  if(status===true){
       button.value.text='停止';
       button.value.type='info';
   }
+  //不然就变为发送
   else{
       button.value.text='发送';
       button.value.type='primary';
@@ -395,23 +390,29 @@ const aiChat = (query) => {
   })
 }
 
+
+
 //点击发送回答问题
 //应该一发送消息就设为禁止发送
-const onSend = async  () => {
+const onSend = async()  => {
+
+
   //先判断当前状态是ai正在回答，还是用户发送消息
   //如果是ai正在回答，就停止回答，停止sse拼接字符串
+  // console.log("点击发送还是暂停",button.value.type)
 
-  if(button.value.type==='info'){
+  function changeWait(){
     console.log(button);
     //停止回答
-    controller.abort();
-    console.log('停止成功了吗？？？？？',controller,signal);
-    //用户中断：
-    isUserAbort.value = true;
-   
+    controller.value.abort(); //连接没有被完全断开欸
+    signal.value=controller.value.signal;
+    console.log(signal.value);
 
-    //TODO:返回后端当前对话的状态，然后将其存储到数据库中
-    //需要返回conv_id,用户当前的query:str,当前的文档List格式(直接返回元数据好了) 和 回答str
+    isUserAbort.value = true; //中断回答
+    console.log('isUserAbort.value',isUserAbort.value);
+    //没有ai回答为什么还要继续终止？当然是因为还没有进行到
+    
+    
     let returnData={
       conv_id:conv_id.value,
       query:currentQuery.value,//用户当前查询的内容，不会置为空了吧
@@ -423,10 +424,9 @@ const onSend = async  () => {
     let latestMsg = msgList[msgList.length - 1];
     //第一种情况：没有返回值,当前的AIReplay为('大模型正在生成回答，请耐心等待','wait');
     if(latestMsg.aiType==='wait'){
-      //TODO:
-      //先删除再添加？会不会直接修改更好?
-      //msgList.pop();
+      
       //有很大的延迟，关键是因为后端请求太慢了
+      //这个时候可能根本就没发起请求？
     }
     //第二种情况，有docs返回，但是还没有回答生成
     else if(latestMsg.aiType==='docs'){
@@ -457,7 +457,18 @@ const onSend = async  () => {
           latestMsg.content=latestMsg.content+'\n(用户已终止对话)\n';
         }
         currentAiReply.value=false;
-        changeButton();
+        changeButton(false);
+        console.log("停止完成");
+        button.value.status=false;
+        
+        if(currentAiReply.value===false) isUserAbort.value=false;
+        //自动滚动
+        scrollToNew();
+
+        //删除之前的sse的controller
+        //直接断掉上一层的sse连接！！！
+        controller.value= new AbortController();
+        signal.value =controller.value.signal;
       }
       else{
         console.log(res);
@@ -467,16 +478,22 @@ const onSend = async  () => {
         })
         return ;
       }
-        //自动滚动
-        scrollToNew();
+       
       
     })
 
-    //这里设置为了false后
-    // isUserAbort.value=false;
     
+  }
+  if(button.value.type==='info'){
+
+    button.value.status=true;
+    changeWait();
+
     return ;
   }
+
+  //如果用户再次点击发送，再在用户中断设为false
+  else  isUserAbort.value===false;
 
   if (value.value.trim() === "") {
     ElMessage({
@@ -503,7 +520,7 @@ const onSend = async  () => {
     createConversion(jsonString).then(res => {
       //200是数字
       if (res.code === 200) {
-        //console.log("成功建立！")
+        console.log("成功建立！")
         //console.log(res);
         conv_id.value = res.data.conv_id;
 
@@ -511,14 +528,14 @@ const onSend = async  () => {
         conv_name = value.value;
 
         if(currentAiReply.value===false) {
-          currentAiReply.value=true;
+          // currentAiReply.value=true;
           currentQuery.value=value.value;
           userQuestion(value.value);
           //让用户等待回答！
           AIReplay('大模型正在生成回答，请耐心等待','wait');
           
           //开始回答时更改字体为 停止
-          changeButton();
+          changeButton(true);
 
           sseAiChat(value.value);
         }
@@ -542,10 +559,12 @@ const onSend = async  () => {
     })
 
   }
+  //不是第一条回答
   else if (conv_id.value !== null && value.value.trim() !== "") {
 
+    //当前ai没有进行回答，也就是onclose没结束
     if(currentAiReply.value===false) {
-      currentAiReply.value=true;
+      // currentAiReply.value=true;
       // 将用户问题加入list
       userQuestion(value.value);
       currentQuery.value=value.value;
@@ -553,7 +572,7 @@ const onSend = async  () => {
       AIReplay('大模型正在生成回答，请耐心等待','wait');
 
       //开始回答时更改字体为 停止
-      changeButton();
+      changeButton(true);
 
       sseAiChat(value.value);
     }
