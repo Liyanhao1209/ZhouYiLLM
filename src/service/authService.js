@@ -1,8 +1,7 @@
 import axios from 'axios'
 import store from '@/store/index';
+import { url } from '../../config/config';
 
-// const url = 'http://zyllmbackend.ihk.fghk.top'
-const url = 'http://localhost:9090/'
 export const request = axios.create({
     baseURL: url,
     headers: {
@@ -37,9 +36,13 @@ function login(data) {
 function register(data) {
     return authRequest.post('/user/register', data)
 }
-function sendVerifyCode(data) {
-    return request.post('user/send_verification_code/' + data)
+function update_password(data) {
+    return authRequest.post('/user/update_password', data)
 }
+function sendVerifyCode(data) {
+    return authRequest.post('user/send_verification_code/' + data)
+}
+
 
 
 // 创建新会话：/conversation/new-conversation
@@ -163,8 +166,19 @@ async function deleteConversation(data) {
     }
 }
 
+//用户删除对话 conv_id
+async function stopChat(data) {
+    try {
+        const res = await request.post('/conversation/stop-llm-chat/', data)
+        return res.data
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export {
     login,
+    update_password,
     sendVerifyCode,
     register,
     createConversion,
@@ -177,6 +191,7 @@ export {
     uploadKnowledgeDoc,
     getKnowledgeBaseDoc,
     update_info,
-    deleteConversation
+    deleteConversation,
+    stopChat
 }
 

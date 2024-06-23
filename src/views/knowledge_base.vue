@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 50px; width: 100%; text-align: center" class="main-div">
     <div class="main">
-      <div > 
+      <div>
         <h1>知识库</h1>
       </div>
 
@@ -9,20 +9,20 @@
 
       <div v-if="!hasKnowledge">
         <el-dialog
-          v-model="dialogVisible"
-          title="新建知识库"
-          width="500"
-          :before-close="handleClose" 
+            v-model="dialogVisible"
+            title="新建知识库"
+            width="500"
+            :before-close="handleClose"
         >
-        <!--  -->
-        <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" />
-        <br>
-        <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" />
-        <!-- <el-button type="primary" @click="newKnowledge ">新建知识库</el-button> -->
+          <!--  -->
+          <el-input v-model="KnowledgeBaseName" style="width: 240px" placeholder="请输入知识库名称,不支持中文命名" clearable/>
+          <br>
+          <el-input v-model="description" style="width: 240px" placeholder="请输入知识库描述" clearable/>
+          <!-- <el-button type="primary" @click="newKnowledge ">新建知识库</el-button> -->
           <template #footer>
-            <div class="dialog-footer" >
-              <el-button @click="KnowledgeValue=''">取消</el-button>
-              <el-button type="primary" @click="newKnowledge" >
+            <div class="dialog-footer">
+              <el-button @click="KnowledgeValue = ''">取消</el-button>
+              <el-button type="primary" @click="newKnowledge">
                 确认
               </el-button>
             </div>
@@ -31,41 +31,35 @@
       </div>
 
       <div style="display: flex;  /* 竖直居中对齐 */">
-      <!-- 选择知识库 -->
-      <div style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
+        <!-- 选择知识库 -->
+        <div style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
 
-        <br><div  style="flex: 1">选择知识库</div><br>
+          <br>
+          <div style="flex: 1">选择知识库</div><br>
 
-        <div  style="flex: 1"> 
-          <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList"
-          @change="changeKnowledge">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <div style="flex: 1">
+            <el-select v-model="KnowledgeValue" placeholder="请选择知识库" style="width: 240px" @focus="getKnowledgeBaseList"
+                       @change="changeKnowledge">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </div>
+
         </div>
-
-      </div>
-      <!-- 上传文件 -->
+        <!-- 上传文件 -->
 
         <!-- 并排 -->
-        <div   v-if="hasKnowledge" style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
+        <div v-if="hasKnowledge"
+             style="flex: 1;flex-direction: column; width:60%; justify-content: center; /* 竖直居中对齐 */">
           <br>
-          <div  style="flex: 1">上传知识库文件</div>
+          <div style="flex: 1">上传知识库文件</div>
           <br>
-          <div  style="flex: 1"> 
-            <el-upload ref="uploadRef" class="upload-demo"  multiple :auto-upload="false"
-              :on-change="handleFileChange" :on-remove="handleRemove" v-model="fileLists">
+          <div style="flex: 1">
+            <el-upload ref="uploadRef" class="upload-demo" multiple :auto-upload="false" :on-change="handleFileChange"
+                       :on-remove="handleRemove" v-model="fileLists">
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <template #trigger>
                 <el-button type="primary" :span="4">选择文件</el-button>
               </template>
-              <!-- <div class="el-upload__text">
-
-                • HTML, HTM, MHTML, MD, JSON, JSONL, CSV, PDF, DOCX, DOC, PPT, PPTX,  <br>
-                EML, MSG, RST, RTF, TXT, XML, EPUB, ODT, TSV, EML, MSG, EPUB, <br>
-                XLSX, XLS, XLSD,IPYNB, PY, SRT, TOML,  ENEX<br>
-                <br>
-                Drop file here or <em>click to upload</em>
-              </div> -->
               <el-button type="primary" @click="submitUpload" :span="4">上传文件</el-button>
               <template #tip>
                 <div class="el-upload__tip">
@@ -78,35 +72,29 @@
         </div>
       </div>
 
-          <el-row >
-            <el-col :span="5">
-                <el-input v-model="searchVal" placeholder="请输入需要查询内容" @change="Search" />
-            </el-col>
-            <el-col :span="2">
-                <el-button  type="primary" @click="Search">查询</el-button>
-            </el-col>
-          </el-row>
-          <!-- 分页表格 -->
-          <el-table
-            ref="singleTableRef"
-            :data="tableData"
-            highlight-current-row
-            style="width: 60%; flex:1;"
-            @current-change="getFileListsMethod"
-          >
-            <el-table-column type="index" width="50" />
-            <el-table-column property="name" label="文件名"/>
-          </el-table>
-          <!-- page-count是最大页数，超过会折叠 -->
-          <el-pagination
-            :page-size="pageSize"
-            :pager-count="10"
-            layout="prev, pager, next"
-            :total="total"
-            :current-page="pageNo"
-            @current-change="handleCurrentChange"
-            style="flex:1;"
-          />
+      <el-row>
+        <el-col :span="5">
+          <el-input v-model="searchVal" placeholder="请输入需要查询内容" @change="Search" clearable/>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" @click="Search">查询</el-button>
+        </el-col>
+      </el-row>
+      <!-- 分页表格 -->
+      <el-table ref="singleTableRef" :data="tableData" highlight-current-row style="width: 60%; flex:1;"
+                @current-change="getFileListsMethod">
+        <el-table-column type="index" width="50" />
+        <el-table-column property="name" label="文件名" />
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button type="danger" @click="deleteKB(scope.row)">删除</el-button>
+            <el-button type="success" @click="dload_file(scope.row)">下载</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- page-count是最大页数，超过会折叠 -->
+      <el-pagination :page-size="pageSize" :pager-count="10" layout="prev, pager, next" :total="total"
+                     :current-page="pageNo" @current-change="handleCurrentChange" style="flex:1;" />
 
 
 
@@ -122,6 +110,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { Comment } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ElUpload } from 'element-plus'
+import { delete_kb_file, download_file } from '@/service/kb_service';
 
 //从接口获取的所有数据
 const currentFile = reactive([
@@ -131,15 +120,15 @@ const pageNo = ref(1)
 // 当前大小
 const pageSize = ref(10)
 // 表格数据
-const tableData =ref([
+const tableData = ref([
 ]);
 // 筛选条数
 const total = ref(0)
-const searchVal=ref('')
-let filteredList=reactive([
+const searchVal = ref('')
+let filteredList = reactive([
 ]);
 //是否搜索
-let isSearch=ref(false)
+let isSearch = ref(false)
 let user_id = ref(null);
 let KnowledgeBaseName = ref('');
 let description = ref('');
@@ -155,14 +144,14 @@ const hasKnowledge = computed(() => {
 
 });
 
-const dialogVisible =computed(() => {
+const dialogVisible = computed(() => {
   //不等返回false，相等返回true
   return hasKnowledge.value === false;
 
 });
 
 const handleClose = () => {
-    KnowledgeValue.value=''
+  KnowledgeValue.value = ''
 }
 
 //初始化时，接受用户id
@@ -204,7 +193,7 @@ function newKnowledge() {
   //不能为中文，后端判断吧
 
   //传参数据
-  console.log(KnowledgeBaseName.value, description.value, user_id.value);
+  //console.log(KnowledgeBaseName.value, description.value, user_id.value);
   let data = {
     'kb_name': KnowledgeBaseName.value,
     'desc': description.value,
@@ -214,7 +203,7 @@ function newKnowledge() {
   createKnowledgeBase(data).then(res => {
     if (res.code === 200) {
       //创建知识库成功
-      console.log("创建知识库成功");
+      //console.log("创建知识库成功");
       ElMessage({
         message: '创建知识库成功',
         type: 'success'
@@ -227,9 +216,9 @@ function newKnowledge() {
       //后端输出的是：{"code":200,"msg":"已新增知识库 b8066be613504f58b8383c578766676a","data":null}
       //但是这个并不是返回给前端的值，所以一定要看源码啊不然就很浪费时间。
       let knowledgeId = res.data.kb_id;
-      console.log("创建知识库id为：" + knowledgeId);
+      //console.log("创建知识库id为：" + knowledgeId);
       //直接强制改了,没问题，有点小问题，因为显示的变成了id，但是点击一下就好了，暂时不想改了私密马赛。
-      KnowledgeValue.value=KnowledgeBaseName.value//knowledgeId;
+      KnowledgeValue.value = KnowledgeBaseName.value//knowledgeId;
 
 
       //清空 
@@ -238,7 +227,7 @@ function newKnowledge() {
 
     }
     else {
-      console.log(res);
+      //console.log(res);
       ElMessage.error(res.code, res.msg);
     }
   })
@@ -264,8 +253,8 @@ function getKnowledgeBaseList() {
   let data = { 'user_id': user_id.value };
   getUserKnowledgeBaseList(data).then(res => {
     if (res.code === 200) {
-      console.log('获取用户知识库成功');
-      console.log(res);
+      //console.log('获取用户知识库成功');
+      //console.log(res);
       //每次获取时强制将其options还原为新建知识库
       options.value = [
         {
@@ -276,10 +265,10 @@ function getKnowledgeBaseList() {
       res.data.user_kbs.forEach(knowledge_base => {
         addKnowledgeBase(knowledge_base);
       });
-      console.log(options.value);
+      //console.log(options.value);
     }
     else {
-      console.log(res);
+      //console.log(res);
       ElMessage.error(res.code, res.msg);
     }
   })
@@ -292,12 +281,12 @@ let fileLists = ref(null);
 // 监听改变文件    
 function handleFileChange(file, fileList) {
   fileLists.value = fileList
-  console.log('test-filelist', fileLists.value)
+  //console.log('test-filelist', fileLists.value)
 }
 // 删除文件
 function handleRemove(file, fileList) {
   fileLists.value = fileList
-  console.log('test-del-filelist', fileLists.value)
+  //console.log('test-del-filelist', fileLists.value)
 }
 
 // function handleBeforeUpload (file) {
@@ -310,9 +299,9 @@ function handleRemove(file, fileList) {
 //     }
 // }
 
-let currentKbId=  ref('');
+let currentKbId = ref('');
 async function uploadAllFile() {
-  console.log('当前知识库id：' + currentKbId.value);
+  //console.log('当前知识库id：' + currentKbId.value);
   const files = fileLists.value;
   for (const file of files) {
     if (file.raw) {
@@ -320,9 +309,9 @@ async function uploadAllFile() {
       fileData.append('files', file.raw);
       fileData.append('kb_id', currentKbId.value);
 
-      console.log("正在处理"+file.name)
+      //console.log("正在处理" + file.name)
       await uploadFile(fileData, file.name); // 等待uploadFile完成
-      console.log(file.name+"处理完毕")
+      //console.log(file.name + "处理完毕")
     }
   }
 
@@ -334,17 +323,17 @@ async function uploadAllFile() {
 
 const uploadRef = ref(null);
 const submitUpload = () => {
-  let faildata='';
-  console.log('禁止上传：',currentKbId.value,fileLists.value);
+  let faildata = '';
+  //console.log('禁止上传：', currentKbId.value, fileLists.value);
   //如果没有选择知识库，禁止上传
-  if(!currentKbId.value===null|| currentKbId.value===''){
-    faildata+='请选择知识库！';
+  if (!currentKbId.value === null || currentKbId.value === '') {
+    faildata += '请选择知识库！';
   }
   //如果没有文件，禁止上传
-  if(fileLists.value===null|| fileLists.value===''){
-    faildata+='请选择上传文件！';
+  if (fileLists.value === null || fileLists.value === '') {
+    faildata += '请选择上传文件！';
   }
-  if(faildata!==''){
+  if (faildata !== '') {
     ElMessage.error(faildata);
     return;
   }
@@ -360,7 +349,7 @@ const submitUpload = () => {
 async function uploadFile(fileData, name) {
   try {
     const res = await uploadKnowledgeDoc(fileData);
-    // console.log(res);
+    //console.log(res);
     if (res.code === 200) {
       if (Object.keys(res.data.failed_files).length === 0) {
         ElMessage.success(`上传文件 ${name} 成功`);
@@ -382,21 +371,21 @@ async function uploadFile(fileData, name) {
 
 let getFileLists = ref(null);
 
-const  changeKnowledge = async (data)=>{
-  console.log('change 当前知识库ID： '+data);
-  currentKbId.value=data;
+const changeKnowledge = async (data) => {
+  //console.log('change 当前知识库ID： ' + data);
+  currentKbId.value = data;
   getFileListsMethod();
 }
 
 //得到当前知识库的文件内容
-const getFileListsMethod = async ()=>{
+const getFileListsMethod = async () => {
 
   //清空搜索：
-  isSearch.value=false; searchVal.value='';
-  console.log('得到文件的当前知识库id '+currentKbId.value);
-  pageNo.value =1
-  tableData.value='';
-  total.value=0;
+  isSearch.value = false; searchVal.value = '';
+  //console.log('得到文件的当前知识库id ' + currentKbId.value);
+  pageNo.value = 1
+  tableData.value = '';
+  total.value = 0;
   currentFile.splice(0, currentFile.length);
   if (KnowledgeValue.value !== '新建知识库') {
     let data = {
@@ -406,7 +395,7 @@ const getFileListsMethod = async ()=>{
       if (res.code === 200) {
 
         getFileLists.value = res.data;
-        console.log('当前知识库文件内容：',getFileLists);
+        //console.log('当前知识库文件内容：', getFileLists);
         res.data.forEach(doc => {
           var file = {
             name: doc,
@@ -418,10 +407,10 @@ const getFileListsMethod = async ()=>{
           //分页
           getpaginatedData();
         });
-        console.log('表格内容',tableData.value);
+        //console.log('表格内容', tableData.value);
       }
       else {
-        console.log(res.msg);
+        //console.log(res.msg);
       }
     })
   }
@@ -429,13 +418,13 @@ const getFileListsMethod = async ()=>{
 
 //分页
 const getpaginatedData = () => {
-    let start = pageNo.value > 1 ? (pageNo.value - 1) * pageSize.value : 0
-    let end = pageNo.value * pageSize.value>total.value ? total.value:pageNo.value * pageSize.value
-    if(isSearch.value===false)
-      tableData.value = currentFile.slice(start, end);
-    else{
-      tableData.value = filteredList.slice(start, end);
-    }
+  let start = pageNo.value > 1 ? (pageNo.value - 1) * pageSize.value : 0
+  let end = pageNo.value * pageSize.value > total.value ? total.value : pageNo.value * pageSize.value
+  if (isSearch.value === false)
+    tableData.value = currentFile.slice(start, end);
+  else {
+    tableData.value = filteredList.slice(start, end);
+  }
 }
 
 
@@ -448,13 +437,13 @@ const handleCurrentChange = val => {
 
 //查询文件
 const Search = () => {
-  if(searchVal.value.trim()===''){
+  if (searchVal.value.trim() === '') {
     //为空返回全部
     getFileListsMethod();
     return;
   }
   const keyword1 = searchVal.value.trim()
-  
+
   const list = currentFile;
   // const list = JSON.parse(localStorage.getItem('list') as string)
   filteredList = [...list]
@@ -463,23 +452,73 @@ const Search = () => {
     filteredList = filteredList.filter(item => item.name.includes(keyword1));
   }
   total.value = filteredList.length;
-  isSearch.value=true;
+  isSearch.value = true;
   getpaginatedData();
 
   //emit('changeList', filteredList)
 }
 
+/**
+ * 删除数据库中的文件
+ * @param row 行对象
+ */
+const deleteKB = (row) => {
+  let map = {
+    kb_id: currentKbId.value,
+    file_names: row.name
+  }
+  delete_kb_file(map).then(res => {
+    if (res.data.code == 500) {
+      ElMessage({
+        type: 'error',
+        message: res.data.msg
+      })
+    } else if (res.data.code == 200) {
+      ElMessage({
+        type: 'success',
+        message: res.data.msg
+      })
+      getpaginatedData();
+    } else {
+      ElMessage({
+        type: 'info',
+        message: res.data.msg
+      })
+    }
+  })
+}
+
+const dload_file = (row) => {
+  let map = {
+    kb_id: currentKbId.value,
+    file_name: row.name,
+    // preview: false
+  }
+  download_file(map).then(res => {
+    console.log(res.data);
+    let blob = new Blob([res.data], {type: 'application/octet-stream'})
+    let a = document.createElement('a')
+    a.download = row.name
+    a.style.display = 'none'
+    let url = URL.createObjectURL(blob)
+    a.href = url
+    document.body.appendChild(a)
+    a.click()
+    URL.revokeObjectURL(url) // 销毁
+    document.body.removeChild(a)
+  })
+}
+
 </script>
 
 <style>
-
-.main-div{
+.main-div {
   border-radius: 15px;
 }
 
 .container {
   /* position: absolute; */
-  
+
   top: 0;
   left: 0;
   width: 100%;

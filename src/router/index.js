@@ -70,9 +70,24 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: () => import('@/views/administor.vue')
+    component: () => import('@/views/admin/administor.vue')
   },
-
+  {
+    path: '/admin_chat_detail',
+    name: 'admin_chat_detail',
+    component: () => import('@/views/admin/chat_detail.vue')
+  },
+  // {
+  //   path: '/admin/history',
+  //   name: 'admin-user-history',
+  //   component: () => import('@/views/history_chats.vue')
+  // },
+  {
+    path: '/admin_history_chat',
+    name: 'admin_history_chat',
+    component: () => import('@/views/admin/admin_history_chats.vue')
+  },
+ 
 ]
 
 const router = createRouter({

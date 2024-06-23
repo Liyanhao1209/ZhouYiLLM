@@ -11,24 +11,22 @@
         周易在线大模型
       </template> -->
       <el-menu router :default-active="$route.path" class="el-menu-vertical-demo" :collapse="isCollapse"
-               @open="handleOpen" @close="handleClose">
+        @open="handleOpen" @close="handleClose">
 
-        <el-menu-item index="/chat"  @click="toChat">
+        <el-menu-item index="/chat" @click="toChat">
           <el-icon>
             <document />
           </el-icon>
           <template #title>新建对话</template>
         </el-menu-item>
 
-        <el-menu-item index="/history_chats">
-
+        <el-menu-item :index="history_index_url">
           <template #title>
             <el-icon>
               <document />
             </el-icon>
             历史对话
           </template>
-
         </el-menu-item>
         <!-- 被禁用了 -->
         <el-menu-item index="/knowledge_base" @click="toKnowledge">
@@ -67,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { createRouter, useRoute, useRouter } from 'vue-router';
 import {
   Document,
@@ -83,21 +81,25 @@ const isCollapse = ref(false)
 // 历史对话是否显示
 // const chatIsCollapse=ref(true)
 const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 
+const history_index_url = computed(() => {
+  return '/history_chats?user_id=' + localStorage.getItem('user_id')
+})
+
 //传参给知识库
-const toKnowledge = () =>{
+const toKnowledge = () => {
   // router.push({
   //   name: 'knowledge_base',
   //   query: {user_id: 'fb18845ed0604498812f8a0135255253' }
   // });
 }
 const router = useRouter()
-const toChat = ()=>{
+const toChat = () => {
   // router.push('/chat');
 }
 const logout = () => {

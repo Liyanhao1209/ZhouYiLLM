@@ -58,7 +58,6 @@ export default {
     },
 
     created() {
-        ;
         this.blog_id = this.$route.query.blog_id
         this.get_blog_()
         this.get_comment_()
