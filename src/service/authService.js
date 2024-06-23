@@ -156,6 +156,9 @@ async function getKnowledgeBaseDoc(data) {
 function update_info(data) {
     return request.post('user/update_info/', data)
 }
+function getuser_info(data) {
+    return request.post('user/getuser_info/', data)
+}
 
 //用户删除对话 conv_id
 async function deleteConversation(data) {
@@ -178,6 +181,7 @@ async function stopChat(data) {
 }
 
 export {
+    getuser_info,
     login,
     update_password,
     sendVerifyCode,
