@@ -12,22 +12,22 @@ from util.utils import serialize_blog, blog_user_to_dict, serialize_comment, ser
     serialize_stars_blog
 
 
-async def get_all_blogs() -> BaseResponse:
+async def get_all_blogs(login_user_id) -> BaseResponse:
     """
     获取论坛上所有的博客列表
     """
     try:
-        with Session(engine) as session:
+        with (Session(engine) as session):
             # 按事件降序排列
             # 需要添加博客的作者信息
 
-            res = session.query(Blog.id, Blog.title, Blog.content, Blog.create_time, User.id, User.name).join(User,
-                                                                                                              User.id == Blog.user_id).order_by(
+            res = session.query(Blog.id, Blog.title, Blog.content, Blog.create_time, User.id, User.name
+                                ).join(User, User.id == Blog.user_id).order_by(
                 Blog.create_time.desc()).all()
             res_data = [blog_user_to_dict(b) for b in res]
             for blog in res_data:
                 stmt = exists().where(BlogStars.blog_id == blog['id'],
-                                      BlogStars.user_id == blog['user_id'])
+                                      BlogStars.user_id == login_user_id)
                 is_starred = session.query(stmt).scalar()
                 blog.update({"is_starred": is_starred})
 
@@ -114,15 +114,13 @@ def star_unstar_blog(user_id: str, blog_id: str) -> BaseResponse:
 
 def get_star_blog(user_id: str) -> BaseResponse:
     try:
-        with Session(engine) as session:
-            res = session.query(BlogStars, Blog).join(Blog, Blog.id == BlogStars.blog_id).filter(
+        with (Session(engine) as session):
+            res = session.query(BlogStars, Blog, User).join(Blog, Blog.id == BlogStars.blog_id
+                                                            ).join(User, User.id == Blog.user_id).filter(
                 BlogStars.user_id == user_id).all()
             s_res = [serialize_stars_blog(i) for i in res]
             for blog in s_res:
-                stmt = exists().where(BlogStars.blog_id == blog['id'],
-                                      BlogStars.user_id == blog['user_id'])
-                is_starred = session.query(stmt).scalar()
-                blog.update({"is_starred": is_starred})
+                blog.update({"is_starred": True})
             return BaseResponse(code=200, msg='ok', data={'star_blog_list': s_res})
     except Exception as e:
         print(e)

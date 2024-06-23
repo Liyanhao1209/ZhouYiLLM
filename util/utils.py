@@ -129,9 +129,11 @@ def serialize_comment_user(row) -> dict:
 def serialize_stars_blog(row) -> dict:
     sb = row[0]
     blog = row[1]
+    user = row[2]
     s_blog = serialize_blog(blog)
     s_sb = {
         'sb_id': sb.id,
+        'user_name': user.name
     }
     s_sb.update(dict(s_blog))
     return s_sb

@@ -11,7 +11,7 @@ class ForumRouter(routers_mount_interface):
         super().__init__(prefix, tag)
 
     def mount(self, app: FastAPI):
-        app.get(self.generate_route_path(['get_all_blogs']), tags=self.tag,
+        app.get(self.generate_route_path(['get_all_blogs', '{login_user_id}']), tags=self.tag,
                 summary="获取博客")(
             forum_service.get_all_blogs)
         app.post(self.generate_route_path(['add_comment']), tags=self.tag,
