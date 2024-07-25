@@ -1,0 +1,5 @@
+{
+  "source_root": "D:\\workSpace\\Scripts\\python_scripts\\text_split\\QA_split\\source",
+  "target_root": "D:\\workSpace\\Scripts\\python_scripts\\text_split\\QA_split\\target",
+  "word_limit": "4000"
+}
